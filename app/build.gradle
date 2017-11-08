@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
 
 
 apply plugin: 'kotlin-android'
@@ -15,7 +14,6 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        manifestPlaceholders = [appPackageName: "${applicationId}"]
         externalNativeBuild {
             cmake {
                 cppFlags ""
@@ -33,22 +31,6 @@ android {
             path "CMakeLists.txt"
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    packagingOptions {
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/NOTICE.txt'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/DEPENDENCIES'
-        pickFirst 'AndroidManifest.xml'
-    }
-    dexOptions {
-        jumboMode true
-    }
 }
 
 dependencies {
@@ -59,8 +41,5 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    compile 'com.adobe.creativesdk.foundation:auth:0.9.1251'
-    compile 'com.adobe.creativesdk:image:4.8.4'
-    compile 'com.localytics.android:library:3.8.0'
 
 }
