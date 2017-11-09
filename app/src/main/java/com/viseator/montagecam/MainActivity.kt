@@ -1,30 +1,43 @@
 package com.viseator.montagecam
 
-import android.support.v7.app.AppCompatActivity
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_main.*
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
+import butterknife.BindView
+import com.google.android.cameraview.CameraView
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
+
+    private val REQUEST_CAMERA_PERMISSION: Int = 0x1;
+
+    @BindView(R.id.main_camera_view)
+    lateinit var mCameraView: CameraView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        // Example of a call to a native method
-        sample_text.text = stringFromJNI()
+        mCameraView.start()
     }
 
-    /**
-     * A native method that is implemented by the 'native-lib' native library,
-     * which is packaged with this application.
-     */
-    external fun stringFromJNI(): String
-
-    companion object {
-
-        // Used to load the 'native-lib' library on application startup.
-        init {
-            System.loadLibrary("native-lib")
+    override fun onResume() {
+        super.onResume()
+        when {
+            ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED
+            -> ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission
+                    .CAMERA), REQUEST_CAMERA_PERMISSION)
         }
+    }
+
+    override fun initView() {
+
+    }
+
+    override fun init() {
+    }
+
+    override fun getLayout(): Int {
+        return R.layout.activity_main
     }
 }
