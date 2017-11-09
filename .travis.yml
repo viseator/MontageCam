@@ -1,4 +1,5 @@
 language: android
+sudo: true
 android:
   components:
     - tools # to get the new `repository-11.xml`
@@ -6,6 +7,10 @@ android:
     - platform-tools
     - build-tools-26.0.2
     - android-26
+
+before_install:
+  - git clone https://github.com/urho3d/android-ndk.git $HOME/android-ndk-root
+  - export ANDROID_NDK_HOME=$HOME/android-ndk-root
 
 script:
    - ./gradlew build connectedCheck
