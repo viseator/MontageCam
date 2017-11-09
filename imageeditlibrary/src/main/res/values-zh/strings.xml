@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">编辑图片</string>
     <string name="no_images">没有发现图片</string>
     <string name="images">%d 张图片</string>
     <string name="save">保存</string>

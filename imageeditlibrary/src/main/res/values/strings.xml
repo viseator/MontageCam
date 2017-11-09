@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">ImageEditLibrary</string>
     <string name="no_images">no found the image</string>
     <string name="images">%d images</string>
     <string name="save">save</string>

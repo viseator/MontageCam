@@ -31,7 +31,7 @@ class MainActivity : BaseActivity() {
     }
 
     override fun initView() {
-
+        setFullScreen()
     }
 
     override fun init() {
