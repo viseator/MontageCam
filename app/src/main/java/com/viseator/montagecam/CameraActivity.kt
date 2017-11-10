@@ -24,10 +24,10 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 
-class MainActivity : BaseActivity(), AspectRatioFragment.Listener {
+class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     val REQUEST_CAMERA_PERMISSION = 0x1
     val REQUEST_STORAGE_PERMISSION = 0x2
-    val TAG = "@vir MainActivity"
+    val TAG = "@vir CameraActivity"
 
     @BindView(R.id.main_camera_view)
     lateinit var mCameraView: CameraView
@@ -83,6 +83,7 @@ class MainActivity : BaseActivity(), AspectRatioFragment.Listener {
 
                     }
                 }
+
             }
         }
 
