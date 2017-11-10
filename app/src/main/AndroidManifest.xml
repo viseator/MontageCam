@@ -23,6 +23,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity android:name="com.xinlan.imageeditlibrary.editimage.EditImageActivity">
+        </activity>
     </application>
 
 </manifest>

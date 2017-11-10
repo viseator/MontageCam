@@ -19,6 +19,7 @@ import android.widget.Toast
 import butterknife.BindView
 import com.google.android.cameraview.AspectRatio
 import com.google.android.cameraview.CameraView
+import com.xinlan.imageeditlibrary.editimage.EditImageActivity
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -27,14 +28,12 @@ import java.io.OutputStream
 class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     val REQUEST_CAMERA_PERMISSION = 0x1
     val REQUEST_STORAGE_PERMISSION = 0x2
+    val CALL_EDIT_ACTIVITY = 0x3
     val TAG = "@vir CameraActivity"
 
-    @BindView(R.id.main_camera_view)
-    lateinit var mCameraView: CameraView
-    @BindView(R.id.camera_toolbar)
-    lateinit var mToolBar: Toolbar
-    @BindView(R.id.camera_shot_button)
-    lateinit var mShotButton: ImageButton
+    @BindView(R.id.main_camera_view) lateinit var mCameraView: CameraView
+    @BindView(R.id.camera_toolbar) lateinit var mToolBar: Toolbar
+    @BindView(R.id.camera_shot_button) lateinit var mShotButton: ImageButton
     private val FLASH_OPTIONS = intArrayOf(CameraView.FLASH_AUTO, CameraView.FLASH_OFF,
             CameraView.FLASH_ON)
 
@@ -59,12 +58,9 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
 
         override fun onPictureTaken(cameraView: CameraView, data: ByteArray) {
             Log.d(TAG, "onPictureTaken " + data.size)
-            Toast.makeText(cameraView.context, R.string.picture_taken, Toast.LENGTH_SHORT)
-                    .show()
             getBackgroundHandler().post {
                 val file = File(Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_PICTURES),
-                        "picture.jpg")
+                        Environment.DIRECTORY_PICTURES), "picture.jpg")
                 Log.d(TAG, String().plus(file.absolutePath))
                 var os: OutputStream? = null
                 try {
@@ -83,10 +79,17 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
 
                     }
                 }
-
+                startImageEdit(file)
             }
         }
 
+    }
+
+    fun startImageEdit(file: File) {
+        if (!file.exists()) {
+            Toast.makeText(this, resources.getString(R.string.NoImg), Toast.LENGTH_SHORT).show()
+        }
+        EditImageActivity.start(this, file.absolutePath, file.absolutePath, CALL_EDIT_ACTIVITY)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -141,12 +144,11 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         when (item.itemId) {
             R.id.aspect_ratio -> {
                 val fragmentManager = supportFragmentManager
-                if (fragmentManager.findFragmentByTag(
-                        FRAGMENT_DIALOG) == null) {
+                if (fragmentManager.findFragmentByTag(FRAGMENT_DIALOG) == null) {
                     val ratios = mCameraView.supportedAspectRatios
                     val currentRatio = mCameraView.aspectRatio
-                    AspectRatioFragment.newInstance(ratios, currentRatio)
-                            .show(fragmentManager, FRAGMENT_DIALOG)
+                    AspectRatioFragment.newInstance(ratios, currentRatio).show(fragmentManager,
+                            FRAGMENT_DIALOG)
                 }
                 return true
             }
@@ -159,10 +161,8 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
             }
             R.id.switch_camera -> {
                 val facing = mCameraView.facing
-                mCameraView.facing = if (facing == CameraView.FACING_FRONT)
-                    CameraView.FACING_BACK
-                else
-                    CameraView.FACING_FRONT
+                mCameraView.facing = if (facing == CameraView.FACING_FRONT) CameraView.FACING_BACK
+                else CameraView.FACING_FRONT
                 return true
             }
         }
@@ -184,11 +184,11 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     }
 
     private fun checkPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission_group.STORAGE) !=
-                PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission
-                    .WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE),
-                    REQUEST_STORAGE_PERMISSION)
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission_group.STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_STORAGE_PERMISSION)
         }
     }
 

@@ -45,12 +45,11 @@ public class AspectRatioFragment extends DialogFragment {
 
     private Listener mListener;
 
-    public static AspectRatioFragment newInstance(Set<AspectRatio> ratios,
-            AspectRatio currentRatio) {
+    public static AspectRatioFragment newInstance(Set<AspectRatio> ratios, AspectRatio
+            currentRatio) {
         final AspectRatioFragment fragment = new AspectRatioFragment();
         final Bundle args = new Bundle();
-        args.putParcelableArray(ARG_ASPECT_RATIOS,
-                ratios.toArray(new AspectRatio[ratios.size()]));
+        args.putParcelableArray(ARG_ASPECT_RATIOS, ratios.toArray(new AspectRatio[ratios.size()]));
         args.putParcelable(ARG_CURRENT_ASPECT_RATIO, currentRatio);
         fragment.setArguments(args);
         return fragment;
@@ -79,14 +78,13 @@ public class AspectRatioFragment extends DialogFragment {
         Arrays.sort(ratios);
         final AspectRatio current = args.getParcelable(ARG_CURRENT_ASPECT_RATIO);
         final AspectRatioAdapter adapter = new AspectRatioAdapter(ratios, current);
-        return new AlertDialog.Builder(getActivity())
-                .setAdapter(adapter, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int position) {
-                        mListener.onAspectRatioSelected(ratios[position]);
-                    }
-                })
-                .create();
+        return new AlertDialog.Builder(getActivity()).setAdapter(adapter, new DialogInterface
+                .OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int position) {
+                mListener.onAspectRatioSelected(ratios[position]);
+            }
+        }).create();
     }
 
     private static class AspectRatioAdapter extends BaseAdapter {
@@ -118,8 +116,8 @@ public class AspectRatioFragment extends DialogFragment {
         public View getView(int position, View view, ViewGroup parent) {
             AspectRatioAdapter.ViewHolder holder;
             if (view == null) {
-                view = LayoutInflater.from(parent.getContext())
-                        .inflate(android.R.layout.simple_list_item_1, parent, false);
+                view = LayoutInflater.from(parent.getContext()).inflate(android.R.layout
+                        .simple_list_item_1, parent, false);
                 holder = new AspectRatioAdapter.ViewHolder();
                 holder.text = (TextView) view.findViewById(android.R.id.text1);
                 view.setTag(holder);
