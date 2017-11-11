@@ -1,6 +1,6 @@
-[![CircleCI](https://circleci.com/gh/viseator/MontageCam.svg?style=svg)](https://circleci.com/gh/viseator/MontageCam)
-
 # Montage Cam
+
+[![CircleCI](https://circleci.com/gh/viseator/MontageCam.svg?style=svg)](https://circleci.com/gh/viseator/MontageCam)
 
 A camera app with ability to make interesting picture cooperated with others.
 
