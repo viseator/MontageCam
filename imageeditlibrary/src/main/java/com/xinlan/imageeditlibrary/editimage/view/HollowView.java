@@ -2,16 +2,21 @@ package com.xinlan.imageeditlibrary.editimage.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.Shader;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.xinlan.imageeditlibrary.R;
 
 /**
  * Created by panyi on 17/2/11.
@@ -61,7 +66,8 @@ public class HollowView extends View {
     }
 
     private void generatorBit() {
-        mDrawBit = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        mDrawBit = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config
+                .ARGB_8888);
         mPaintCanvas = new Canvas(mDrawBit);
     }
 
@@ -69,10 +75,14 @@ public class HollowView extends View {
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
 
-        mPaint.setColor(Color.RED);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
-
+        Bitmap patternBitmap = BitmapFactory.decodeResource(getResources(), R.drawable
+                .fill_pattern);
+        BitmapShader patternBitmapShader = new BitmapShader(patternBitmap, Shader.TileMode
+                .REPEAT, Shader.TileMode.REPEAT);
+        mPaint.setColor(0xFFFFFFFF);
+        mPaint.setShader(patternBitmapShader);
 
         mEraserPaint = new Paint();
         mEraserPaint.setAlpha(0);

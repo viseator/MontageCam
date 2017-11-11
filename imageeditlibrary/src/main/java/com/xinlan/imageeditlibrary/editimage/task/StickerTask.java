@@ -31,11 +31,9 @@ public abstract class StickerTask extends AsyncTask<Bitmap, Void, Bitmap> {
     protected void onPreExecute() {
         super.onPreExecute();
 
-        if (mContext.isFinishing())
-            return;
+        if (mContext.isFinishing()) return;
 
-        dialog = mContext.getLoadingDialog(mContext, R.string.saving_image,
-                false);
+        dialog = mContext.getLoadingDialog(mContext, R.string.saving_image, false);
         dialog.show();
     }
 
@@ -44,8 +42,7 @@ public abstract class StickerTask extends AsyncTask<Bitmap, Void, Bitmap> {
         // System.out.println("保存贴图!");
         Matrix touchMatrix = mContext.mainImage.getImageViewMatrix();
 
-        Bitmap resultBit = Bitmap.createBitmap(params[0]).copy(
-                Bitmap.Config.ARGB_8888, true);
+        Bitmap resultBit = Bitmap.createBitmap(params[0]).copy(Bitmap.Config.ARGB_8888, true);
         Canvas canvas = new Canvas(resultBit);
 
         float[] data = new float[9];

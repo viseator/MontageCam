@@ -116,12 +116,12 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mPaintModeView.setPaintStrokeColor(Color.RED);
-        mPaintModeView.setPaintStrokeWidth(10);
+        mPaintModeView.setPaintStrokeWidth(30);
         updatePaintView();
         if (mPaintModeView.getMeasuredHeight() == 0) {
             mainView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         }
-        mStokenWidthSeekBar.setMax(mPaintModeView.getMeasuredHeight() / 2);
+        mStokenWidthSeekBar.setMax(mPaintModeView.getMeasuredHeight());
 
         mStokenWidthSeekBar.setProgress((int) mPaintModeView.getStokenWidth());
 

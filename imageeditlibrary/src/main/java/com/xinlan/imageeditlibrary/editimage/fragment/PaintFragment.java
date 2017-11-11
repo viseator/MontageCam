@@ -36,7 +36,8 @@ import com.xinlan.imageeditlibrary.editimage.view.PaintModeView;
  *
  * @author panyi
  */
-public class PaintFragment extends BaseEditFragment implements View.OnClickListener, ColorListAdapter.IColorListAction {
+public class PaintFragment extends BaseEditFragment implements View.OnClickListener,
+        ColorListAdapter.IColorListAction {
     public static final int INDEX = ModuleConfig.INDEX_PAINT;
     public static final String TAG = PaintFragment.class.getName();
 
@@ -60,18 +61,16 @@ public class PaintFragment extends BaseEditFragment implements View.OnClickListe
 
     private SaveCustomPaintTask mSavePaintImageTask;
 
-    public int[] mPaintColors = {Color.BLACK,
-            Color.DKGRAY, Color.GRAY, Color.LTGRAY, Color.WHITE,
-            Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.CYAN, Color.MAGENTA};
+    public int[] mPaintColors = {Color.BLACK, Color.DKGRAY, Color.GRAY, Color.LTGRAY, Color
+            .WHITE, Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.CYAN, Color.MAGENTA};
 
     public static PaintFragment newInstance() {
-        PaintFragment fragment = new PaintFragment();
-        return fragment;
+        return new PaintFragment();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         mainView = inflater.inflate(R.layout.fragment_edit_paint, null);
         return mainView;
     }
@@ -80,7 +79,7 @@ public class PaintFragment extends BaseEditFragment implements View.OnClickListe
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mPaintView = (CustomPaintView)getActivity().findViewById(R.id.custom_paint_view);
+        mPaintView = (CustomPaintView) getActivity().findViewById(R.id.custom_paint_view);
         backToMenu = mainView.findViewById(R.id.back_to_main);
         mPaintModeView = (PaintModeView) mainView.findViewById(R.id.paint_thumb);
         mColorListView = (RecyclerView) mainView.findViewById(R.id.paint_color_list);
@@ -215,15 +214,15 @@ public class PaintFragment extends BaseEditFragment implements View.OnClickListe
 
         int[] locations = new int[2];
         activity.bottomGallery.getLocationOnScreen(locations);
-        setStokenWidthWindow.showAtLocation(activity.bottomGallery,
-                Gravity.NO_GRAVITY, 0, locations[1] - popView.getMeasuredHeight());
+        setStokenWidthWindow.showAtLocation(activity.bottomGallery, Gravity.NO_GRAVITY, 0,
+                locations[1] - popView.getMeasuredHeight());
     }
 
     private void initStokeWidthPopWindow() {
         popView = LayoutInflater.from(activity).
                 inflate(R.layout.view_set_stoke_width, null);
-        setStokenWidthWindow = new PopupWindow(popView, ViewGroup.LayoutParams.MATCH_PARENT
-                , ViewGroup.LayoutParams.WRAP_CONTENT);
+        setStokenWidthWindow = new PopupWindow(popView, ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
 
         mStokenWidthSeekBar = (SeekBar) popView.findViewById(R.id.stoke_width_seekbar);
 
@@ -245,7 +244,8 @@ public class PaintFragment extends BaseEditFragment implements View.OnClickListe
     }
 
     private void updateEraserView() {
-        mEraserView.setImageResource(isEraser ? R.drawable.eraser_seleced : R.drawable.eraser_normal);
+        mEraserView.setImageResource(isEraser ? R.drawable.eraser_seleced : R.drawable
+                .eraser_normal);
         mPaintView.setEraser(isEraser);
     }
 
