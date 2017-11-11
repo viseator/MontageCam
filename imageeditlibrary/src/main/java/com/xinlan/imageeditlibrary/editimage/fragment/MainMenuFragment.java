@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.xinlan.imageeditlibrary.R;
 import com.xinlan.imageeditlibrary.editimage.ModuleConfig;
 
@@ -19,8 +20,9 @@ public class MainMenuFragment extends BaseEditFragment implements View.OnClickLi
     public static final String TAG = MainMenuFragment.class.getName();
     private View mainView;
 
+    private View hollowBtn;
     private View stickerBtn;// 贴图按钮
-    private View fliterBtn;// 滤镜按钮
+    private View filterBtn;// 滤镜按钮
     private View cropBtn;// 剪裁按钮
     private View rotateBtn;// 旋转按钮
     private View mTextBtn;//文字型贴图添加
@@ -38,10 +40,9 @@ public class MainMenuFragment extends BaseEditFragment implements View.OnClickLi
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        mainView = inflater.inflate(R.layout.fragment_edit_image_main_menu,
-                null);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
+        mainView = inflater.inflate(R.layout.fragment_edit_image_main_menu, null);
         return mainView;
     }
 
@@ -49,16 +50,18 @@ public class MainMenuFragment extends BaseEditFragment implements View.OnClickLi
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        hollowBtn = mainView.findViewById(R.id.btn_hollow);
         stickerBtn = mainView.findViewById(R.id.btn_stickers);
-        fliterBtn = mainView.findViewById(R.id.btn_fliter);
+        filterBtn = mainView.findViewById(R.id.btn_fliter);
         cropBtn = mainView.findViewById(R.id.btn_crop);
         rotateBtn = mainView.findViewById(R.id.btn_rotate);
         mTextBtn = mainView.findViewById(R.id.btn_text);
         mPaintBtn = mainView.findViewById(R.id.btn_paint);
         mBeautyBtn = mainView.findViewById(R.id.btn_beauty);
 
+        hollowBtn.setOnClickListener(this);
         stickerBtn.setOnClickListener(this);
-        fliterBtn.setOnClickListener(this);
+        filterBtn.setOnClickListener(this);
         cropBtn.setOnClickListener(this);
         rotateBtn.setOnClickListener(this);
         mTextBtn.setOnClickListener(this);
@@ -73,9 +76,11 @@ public class MainMenuFragment extends BaseEditFragment implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        if (v == stickerBtn) {
+        if (v == hollowBtn) {
+            onHollowClick();
+        } else if (v == stickerBtn) {
             onStickClick();
-        } else if (v == fliterBtn) {
+        } else if (v == filterBtn) {
             onFilterClick();
         } else if (v == cropBtn) {
             onCropClick();
@@ -85,9 +90,14 @@ public class MainMenuFragment extends BaseEditFragment implements View.OnClickLi
             onAddTextClick();
         } else if (v == mPaintBtn) {
             onPaintClick();
-        }else if(v == mBeautyBtn){
+        } else if (v == mBeautyBtn) {
             onBeautyClick();
         }
+    }
+
+    private void onHollowClick() {
+        activity.bottomGallery.setCurrentItem(HollowFragment.INDEX);
+        activity.mHollowFragment.onShow();
     }
 
     /**
@@ -96,8 +106,8 @@ public class MainMenuFragment extends BaseEditFragment implements View.OnClickLi
      * @author panyi
      */
     private void onStickClick() {
-        activity.bottomGallery.setCurrentItem(StirckerFragment.INDEX);
-        activity.mStirckerFragment.onShow();
+        activity.bottomGallery.setCurrentItem(StickerFragment.INDEX);
+        activity.mStickerFragment.onShow();
     }
 
     /**
@@ -106,8 +116,8 @@ public class MainMenuFragment extends BaseEditFragment implements View.OnClickLi
      * @author panyi
      */
     private void onFilterClick() {
-        activity.bottomGallery.setCurrentItem(FliterListFragment.INDEX);
-        activity.mFliterListFragment.onShow();
+        activity.bottomGallery.setCurrentItem(FilterListFragment.INDEX);
+        activity.mFilterListFragment.onShow();
     }
 
     /**
@@ -148,7 +158,7 @@ public class MainMenuFragment extends BaseEditFragment implements View.OnClickLi
         activity.mPaintFragment.onShow();
     }
 
-    private void onBeautyClick(){
+    private void onBeautyClick() {
         activity.bottomGallery.setCurrentItem(BeautyFragment.INDEX);
         activity.mBeautyFragment.onShow();
     }
