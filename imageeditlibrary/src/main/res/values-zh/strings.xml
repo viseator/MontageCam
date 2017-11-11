@@ -4,7 +4,7 @@
     <string name="save">保存</string>
     <string name="apply">应用</string>
     <string name="stickers">贴图</string>
-    <string name="fliter">滤镜</string>
+    <string name="filter">滤镜</string>
     <string name="crop">裁剪</string>
     <string name="rotate">旋转</string>
     <string name="text">文字</string>
@@ -44,4 +44,5 @@
     <string name="beauty">美颜</string>
     <string name="smooth">磨皮</string>
     <string name="white_skin">美白</string>
+    <string name="paint">画笔</string>
 </resources>

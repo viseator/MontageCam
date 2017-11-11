@@ -225,6 +225,7 @@ public class AddTextFragment extends BaseEditFragment implements TextWatcher {
             mTextStickerView.resetView();
 
             activity.changeMainBitmap(result);
+            backToMain();
         }
     }//end inner class
 

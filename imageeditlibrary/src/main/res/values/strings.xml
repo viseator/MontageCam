@@ -6,7 +6,7 @@
     <string name="apply">apply</string>
 
     <string name="stickers">stickers</string>
-    <string name="fliter">fliter</string>
+    <string name="filter">filter</string>
     <string name="crop">crop</string>
     <string name="rotate">rotate</string>
     <string name="text">text</string>
@@ -50,4 +50,5 @@
     <string name="beauty">beauty</string>
     <string name="smooth">smooth</string>
     <string name="white_skin">white skin</string>
+    <string name="paint">paint</string>
 </resources>

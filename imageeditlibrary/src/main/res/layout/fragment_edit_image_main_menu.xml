@@ -17,7 +17,7 @@
             android:layout_gravity="center"
             android:layout_margin="@dimen/image_edit_menu_margin"
             android:gravity="center"
-            android:text="@string/edit"
+            android:text="@string/paint"
             android:textColor="@color/white"
             android:textSize="@dimen/image_edit_text_size"/>
 
@@ -39,7 +39,7 @@
             android:layout_gravity="center"
             android:layout_margin="@dimen/image_edit_menu_margin"
             android:gravity="center"
-            android:text="@string/fliter"
+            android:text="@string/filter"
             android:textColor="@color/white"
             android:textSize="@dimen/image_edit_text_size"/>
 

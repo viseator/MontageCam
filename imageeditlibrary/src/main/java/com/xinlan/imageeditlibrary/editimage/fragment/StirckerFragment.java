@@ -278,6 +278,7 @@ public class StirckerFragment extends BaseEditFragment {
         public void onPostResult(Bitmap result) {
             mStickerView.clear();
             activity.changeMainBitmap(result);
+            backToMain();
         }
     }// end inner class
 

@@ -301,6 +301,7 @@ public class PaintFragment extends BaseEditFragment implements View.OnClickListe
         public void onPostResult(Bitmap result) {
             mPaintView.reset();
             activity.changeMainBitmap(result);
+            backToMain();
         }
     }//end inner class
 

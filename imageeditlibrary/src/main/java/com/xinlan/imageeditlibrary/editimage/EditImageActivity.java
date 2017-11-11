@@ -41,22 +41,21 @@ import com.xinlan.imageeditlibrary.editimage.utils.BitmapUtils;
 import com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouchBase;
 
 /**
- *  一个幽灵
- *  共产主义的幽灵
- *  在欧洲徘徊
- *  旧欧洲的一切势力，
- *  教皇和沙皇、
- *  梅特涅和基佐、
- *  法国的激进党人和德国的警察，
- *  都为驱除这个幽灵而结成了神圣同盟
- *                                       -----《共产党宣言》
- *
+ * 一个幽灵
+ * 共产主义的幽灵
+ * 在欧洲徘徊
+ * 旧欧洲的一切势力，
+ * 教皇和沙皇、
+ * 梅特涅和基佐、
+ * 法国的激进党人和德国的警察，
+ * 都为驱除这个幽灵而结成了神圣同盟
+ * -----《共产党宣言》
+ * <p>
  * 图片编辑 主页面
  *
  * @author panyi
  *         <p>
  *         包含 1.贴图 2.滤镜 3.剪裁 4.底图旋转 功能
- *
  */
 public class EditImageActivity extends BaseActivity {
     public static final String FILE_PATH = "file_path";
@@ -118,7 +117,8 @@ public class EditImageActivity extends BaseActivity {
      * @param outputPath
      * @param requestCode
      */
-    public static void start(Activity context, final String editImagePath, final String outputPath, final int requestCode) {
+    public static void start(Activity context, final String editImagePath, final String
+            outputPath, final int requestCode) {
         if (TextUtils.isEmpty(editImagePath)) {
             Toast.makeText(context, R.string.no_choose, Toast.LENGTH_SHORT).show();
             return;
@@ -178,8 +178,7 @@ public class EditImageActivity extends BaseActivity {
         bottomGallery = (CustomViewPager) findViewById(R.id.bottom_gallery);
         //bottomGallery.setOffscreenPageLimit(7);
         mMainMenuFragment = MainMenuFragment.newInstance();
-        mBottomGalleryAdapter = new BottomGalleryAdapter(
-                this.getSupportFragmentManager());
+        mBottomGalleryAdapter = new BottomGalleryAdapter(this.getSupportFragmentManager());
         mStirckerFragment = StirckerFragment.newInstance();
         mFliterListFragment = FliterListFragment.newInstance();
         mCropFragment = CropFragment.newInstance();
@@ -194,7 +193,8 @@ public class EditImageActivity extends BaseActivity {
         mainImage.setFlingListener(new ImageViewTouch.OnImageFlingListener() {
             @Override
             public void onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                //System.out.println(e1.getAction() + " " + e2.getAction() + " " + velocityX + "  " + velocityY);
+                //System.out.println(e1.getAction() + " " + e2.getAction() + " " + velocityX + "
+                // " + velocityY);
                 if (velocityY > 1) {
                     closeInputMethod();
                 }
@@ -266,8 +266,7 @@ public class EditImageActivity extends BaseActivity {
         @Override
         protected Bitmap doInBackground(String... params) {
 
-            return BitmapUtils.getSampledBitmap(params[0], imageWidth,
-                    imageHeight);
+            return BitmapUtils.getSampledBitmap(params[0], imageWidth, imageHeight);
         }
 
         @Override
@@ -315,8 +314,8 @@ public class EditImageActivity extends BaseActivity {
             onSaveTaskDone();
         } else {//图片还未被保存    弹出提示框确认
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-            alertDialogBuilder.setMessage(R.string.exit_without_save)
-                    .setCancelable(false).setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+            alertDialogBuilder.setMessage(R.string.exit_without_save).setCancelable(false)
+                    .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     mContext.finish();
                 }
@@ -384,8 +383,7 @@ public class EditImageActivity extends BaseActivity {
     }// end inner class
 
     protected void doSaveImage() {
-        if (mOpTimes <= 0)
-            return;
+        if (mOpTimes <= 0) return;
 
         if (mSaveImageTask != null) {
             mSaveImageTask.cancel(true);
@@ -401,8 +399,7 @@ public class EditImageActivity extends BaseActivity {
      * @param newBit
      */
     public void changeMainBitmap(Bitmap newBit) {
-        if(newBit == null)
-            return;
+        if (newBit == null) return;
 
         if (mainBitmap != null) {
             if (!mainBitmap.isRecycled()) {// 回收
@@ -461,8 +458,7 @@ public class EditImageActivity extends BaseActivity {
 
         @Override
         protected Boolean doInBackground(Bitmap... params) {
-            if (TextUtils.isEmpty(saveFilePath))
-                return false;
+            if (TextUtils.isEmpty(saveFilePath)) return false;
 
             return BitmapUtils.saveBitmap(params[0], saveFilePath);
         }
