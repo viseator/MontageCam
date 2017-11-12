@@ -20,6 +20,7 @@ import butterknife.BindView
 import com.google.android.cameraview.AspectRatio
 import com.google.android.cameraview.CameraView
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity
+import com.xinlan.imageeditlibrary.editimage.utils.FileUtil
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -66,7 +67,6 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
                 try {
                     os = FileOutputStream(file)
                     os.write(data)
-                    os.close()
                 } catch (e: IOException) {
                     Log.w(TAG, "Cannot write to " + file, e)
                 } finally {
@@ -79,6 +79,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
 
                     }
                 }
+                FileUtil.ablumUpdate(this@CameraActivity, file.absolutePath)
                 startImageEdit(file)
             }
         }
@@ -89,11 +90,17 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         if (!file.exists()) {
             Toast.makeText(this, resources.getString(R.string.NoImg), Toast.LENGTH_SHORT).show()
         }
-        EditImageActivity.start(this, file.absolutePath, file.absolutePath, CALL_EDIT_ACTIVITY)
+
+        val fileOutput = File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                "picture_output.png")
+        EditImageActivity.start(this, file.absolutePath, fileOutput.absolutePath,
+                CALL_EDIT_ACTIVITY)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         checkPermission()
+        setFullScreen()
         setContentView(R.layout.activity_main)
         super.onCreate(savedInstanceState)
 
