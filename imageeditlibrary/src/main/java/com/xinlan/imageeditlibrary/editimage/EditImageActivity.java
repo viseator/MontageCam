@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -60,6 +62,7 @@ import com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouchBase;
  *         包含 1.贴图 2.滤镜 3.剪裁 4.底图旋转 功能
  */
 public class EditImageActivity extends BaseActivity {
+    private static final String TAG = "@vir EditImageActivity";
     public static final String FILE_PATH = "file_path";
     public static final String EXTRA_OUTPUT = "extra_output";
     public static final String SAVE_FILE_PATH = "save_file_path";
@@ -275,7 +278,8 @@ public class EditImageActivity extends BaseActivity {
         @Override
         protected Bitmap doInBackground(String... params) {
 
-            return BitmapUtils.getSampledBitmap(params[0], imageWidth, imageHeight);
+//            return BitmapUtils.getSampledBitmap(params[0], imageWidth, imageHeight);
+            return BitmapFactory.decodeFile(params[0]);
         }
 
         @Override
@@ -390,22 +394,24 @@ public class EditImageActivity extends BaseActivity {
     private final class SaveBtnClick implements OnClickListener {
         @Override
         public void onClick(View v) {
-            if (mOpTimes == 0) {//并未修改图片
-                onSaveTaskDone();
-            } else {
-                doSaveImage();
-            }
+//            if (mOpTimes == 0) {//并未修改图片
+//                onSaveTaskDone();
+//            } else {
+            doSaveImage();
+//            }
         }
     }// end inner class
 
     protected void doSaveImage() {
-        if (mOpTimes <= 0) return;
+//        if (mOpTimes <= 0) return;
 
         if (mSaveImageTask != null) {
             mSaveImageTask.cancel(true);
         }
 
         mSaveImageTask = new SaveImageTask();
+        Log.d(TAG, String.valueOf(mainBitmap.getHeight()) + "x" + String.valueOf(mainBitmap
+                .getWidth()));
         mSaveImageTask.execute(mainBitmap);
     }
 
