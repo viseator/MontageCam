@@ -6,22 +6,16 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.SeekBar;
 
 import com.xinlan.imageeditlibrary.R;
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity;
 import com.xinlan.imageeditlibrary.editimage.ModuleConfig;
-import com.xinlan.imageeditlibrary.editimage.adapter.ColorListAdapter;
 import com.xinlan.imageeditlibrary.editimage.task.StickerTask;
-import com.xinlan.imageeditlibrary.editimage.view.CustomPaintView;
 import com.xinlan.imageeditlibrary.editimage.view.HollowView;
 import com.xinlan.imageeditlibrary.editimage.view.PaintModeView;
 
@@ -32,7 +26,7 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
     private View backToMenu;// 返回主菜单
     private PaintModeView mPaintModeView;
 
-    private HollowView mPaintView;
+    private HollowView mHollowView;
 
 
     private SeekBar mStokenWidthSeekBar;
@@ -52,11 +46,12 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         mainView = inflater.inflate(R.layout.fragment_hollow, container, false);
-        mPaintView = (HollowView) getActivity().findViewById(R.id.hollow_view);
+        mHollowView = (HollowView) getActivity().findViewById(R.id.hollow_view);
         backToMenu = mainView.findViewById(R.id.hollow_back_to_main);
         mPaintModeView = (PaintModeView) mainView.findViewById(R.id.hollow_paint_thumb);
         mEraserView = (ImageView) mainView.findViewById(R.id.hollow_paint_eraser);
         mStokenWidthSeekBar = (SeekBar) mainView.findViewById(R.id.hollow_stoke_width_seekbar);
+        mHollowView.setFragment(this);
         return mainView;
     }
 
@@ -87,19 +82,21 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
      * 返回主菜单
      */
     public void backToMain() {
+        activity.mainImage.setVisibility(View.VISIBLE);
         activity.mode = EditImageActivity.MODE_NONE;
         activity.bottomGallery.setCurrentItem(MainMenuFragment.INDEX);
         activity.mainImage.setVisibility(View.VISIBLE);
         activity.bannerFlipper.showPrevious();
 
-        this.mPaintView.setVisibility(View.GONE);
+        this.mHollowView.setVisibility(View.GONE);
+        this.mHollowView.setInited(false);
     }
 
     public void onShow() {
         activity.mode = EditImageActivity.MODE_HOLLOW;
         activity.mainImage.setImageBitmap(activity.mainBitmap);
         activity.bannerFlipper.showNext();
-        this.mPaintView.setVisibility(View.VISIBLE);
+        this.mHollowView.setVisibility(View.VISIBLE);
     }
 
 
@@ -107,8 +104,8 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
         isEraser = false;
         updateEraserView();
 
-        this.mPaintView.setColor(mPaintModeView.getStokenColor());
-        this.mPaintView.setWidth(mPaintModeView.getStokenWidth());
+        this.mHollowView.setColor(mPaintModeView.getStokenColor());
+        this.mHollowView.setWidth(mPaintModeView.getStokenWidth());
     }
 
 
@@ -152,7 +149,7 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
     private void updateEraserView() {
         mEraserView.setImageResource(isEraser ? R.drawable.eraser_seleced : R.drawable
                 .eraser_normal);
-        mPaintView.setEraser(isEraser);
+        mHollowView.setEraser(isEraser);
     }
 
     /**
@@ -197,18 +194,21 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
             canvas.translate(dx, dy);
             canvas.scale(scale_x, scale_y);
 
-            if (mPaintView.getPaintBit() != null) {
-                canvas.drawBitmap(mPaintView.getPaintBit(), 0, 0, null);
+            if (mHollowView.getPaintBit() != null) {
+                canvas.drawBitmap(mHollowView.getPaintBit(), 0, 0, null);
             }
             canvas.restore();
         }
 
         @Override
         public void onPostResult(Bitmap result) {
-            mPaintView.reset();
+            mHollowView.reset();
             activity.changeMainBitmap(result);
             backToMain();
         }
     }//end inner class
+
+
+
 
 }// end class

@@ -10,7 +10,7 @@ import com.xinlan.imageeditlibrary.editimage.EditImageActivity;
  */
 
 public abstract class BaseEditFragment extends Fragment {
-    protected EditImageActivity activity;
+    public EditImageActivity activity;
 
     protected EditImageActivity ensureEditActivity(){
         if(activity==null){

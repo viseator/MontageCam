@@ -2,30 +2,32 @@ package com.xinlan.imageeditlibrary.editimage.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.Shader;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.xinlan.imageeditlibrary.R;
+import com.xinlan.imageeditlibrary.editimage.fragment.HollowFragment;
 
 /**
  * Created by panyi on 17/2/11.
  */
 
 public class HollowView extends View {
+    private static final String TAG = "@vir HollowView";
+    private Context mContext;
     private Paint mPaint;
     private Bitmap mDrawBit;
-    private Paint mEraserPaint;
+
+
+    private HollowFragment mFragment;
 
     private Canvas mPaintCanvas = null;
 
@@ -34,6 +36,7 @@ public class HollowView extends View {
     private boolean eraser;
 
     private int mColor;
+    private boolean inited = false;
 
     public HollowView(Context context) {
         super(context);
@@ -72,32 +75,25 @@ public class HollowView extends View {
     }
 
     private void init(Context context) {
+        mContext = context;
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
 
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
-        Bitmap patternBitmap = BitmapFactory.decodeResource(getResources(), R.drawable
-                .fill_pattern);
-        BitmapShader patternBitmapShader = new BitmapShader(patternBitmap, Shader.TileMode
-                .REPEAT, Shader.TileMode.REPEAT);
-        mPaint.setColor(0xFFFFFFFF);
-        mPaint.setShader(patternBitmapShader);
+        mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+//        Bitmap patternBitmap = BitmapFactory.decodeResource(getResources(), R.drawable
+//                .fill_pattern);
+//        BitmapShader patternBitmapShader = new BitmapShader(patternBitmap, Shader.TileMode
+//                .REPEAT, Shader.TileMode.REPEAT);
+//        mPaint.setColor(0xFFFFFFFF);
+//        mPaint.setShader(patternBitmapShader);
 
-        mEraserPaint = new Paint();
-        mEraserPaint.setAlpha(0);
-        mEraserPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
-        mEraserPaint.setAntiAlias(true);
-        mEraserPaint.setDither(true);
-        mEraserPaint.setStyle(Paint.Style.STROKE);
-        mEraserPaint.setStrokeJoin(Paint.Join.ROUND);
-        mEraserPaint.setStrokeCap(Paint.Cap.ROUND);
-        mEraserPaint.setStrokeWidth(40);
     }
 
     public void setColor(int color) {
         this.mColor = color;
-        this.mPaint.setColor(mColor);
+//        this.mPaint.setColor(mColor);
     }
 
     public void setWidth(float width) {
@@ -107,6 +103,10 @@ public class HollowView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if (!inited) {
+            onFirstDraw();
+            inited = true;
+        }
         if (mDrawBit != null) {
             canvas.drawBitmap(mDrawBit, 0, 0, null);
         }
@@ -126,7 +126,7 @@ public class HollowView extends View {
                 break;
             case MotionEvent.ACTION_MOVE:
                 ret = true;
-                mPaintCanvas.drawLine(last_x, last_y, x, y, eraser ? mEraserPaint : mPaint);
+                mPaintCanvas.drawLine(last_x, last_y, x, y, mPaint);
                 last_x = x;
                 last_y = y;
                 this.postInvalidate();
@@ -139,12 +139,25 @@ public class HollowView extends View {
         return ret;
     }
 
+    private void onFirstDraw() {
+        Log.d(TAG, String.valueOf("onFirstDraw"));
+        mFragment.activity.mainImage.setVisibility(GONE);
+        mPaintCanvas.drawBitmap(mFragment.activity.mainBitmap, mFragment.activity.mainImage
+                .getImageViewMatrix(), null);
+    }
+
+
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         if (mDrawBit != null && !mDrawBit.isRecycled()) {
             mDrawBit.recycle();
+            inited = false;
         }
+    }
+
+    public void setInited(boolean inited) {
+        this.inited = inited;
     }
 
     public void setEraser(boolean eraser) {
@@ -162,5 +175,10 @@ public class HollowView extends View {
         }
 
         generatorBit();
+        inited = false;
+    }
+
+    public void setFragment(HollowFragment hollowFragment) {
+        mFragment = hollowFragment;
     }
 }//end class

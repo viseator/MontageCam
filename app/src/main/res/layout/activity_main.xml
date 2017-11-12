@@ -8,6 +8,7 @@
     android:background="@color/colorPrimary"
     tools:context="com.viseator.montagecam.CameraActivity">
 
+
     <com.google.android.cameraview.CameraView
         android:id="@+id/main_camera_view"
         android:layout_width="match_parent"
@@ -17,6 +18,13 @@
 
 
     </com.google.android.cameraview.CameraView>
+
+    <ImageView
+        android:id="@+id/hollow_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:src="@drawable/test_transparent"/>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/camera_toolbar"
@@ -28,12 +36,12 @@
     <ImageButton
         android:id="@+id/camera_shot_button"
         android:layout_width="wrap_content"
-        android:background="@null"
-        android:alpha="0.65"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:alpha="0.65"
+        android:background="@null"
         android:src="@drawable/ic_camera_enhance"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
