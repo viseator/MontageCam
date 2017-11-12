@@ -69,9 +69,8 @@ public class BitmapUtils {
         try {
             File imageFile = new File(imagePath);
             ExifInterface exif = new ExifInterface(imageFile.getAbsolutePath());
-            int orientation = exif.getAttributeInt(
-                    ExifInterface.TAG_ORIENTATION,
-                    ExifInterface.ORIENTATION_NORMAL);
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface
+                    .ORIENTATION_NORMAL);
             switch (orientation) {
                 case ExifInterface.ORIENTATION_ROTATE_270:
                     rotate = 270;
@@ -98,13 +97,11 @@ public class BitmapUtils {
         return new BitmapSize(options.outWidth, options.outHeight);
     }
 
-    public static BitmapSize getScaledSize(int originalWidth,
-                                           int originalHeight, int numPixels) {
+    public static BitmapSize getScaledSize(int originalWidth, int originalHeight, int numPixels) {
         float ratio = (float) originalWidth / originalHeight;
 
         int scaledHeight = (int) Math.sqrt((float) numPixels / ratio);
-        int scaledWidth = (int) (ratio * Math.sqrt((float) numPixels
-                / ratio));
+        int scaledWidth = (int) (ratio * Math.sqrt((float) numPixels / ratio));
 
         return new BitmapSize(scaledWidth, scaledHeight);
     }
@@ -137,8 +134,8 @@ public class BitmapUtils {
         Matrix matrix = new Matrix();// 矩阵
         matrix.reset();// 设置为单位矩阵
         matrix.postRotate(90);// 旋转90度
-        Bitmap bMapRotate = Bitmap.createBitmap(bMap, 0, 0, bMap.getWidth(),
-                bMap.getHeight(), matrix, true);
+        Bitmap bMapRotate = Bitmap.createBitmap(bMap, 0, 0, bMap.getWidth(), bMap.getHeight(),
+                matrix, true);
         bMap.recycle();
         bMap = null;
         System.gc();
@@ -156,14 +153,12 @@ public class BitmapUtils {
      * @return
      */
     public static Bitmap getBitmapFromView(View view) {
-        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(),
-                view.getHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap
+                .Config.ARGB_8888);
         Canvas canvas = new Canvas(returnedBitmap);
         Drawable bgDrawable = view.getBackground();
-        if (bgDrawable != null)
-            bgDrawable.draw(canvas);
-        else
-            canvas.drawColor(Color.WHITE);
+        if (bgDrawable != null) bgDrawable.draw(canvas);
+        else canvas.drawColor(Color.WHITE);
         view.draw(canvas);
         return returnedBitmap;
     }
@@ -188,8 +183,7 @@ public class BitmapUtils {
         } else if (w < h && h > hh) {// 如果高度高的话根据宽度固定大小缩放
             be = (int) (newOpts.outHeight / hh);
         }
-        if (be <= 0)
-            be = 1;
+        if (be <= 0) be = 1;
         newOpts.inSampleSize = be;// 设置缩放比例
         // 重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
         bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
@@ -201,7 +195,8 @@ public class BitmapUtils {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         image.compress(CompressFormat.JPEG, 100, baos);
-        if (baos.toByteArray().length / 1024 > 1024) {// 判断如果图片大于1M,进行压缩避免在生成图片（BitmapFactory.decodeStream）时溢出
+        if (baos.toByteArray().length / 1024 > 1024) {// 判断如果图片大于1M,进行压缩避免在生成图片（BitmapFactory
+            // .decodeStream）时溢出
             baos.reset();// 重置baos即清空baos
             image.compress(CompressFormat.JPEG, 50, baos);// 这里压缩50%，把压缩后的数据存放到baos中
         }
@@ -223,8 +218,7 @@ public class BitmapUtils {
         } else if (w < h && h > hh) {// 如果高度高的话根据宽度固定大小缩放
             be = (int) (newOpts.outHeight / hh);
         }
-        if (be <= 0)
-            be = 1;
+        if (be <= 0) be = 1;
         newOpts.inSampleSize = be;// 设置缩放比例
         // 重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
         isBm = new ByteArrayInputStream(baos.toByteArray());
@@ -245,7 +239,8 @@ public class BitmapUtils {
 //			System.out.println("options--->" + options + "    "
 //					+ (baos.toByteArray().length / 1024));
         }
-        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());// 把压缩后的数据baos存放到ByteArrayInputStream中
+        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());//
+        // 把压缩后的数据baos存放到ByteArrayInputStream中
         Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);// 把ByteArrayInputStream数据生成图片
         return bitmap;
     }
@@ -265,8 +260,7 @@ public class BitmapUtils {
         OutputStream stream = null;
         try {
             // 判断SDcard状态
-            if (!Environment.MEDIA_MOUNTED.equals(Environment
-                    .getExternalStorageState())) {
+            if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
                 // 错误提示
                 return false;
             }
@@ -319,58 +313,54 @@ public class BitmapUtils {
     /**
      * Resize a bitmap object to fit the passed width and height
      *
-     * @param input
-     *           The bitmap to be resized
-     * @param destWidth
-     *           Desired maximum width of the result bitmap
-     * @param destHeight
-     *           Desired maximum height of the result bitmap
+     * @param input      The bitmap to be resized
+     * @param destWidth  Desired maximum width of the result bitmap
+     * @param destHeight Desired maximum height of the result bitmap
      * @return A new resized bitmap
-     * @throws OutOfMemoryError
-     *            if the operation exceeds the available vm memory
+     * @throws OutOfMemoryError if the operation exceeds the available vm memory
      */
-    public static Bitmap resizeBitmap( final Bitmap input, int destWidth, int destHeight, int rotation ) throws OutOfMemoryError {
+    public static Bitmap resizeBitmap(final Bitmap input, int destWidth, int destHeight, int
+            rotation) throws OutOfMemoryError {
 
         int dstWidth = destWidth;
         int dstHeight = destHeight;
         final int srcWidth = input.getWidth();
         final int srcHeight = input.getHeight();
 
-        if ( rotation == 90 || rotation == 270 ) {
+        if (rotation == 90 || rotation == 270) {
             dstWidth = destHeight;
             dstHeight = destWidth;
         }
 
         boolean needsResize = false;
         float p;
-        if ( ( srcWidth > dstWidth ) || ( srcHeight > dstHeight ) ) {
+        if ((srcWidth > dstWidth) || (srcHeight > dstHeight)) {
             needsResize = true;
-            if ( ( srcWidth > srcHeight ) && ( srcWidth > dstWidth ) ) {
+            if ((srcWidth > srcHeight) && (srcWidth > dstWidth)) {
                 p = (float) dstWidth / (float) srcWidth;
-                dstHeight = (int) ( srcHeight * p );
+                dstHeight = (int) (srcHeight * p);
             } else {
                 p = (float) dstHeight / (float) srcHeight;
-                dstWidth = (int) ( srcWidth * p );
+                dstWidth = (int) (srcWidth * p);
             }
         } else {
             dstWidth = srcWidth;
             dstHeight = srcHeight;
         }
 
-        if ( needsResize || rotation != 0 ) {
+        if (needsResize || rotation != 0) {
             Bitmap output;
 
-            if ( rotation == 0 ) {
-                output = Bitmap.createScaledBitmap( input, dstWidth, dstHeight, true );
+            if (rotation == 0) {
+                output = Bitmap.createScaledBitmap(input, dstWidth, dstHeight, true);
             } else {
                 Matrix matrix = new Matrix();
-                matrix.postScale( (float) dstWidth / srcWidth, (float) dstHeight / srcHeight );
-                matrix.postRotate( rotation );
-                output = Bitmap.createBitmap( input, 0, 0, srcWidth, srcHeight, matrix, true );
+                matrix.postScale((float) dstWidth / srcWidth, (float) dstHeight / srcHeight);
+                matrix.postRotate(rotation);
+                output = Bitmap.createBitmap(input, 0, 0, srcWidth, srcHeight, matrix, true);
             }
             return output;
-        } else
-            return input;
+        } else return input;
     }
 
 
@@ -383,8 +373,9 @@ public class BitmapUtils {
      * @return
      * @throws OutOfMemoryError
      */
-    public static Bitmap resizeBitmap( final Bitmap input, int destWidth, int destHeight ) throws OutOfMemoryError {
-        return resizeBitmap( input, destWidth, destHeight, 0 );
+    public static Bitmap resizeBitmap(final Bitmap input, int destWidth, int destHeight) throws
+            OutOfMemoryError {
+        return resizeBitmap(input, destWidth, destHeight, 0);
     }
 
     public static Bitmap getSampledBitmap(String filePath, int reqWidth, int reqHeight) {
@@ -399,7 +390,8 @@ public class BitmapUtils {
     }
 
 
-    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int
+            reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;
         final int width = options.outWidth;
@@ -412,8 +404,8 @@ public class BitmapUtils {
 
             // Calculate the largest inSampleSize value that is a power of 2 and keeps both
             // height and width larger than the requested height and width.
-            while ((halfHeight / inSampleSize) >= reqHeight
-                    && (halfWidth / inSampleSize) >= reqWidth) {
+            while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >=
+                    reqWidth) {
                 inSampleSize *= 2;
             }
         }
@@ -433,7 +425,7 @@ public class BitmapUtils {
         }
         try {
             FileOutputStream out = new FileOutputStream(f);
-            bm.compress(Bitmap.CompressFormat.PNG, 90, out);
+            bm.compress(Bitmap.CompressFormat.PNG, 100, out);
             out.flush();
             out.close();
             return true;

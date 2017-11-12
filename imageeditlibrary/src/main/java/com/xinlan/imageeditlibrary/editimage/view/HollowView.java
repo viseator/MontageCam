@@ -72,6 +72,7 @@ public class HollowView extends View {
     private void generatorBit() {
         mDrawBit = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config
                 .ARGB_8888);
+        mDrawBit.setHasAlpha(true);
         mPaintCanvas = new Canvas(mDrawBit);
     }
 

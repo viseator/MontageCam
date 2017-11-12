@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -78,17 +80,13 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
         }//end if
     }
 
-    /**
-     * 返回主菜单
-     */
     public void backToMain() {
         activity.mainImage.setVisibility(View.VISIBLE);
         activity.mode = EditImageActivity.MODE_NONE;
         activity.bottomGallery.setCurrentItem(MainMenuFragment.INDEX);
         activity.mainImage.setVisibility(View.VISIBLE);
         activity.bannerFlipper.showPrevious();
-        activity.mFrameLayout.setBackgroundColor(getResources().getColor(R.color
-                .materialcolorpicker__black));
+        activity.mFrameLayout.setBackgroundColor(getResources().getColor(R.color.main_backgroud));
 
         this.mHollowView.setVisibility(View.GONE);
         this.mHollowView.setInited(false);
@@ -154,9 +152,6 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
                 .eraser_normal);
     }
 
-    /**
-     * 保存涂鸦
-     */
     public void savePaintImage() {
         if (mSavePaintImageTask != null && !mSavePaintImageTask.isCancelled()) {
             mSavePaintImageTask.cancel(true);
@@ -174,10 +169,6 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
         }
     }
 
-    /**
-     * 文字合成任务
-     * 合成最终图片
-     */
     private final class SaveCustomPaintTask extends StickerTask {
 
         public SaveCustomPaintTask(EditImageActivity activity) {
@@ -192,6 +183,7 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
             int dy = (int) f[Matrix.MTRANS_Y];
             float scale_x = f[Matrix.MSCALE_X];
             float scale_y = f[Matrix.MSCALE_Y];
+            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
             canvas.save();
             canvas.translate(dx, dy);
             canvas.scale(scale_x, scale_y);

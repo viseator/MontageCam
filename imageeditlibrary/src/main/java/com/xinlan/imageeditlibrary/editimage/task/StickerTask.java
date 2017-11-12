@@ -43,6 +43,7 @@ public abstract class StickerTask extends AsyncTask<Bitmap, Void, Bitmap> {
         Matrix touchMatrix = mContext.mainImage.getImageViewMatrix();
 
         Bitmap resultBit = Bitmap.createBitmap(params[0]).copy(Bitmap.Config.ARGB_8888, true);
+        resultBit.setHasAlpha(true);
         Canvas canvas = new Canvas(resultBit);
 
         float[] data = new float[9];

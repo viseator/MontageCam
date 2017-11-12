@@ -73,7 +73,7 @@
         android:layout_height="fill_parent"
         android:layout_above="@id/bottom_gallery"
         android:layout_below="@id/banner"
-        android:background="#000000"
+        android:background="@color/main_backgroud"
 
         >
 
