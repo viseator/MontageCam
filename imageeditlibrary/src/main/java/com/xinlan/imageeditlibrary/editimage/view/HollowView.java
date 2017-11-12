@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.xinlan.imageeditlibrary.R;
 import com.xinlan.imageeditlibrary.editimage.fragment.HollowFragment;
 
 /**
@@ -144,6 +145,8 @@ public class HollowView extends View {
         mFragment.activity.mainImage.setVisibility(GONE);
         mPaintCanvas.drawBitmap(mFragment.activity.mainBitmap, mFragment.activity.mainImage
                 .getImageViewMatrix(), null);
+        mFragment.activity.mFrameLayout.setBackground(mContext.getDrawable(R.drawable
+                .repeat_fill_pattern));
     }
 
 
@@ -160,10 +163,6 @@ public class HollowView extends View {
         this.inited = inited;
     }
 
-    public void setEraser(boolean eraser) {
-        this.eraser = eraser;
-        mPaint.setColor(eraser ? Color.TRANSPARENT : mColor);
-    }
 
     public Bitmap getPaintBit() {
         return mDrawBit;

@@ -87,9 +87,12 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
         activity.bottomGallery.setCurrentItem(MainMenuFragment.INDEX);
         activity.mainImage.setVisibility(View.VISIBLE);
         activity.bannerFlipper.showPrevious();
+        activity.mFrameLayout.setBackgroundColor(getResources().getColor(R.color
+                .materialcolorpicker__black));
 
         this.mHollowView.setVisibility(View.GONE);
         this.mHollowView.setInited(false);
+
     }
 
     public void onShow() {
@@ -149,7 +152,6 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
     private void updateEraserView() {
         mEraserView.setImageResource(isEraser ? R.drawable.eraser_seleced : R.drawable
                 .eraser_normal);
-        mHollowView.setEraser(isEraser);
     }
 
     /**
@@ -207,8 +209,6 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
             backToMain();
         }
     }//end inner class
-
-
 
 
 }// end class

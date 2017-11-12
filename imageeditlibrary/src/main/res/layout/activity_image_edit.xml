@@ -73,7 +73,9 @@
         android:layout_height="fill_parent"
         android:layout_above="@id/bottom_gallery"
         android:layout_below="@id/banner"
-        android:background="#000000">
+        android:background="#000000"
+
+        >
 
         <com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouch
             android:id="@+id/main_image"
