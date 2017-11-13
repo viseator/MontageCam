@@ -18,7 +18,7 @@ import android.widget.Toast
 import butterknife.BindView
 import com.google.android.cameraview.AspectRatio
 import com.google.android.cameraview.CameraView
-import com.viseator.montagecam.view.TestHollowImageView
+import com.viseator.montagecam.view.HollowImageView
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity
 import com.xinlan.imageeditlibrary.editimage.utils.FileUtil
 import java.io.File
@@ -35,7 +35,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     @BindView(R.id.main_camera_view) lateinit var mCameraView: CameraView
     @BindView(R.id.camera_toolbar) lateinit var mToolBar: Toolbar
     @BindView(R.id.camera_shot_button) lateinit var mShotButton: ImageButton
-    @BindView(R.id.hollow_image) lateinit var mHollowImageView: TestHollowImageView
+    @BindView(R.id.hollow_image) lateinit var mHollowImageView: HollowImageView
 
     private val FLASH_OPTIONS = intArrayOf(CameraView.FLASH_AUTO, CameraView.FLASH_OFF,
             CameraView.FLASH_ON)
@@ -47,6 +47,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
             R.string.flash_on)
     private val FRAGMENT_DIALOG = "dialog"
     private var mCurrentFlash: Int = 0
+    private var inHollowMode = false
 
     private var mBackgroundHandler: Handler? = null
     private val mCallback = object : CameraView.Callback() {
@@ -82,9 +83,17 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
                     }
                 }
                 FileUtil.ablumUpdate(this@CameraActivity, file.absolutePath)
-                startImageEdit(file)
+                if (inHollowMode) {
+                    startComposeImage(file)
+                } else {
+                    startImageEdit(file)
+                }
             }
         }
+
+    }
+
+    fun startComposeImage(file: File) {
 
     }
 
@@ -141,11 +150,17 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         })
         val options = BitmapFactory.Options()
         options.inScaled = false
-//        mHollowImageView.bitmap = BitmapFactory.decodeResource(resources,
-//                R.drawable.t5, options)
-        val file = File(Environment.getExternalStoragePublicDirectory(Environment
-                .DIRECTORY_PICTURES),"picture_output.png")
+        //        mHollowImageView.bitmap = BitmapFactory.decodeResource(resources,
+        //                R.drawable.t5, options)
+        val file = File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                "picture_output.png")
+        initHollowView(file)
+    }
+
+    fun initHollowView(file: File) {
         mHollowImageView.bitmap = BitmapFactory.decodeFile(file.absolutePath)
+        inHollowMode = true
     }
 
     override fun init() {

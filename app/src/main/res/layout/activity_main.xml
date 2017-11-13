@@ -20,7 +20,7 @@
     </com.google.android.cameraview.CameraView>
 
 
-    <com.viseator.montagecam.view.TestHollowImageView
+    <com.viseator.montagecam.view.HollowImageView
         android:id="@+id/hollow_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
