@@ -141,11 +141,11 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         })
         val options = BitmapFactory.Options()
         options.inScaled = false
-        mHollowImageView.bitmap = BitmapFactory.decodeResource(resources,
-                R.drawable.t5, options)
-        //        mHollowImageView.displayType = ImageViewTouchBase.DisplayType.FIT_TO_SCREEN
-        //        mHollowImageView.imageBitmap = BitmapFactory.decodeResource(resources,
-        //                R.drawable.test_transparent)
+//        mHollowImageView.bitmap = BitmapFactory.decodeResource(resources,
+//                R.drawable.t5, options)
+        val file = File(Environment.getExternalStoragePublicDirectory(Environment
+                .DIRECTORY_PICTURES),"picture_output.png")
+        mHollowImageView.bitmap = BitmapFactory.decodeFile(file.absolutePath)
     }
 
     override fun init() {

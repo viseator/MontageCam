@@ -95,7 +95,7 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
 
     public void onShow() {
         activity.mode = EditImageActivity.MODE_HOLLOW;
-        activity.mainImage.setImageBitmap(activity.mainBitmap);
+//        activity.mainImage.setImageBitmap(activity.mainBitmap);
         activity.bannerFlipper.showNext();
         this.mHollowView.setVisibility(View.VISIBLE);
     }

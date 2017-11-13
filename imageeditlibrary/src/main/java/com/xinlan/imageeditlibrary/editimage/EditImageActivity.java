@@ -294,7 +294,6 @@ public class EditImageActivity extends BaseActivity {
             mainBitmap.setHasAlpha(true);
             mainImage.setImageBitmap(result);
             mainImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
-            // mainImage.setDisplayType(DisplayType.FIT_TO_SCREEN);
         }
     }// end inner class
 
