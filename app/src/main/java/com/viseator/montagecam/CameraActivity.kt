@@ -142,7 +142,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         val options = BitmapFactory.Options()
         options.inScaled = false
         mHollowImageView.bitmap = BitmapFactory.decodeResource(resources,
-                R.drawable.test1, options)
+                R.drawable.t5, options)
         //        mHollowImageView.displayType = ImageViewTouchBase.DisplayType.FIT_TO_SCREEN
         //        mHollowImageView.imageBitmap = BitmapFactory.decodeResource(resources,
         //                R.drawable.test_transparent)

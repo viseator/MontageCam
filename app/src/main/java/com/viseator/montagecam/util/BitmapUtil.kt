@@ -13,6 +13,7 @@ import com.viseator.montagecam.entity.BitmapInfo
 class BitmapUtil {
     companion object {
         val TAG = "@vir BitmapUtil"
+        val paintColor = Color.WHITE
         fun bitmapFixToScreen(bitmap: Bitmap, h: Int, w: Int): BitmapInfo {
             val height = bitmap.height
             val width = bitmap.width
@@ -22,10 +23,30 @@ class BitmapUtil {
             val mainScale = Math.min(scaleX, scaleY)
             Log.d(TAG, "$scaleX : $scaleY - $mainScale")
             val fitX = mainScale == scaleX
-            if (mainScale <= 1) {
-                return handleScaleIn(bitmap, mainScale, h, w, fitX)
+            return if (mainScale <= 1) {
+                handleScaleIn(bitmap, mainScale, h, w, fitX)
+            } else {
+                handleScaleOut(bitmap, mainScale, h, w)
             }
-            return BitmapInfo(bitmap, 0.0f)
+        }
+
+        fun handleScaleOut(bitmap: Bitmap, scale: Float, h: Int, w: Int): BitmapInfo {
+            val screenBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+            screenBitmap.density = bitmap.density
+            val canvas = Canvas(screenBitmap)
+            val paint = Paint()
+            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
+            paint.color = paintColor
+            val dX = (screenBitmap.width - bitmap.width) / 2.toFloat()
+            val dY = (screenBitmap.height - bitmap.height) / 2.toFloat()
+            canvas.drawRect(0f, 0f, screenBitmap.width.toFloat(), dY, paint)
+            canvas.drawRect(0f, dY + bitmap.height, screenBitmap.width.toFloat(),
+                    screenBitmap.height.toFloat(), paint)
+            canvas.drawRect(0f, 0f, dX, screenBitmap.height.toFloat(), paint)
+            canvas.drawRect(dX + bitmap.width, 0f, screenBitmap.width.toFloat(),
+                    screenBitmap.height.toFloat(), paint)
+            canvas.drawBitmap(bitmap, dX, dY, null)
+            return BitmapInfo(screenBitmap, scale)
         }
 
         fun handleScaleIn(bitmap: Bitmap, scale: Float, h: Int, w: Int, fitX: Boolean): BitmapInfo {
@@ -40,7 +61,7 @@ class BitmapUtil {
             val canvas = Canvas(screenBitmap)
             val paint = Paint()
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
-            paint.color = Color.WHITE
+            paint.color = paintColor
             if (fitX) {
                 val d = (screenBitmap.height - bitmap.height) / 2.toFloat()
                 canvas.drawRect(0f, 0f, screenBitmap.width.toFloat(), d, paint)

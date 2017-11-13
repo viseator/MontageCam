@@ -40,7 +40,9 @@ class TestHollowImageView : View {
             return
         }
         canvas.save()
-        canvas.scale(scale!!,scale!!)
+        if(scale!! < 1){
+            canvas.scale(scale!!,scale!!)
+        }
         canvas.drawBitmap(bitmap, 0f, 0f, null)
         canvas.restore()
     }
