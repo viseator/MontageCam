@@ -394,24 +394,22 @@ public class EditImageActivity extends BaseActivity {
     private final class SaveBtnClick implements OnClickListener {
         @Override
         public void onClick(View v) {
-//            if (mOpTimes == 0) {//并未修改图片
-//                onSaveTaskDone();
-//            } else {
-            doSaveImage();
-//            }
+            if (mOpTimes == 0) {//并未修改图片
+                onSaveTaskDone();
+            } else {
+                doSaveImage();
+            }
         }
     }// end inner class
 
     protected void doSaveImage() {
-//        if (mOpTimes <= 0) return;
+        if (mOpTimes <= 0) return;
 
         if (mSaveImageTask != null) {
             mSaveImageTask.cancel(true);
         }
 
         mSaveImageTask = new SaveImageTask();
-        Log.d(TAG, String.valueOf(mainBitmap.getHeight()) + "x" + String.valueOf(mainBitmap
-                .getWidth()));
         mSaveImageTask.execute(mainBitmap);
     }
 

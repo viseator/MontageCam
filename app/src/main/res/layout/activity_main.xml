@@ -19,12 +19,13 @@
 
     </com.google.android.cameraview.CameraView>
 
-    <ImageView
+
+    <com.viseator.montagecam.view.TestHollowImageView
         android:id="@+id/hollow_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:src="@drawable/test_transparent"/>
+        android:visibility="visible"/>
+
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/camera_toolbar"

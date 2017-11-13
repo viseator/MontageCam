@@ -3,6 +3,7 @@ package com.viseator.montagecam
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
@@ -19,8 +20,12 @@ import android.widget.Toast
 import butterknife.BindView
 import com.google.android.cameraview.AspectRatio
 import com.google.android.cameraview.CameraView
+import com.viseator.montagecam.view.HollowImageView
+import com.viseator.montagecam.view.TestHollowImageView
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity
 import com.xinlan.imageeditlibrary.editimage.utils.FileUtil
+import com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouchBase
+import org.jetbrains.anko.imageBitmap
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -35,6 +40,8 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     @BindView(R.id.main_camera_view) lateinit var mCameraView: CameraView
     @BindView(R.id.camera_toolbar) lateinit var mToolBar: Toolbar
     @BindView(R.id.camera_shot_button) lateinit var mShotButton: ImageButton
+    @BindView(R.id.hollow_image) lateinit var mHollowImageView: TestHollowImageView
+
     private val FLASH_OPTIONS = intArrayOf(CameraView.FLASH_AUTO, CameraView.FLASH_OFF,
             CameraView.FLASH_ON)
 
@@ -137,6 +144,13 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         mShotButton.setOnClickListener({
             mCameraView.takePicture()
         })
+        val options = BitmapFactory.Options()
+        options.inScaled = false
+        mHollowImageView.mBitmap = BitmapFactory.decodeResource(resources,
+                R.drawable.test1, options)
+        //        mHollowImageView.displayType = ImageViewTouchBase.DisplayType.FIT_TO_SCREEN
+        //        mHollowImageView.imageBitmap = BitmapFactory.decodeResource(resources,
+        //                R.drawable.test_transparent)
     }
 
     override fun init() {

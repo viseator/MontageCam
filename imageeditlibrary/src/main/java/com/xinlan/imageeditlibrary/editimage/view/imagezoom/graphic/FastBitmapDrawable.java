@@ -1,6 +1,7 @@
 package com.xinlan.imageeditlibrary.editimage.view.imagezoom.graphic;
 
 import java.io.InputStream;
+
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,72 +14,72 @@ import android.graphics.drawable.Drawable;
 /**
  * Fast bitmap drawable. Does not support states. it only
  * support alpha and colormatrix
- * @author alessandro
  *
+ * @author alessandro
  */
 public class FastBitmapDrawable extends Drawable implements IBitmapDrawable {
 
-	protected Bitmap mBitmap;
-	protected Paint mPaint;
+    protected Bitmap mBitmap;
+    protected Paint mPaint;
 
-	public FastBitmapDrawable( Bitmap b ) {
-		mBitmap = b;
-		mPaint = new Paint();
-		mPaint.setDither( true );
-		mPaint.setFilterBitmap( true );
-	}
-	
-	public FastBitmapDrawable( Resources res, InputStream is ){
-		this(BitmapFactory.decodeStream(is));
-	}
+    public FastBitmapDrawable(Bitmap b) {
+        mBitmap = b;
+        mPaint = new Paint();
+        mPaint.setDither(true);
+        mPaint.setFilterBitmap(true);
+    }
 
-	@Override
-	public void draw( Canvas canvas ) {
-		canvas.drawBitmap( mBitmap, 0.0f, 0.0f, mPaint );
-	}
+    public FastBitmapDrawable(Resources res, InputStream is) {
+        this(BitmapFactory.decodeStream(is));
+    }
 
-	@Override
-	public int getOpacity() {
-		return PixelFormat.TRANSLUCENT;
-	}
+    @Override
+    public void draw(Canvas canvas) {
+        canvas.drawBitmap(mBitmap, 0.0f, 0.0f, mPaint);
+    }
 
-	@Override
-	public void setAlpha( int alpha ) {
-		mPaint.setAlpha( alpha );
-	}
+    @Override
+    public int getOpacity() {
+        return PixelFormat.TRANSLUCENT;
+    }
 
-	@Override
-	public void setColorFilter( ColorFilter cf ) {
-		mPaint.setColorFilter( cf );
-	}
+    @Override
+    public void setAlpha(int alpha) {
+        mPaint.setAlpha(alpha);
+    }
 
-	@Override
-	public int getIntrinsicWidth() {
-		return mBitmap.getWidth();
-	}
+    @Override
+    public void setColorFilter(ColorFilter cf) {
+        mPaint.setColorFilter(cf);
+    }
 
-	@Override
-	public int getIntrinsicHeight() {
-		return mBitmap.getHeight();
-	}
+    @Override
+    public int getIntrinsicWidth() {
+        return mBitmap.getWidth();
+    }
 
-	@Override
-	public int getMinimumWidth() {
-		return mBitmap.getWidth();
-	}
+    @Override
+    public int getIntrinsicHeight() {
+        return mBitmap.getHeight();
+    }
 
-	@Override
-	public int getMinimumHeight() {
-		return mBitmap.getHeight();
-	}
-	
-	public void setAntiAlias( boolean value ){
-		mPaint.setAntiAlias( value );
-		invalidateSelf();
-	}
+    @Override
+    public int getMinimumWidth() {
+        return mBitmap.getWidth();
+    }
 
-	@Override
-	public Bitmap getBitmap() {
-		return mBitmap;
-	}
+    @Override
+    public int getMinimumHeight() {
+        return mBitmap.getHeight();
+    }
+
+    public void setAntiAlias(boolean value) {
+        mPaint.setAntiAlias(value);
+        invalidateSelf();
+    }
+
+    @Override
+    public Bitmap getBitmap() {
+        return mBitmap;
+    }
 }
