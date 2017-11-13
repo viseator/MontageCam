@@ -12,6 +12,7 @@ import com.viseator.montagecam.util.BitmapUtil
  * Wu Di
  * viseator@gmail.com
  */
+data class BitmapInfo(val bitmap: Bitmap,val scale: Float, val dX: Float, val dY: Float)
 class HollowImageView : View {
     val TAG = "@vir TestHollow"
 
@@ -20,6 +21,9 @@ class HollowImageView : View {
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs,
             defStyleAttr)
 
+    var dX: Float? = null
+    var dY: Float? = null
+
     var scale: Float? = null
     var bitmap: Bitmap? = null
         set(value) {
@@ -27,21 +31,23 @@ class HollowImageView : View {
                 return
             }
             val metrics = context.resources.displayMetrics
-            val bitmapInfo = BitmapUtil.bitmapFixToScreen(value, metrics.heightPixels, metrics
-            .widthPixels)
+            val bitmapInfo = BitmapUtil.bitmapFixToScreen(value, metrics.heightPixels,
+                    metrics.widthPixels)
             field = bitmapInfo.bitmap
             scale = bitmapInfo.scale
+            dX = bitmapInfo.dX
+            dY = bitmapInfo.dY
             value.recycle()
         }
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        if (canvas == null ) {
+        if (canvas == null) {
             return
         }
         canvas.save()
-        if(scale!! < 1){
-            canvas.scale(scale!!,scale!!)
+        if (scale!! < 1) {
+            canvas.scale(scale!!, scale!!)
         }
         canvas.drawBitmap(bitmap, 0f, 0f, null)
         canvas.restore()

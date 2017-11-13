@@ -18,8 +18,10 @@ import android.widget.Toast
 import butterknife.BindView
 import com.google.android.cameraview.AspectRatio
 import com.google.android.cameraview.CameraView
+import com.viseator.montagecam.util.BitmapUtil
 import com.viseator.montagecam.view.HollowImageView
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity
+import com.xinlan.imageeditlibrary.editimage.utils.BitmapUtils
 import com.xinlan.imageeditlibrary.editimage.utils.FileUtil
 import java.io.File
 import java.io.FileOutputStream
@@ -94,7 +96,19 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     }
 
     fun startComposeImage(file: File) {
-
+        val metrics = resources.displayMetrics
+        val options = BitmapFactory.Options()
+        options.inScaled = false
+        val bgImg = BitmapFactory.decodeFile(file.absolutePath, options)
+        val resultBitmap = BitmapUtil.composeBitmap(bgImg, mHollowImageView.bitmap!!,
+                metrics.widthPixels, metrics.heightPixels, mHollowImageView.scale!!,
+                mHollowImageView.dX!!, mHollowImageView.dY!!)
+        val fileOutput = File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                "picture_output.png")
+        BitmapUtils.saveBitmap(resultBitmap, fileOutput.absolutePath)
+        FileUtil.ablumUpdate(this, fileOutput.absolutePath)
+        resultBitmap.recycle()
     }
 
     fun startImageEdit(file: File) {
@@ -154,7 +168,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         //                R.drawable.t5, options)
         val file = File(
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                "picture_output.png")
+                "picture.png")
         initHollowView(file)
     }
 

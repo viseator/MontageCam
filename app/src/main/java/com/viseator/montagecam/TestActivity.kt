@@ -12,13 +12,13 @@ class TestActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test)
-        //        val file = File(
-        //                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-        //                "t5.png")
-        //        val outputFile = File(
-        //                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-        //                "picture_output.png")
-        //        EditImageActivity.start(this, file.absolutePath, outputFile.absolutePath, 1)
+//                val file = File(
+//                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+//                        "t5.png")
+//                val outputFile = File(
+//                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+//                        "picture.png")
+//                EditImageActivity.start(this, file.absolutePath, outputFile.absolutePath, 1)
         startActivity<CameraActivity>()
         finish()
     }
