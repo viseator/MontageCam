@@ -1,7 +1,6 @@
 package com.viseator.montagecam
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -14,18 +13,14 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
 import butterknife.BindView
 import com.google.android.cameraview.AspectRatio
 import com.google.android.cameraview.CameraView
-import com.viseator.montagecam.view.HollowImageView
 import com.viseator.montagecam.view.TestHollowImageView
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity
 import com.xinlan.imageeditlibrary.editimage.utils.FileUtil
-import com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouchBase
-import org.jetbrains.anko.imageBitmap
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -146,7 +141,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         })
         val options = BitmapFactory.Options()
         options.inScaled = false
-        mHollowImageView.mBitmap = BitmapFactory.decodeResource(resources,
+        mHollowImageView.bitmap = BitmapFactory.decodeResource(resources,
                 R.drawable.test1, options)
         //        mHollowImageView.displayType = ImageViewTouchBase.DisplayType.FIT_TO_SCREEN
         //        mHollowImageView.imageBitmap = BitmapFactory.decodeResource(resources,

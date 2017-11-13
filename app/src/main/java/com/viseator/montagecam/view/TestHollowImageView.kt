@@ -4,8 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.util.AttributeSet
-import android.util.DisplayMetrics
-import android.util.Log
 import android.view.View
 import com.viseator.montagecam.util.BitmapUtil
 
@@ -22,25 +20,28 @@ class TestHollowImageView : View {
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs,
             defStyleAttr)
 
-    var mBitmap: Bitmap? = null
+    var scale: Float? = null
+    var bitmap: Bitmap? = null
         set(value) {
             if (value == null) {
                 return
             }
             val metrics = context.resources.displayMetrics
-            field = BitmapUtil.bitmapFixToScreen(value, metrics.heightPixels, metrics.widthPixels)
+            val bitmapInfo = BitmapUtil.bitmapFixToScreen(value, metrics.heightPixels, metrics
+            .widthPixels)
+            field = bitmapInfo.bitmap
+            scale = bitmapInfo.scale
             value.recycle()
         }
-    //    var mBitmap: Bitmap? = null
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        if (canvas == null) {
+        if (canvas == null ) {
             return
         }
         canvas.save()
-        canvas.scale(0.46153846f, 0.46153846f)
-        canvas.drawBitmap(mBitmap, 0f, 0f, null)
+        canvas.scale(scale!!,scale!!)
+        canvas.drawBitmap(bitmap, 0f, 0f, null)
         canvas.restore()
     }
 }

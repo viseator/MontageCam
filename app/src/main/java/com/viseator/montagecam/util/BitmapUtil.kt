@@ -2,6 +2,7 @@ package com.viseator.montagecam.util
 
 import android.graphics.*
 import android.util.Log
+import com.viseator.montagecam.entity.BitmapInfo
 
 /**
  * Created by viseator on 11/13/17.
@@ -12,7 +13,7 @@ import android.util.Log
 class BitmapUtil {
     companion object {
         val TAG = "@vir BitmapUtil"
-        fun bitmapFixToScreen(bitmap: Bitmap, h: Int, w: Int): Bitmap {
+        fun bitmapFixToScreen(bitmap: Bitmap, h: Int, w: Int): BitmapInfo {
             val height = bitmap.height
             val width = bitmap.width
             Log.d(TAG, "raw:$width x $height")
@@ -24,10 +25,10 @@ class BitmapUtil {
             if (mainScale <= 1) {
                 return handleScaleIn(bitmap, mainScale, h, w, fitX)
             }
-            return bitmap
+            return BitmapInfo(bitmap, 0.0f)
         }
 
-        fun handleScaleIn(bitmap: Bitmap, scale: Float, h: Int, w: Int, fitX: Boolean): Bitmap {
+        fun handleScaleIn(bitmap: Bitmap, scale: Float, h: Int, w: Int, fitX: Boolean): BitmapInfo {
             val screenBitmap = if (fitX) {
                 Bitmap.createBitmap(bitmap.width,
                         (bitmap.width / w.toFloat() * h.toFloat()).toInt(), Bitmap.Config.ARGB_8888)
@@ -35,33 +36,28 @@ class BitmapUtil {
                 Bitmap.createBitmap((bitmap.height / h.toFloat() * w.toFloat()).toInt(),
                         bitmap.height, Bitmap.Config.ARGB_8888)
             }
+            screenBitmap.density = bitmap.density
             val canvas = Canvas(screenBitmap)
             val paint = Paint()
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
-            paint.color = Color.BLACK
-            val delta: Float = if (fitX) {
+            paint.color = Color.WHITE
+            if (fitX) {
                 val d = (screenBitmap.height - bitmap.height) / 2.toFloat()
                 canvas.drawRect(0f, 0f, screenBitmap.width.toFloat(), d, paint)
+                canvas.drawBitmap(bitmap, 0f, d, null)
                 canvas.drawRect(0f, d + bitmap.height, screenBitmap.width.toFloat(),
                         screenBitmap.height.toFloat(), paint)
-                d
             } else {
                 val d = (screenBitmap.width - bitmap.width) / 2.toFloat()
                 canvas.drawRect(0f, 0f, d, screenBitmap.height.toFloat(), paint)
+                canvas.drawBitmap(bitmap, d, 0f, null)
                 canvas.drawRect(d + bitmap.width, 0f, screenBitmap.width.toFloat(),
                         screenBitmap.height.toFloat(), paint)
-                d
             }
-            if (fitX) {
-                canvas.translate(0f, delta)
-            } else {
-                canvas.translate(delta, 0f)
-            }
-            canvas.drawBitmap(bitmap, 0f, 0f, null)
             Log.d(TAG, "canvas:${canvas.width}x${canvas.height}")
             Log.d(TAG, "bitmap:${bitmap.width}x${bitmap.height}")
             Log.d(TAG, "screenBitmap:${screenBitmap.width}x${screenBitmap.height}")
-            return screenBitmap
+            return BitmapInfo(screenBitmap, scale)
         }
     }
 }
