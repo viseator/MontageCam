@@ -14,10 +14,10 @@ class TestActivity : AppCompatActivity() {
         setContentView(R.layout.activity_test)
 //                val file = File(
 //                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-//                        "t5.png")
+//                        "t1.png")
 //                val outputFile = File(
 //                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-//                        "picture.png")
+//                        "picture_test1.png")
 //                EditImageActivity.start(this, file.absolutePath, outputFile.absolutePath, 1)
         startActivity<CameraActivity>()
         finish()

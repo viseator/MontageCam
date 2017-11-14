@@ -78,9 +78,7 @@ class BitmapUtil {
                         screenBitmap.height.toFloat(), paint)
                 d
             }
-            Log.d(TAG, "canvas:${canvas.width}x${canvas.height}")
-            Log.d(TAG, "bitmap:${bitmap.width}x${bitmap.height}")
-            Log.d(TAG, "screenBitmap:${screenBitmap.width}x${screenBitmap.height}")
+            Log.d(TAG, "afterScaleIn:${screenBitmap.width}x${screenBitmap.height}")
             return if (fitX) {
                 BitmapInfo(screenBitmap, scale, 0f, delta)
             } else {
@@ -93,22 +91,41 @@ class BitmapUtil {
             val bgInfo = bitmapFixToScreen(bgImg, h, w)
             bgImg.recycle()
             val bgScale = bgInfo.scale
-            val result = Bitmap.createBitmap(fgImg.width, fgImg.height, Bitmap.Config.ARGB_8888)
+            val deltaScale = fgImg.width / bgInfo.bitmap.width.toFloat()
+            Log.d(TAG, "fgImg: ${fgImg.width}x${fgImg.height}")
+            Log.d(TAG, "deltaScale: $deltaScale")
+            var result = Bitmap.createBitmap(fgImg.width, fgImg.height, Bitmap.Config.ARGB_8888)
+            Log.d(TAG, "result:${result.width}x${result.height}")
+            Log.d(TAG, "delta: $dX $dY")
             val canvas = Canvas(result)
             // todo: handle situation when bitmap are in different size
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
             canvas.save()
-//            canvas.scale(bgScale, bgScale)
+            canvas.scale(deltaScale, deltaScale)
             canvas.drawBitmap(bgInfo.bitmap, 0f, 0f, null)
             canvas.restore()
 
             canvas.save()
-//            canvas.scale(fgScale, fgScale)
-            canvas.drawBitmap(fgImg, 0f, 0f, null)
+            //            canvas.scale(fgScale, fgScale)
+            val paint = Paint()
+            //            paint.alpha = 50
+            canvas.drawBitmap(fgImg, 0f, 0f, paint)
             canvas.restore()
             // todo: cut out the region outside of desired result
             bgInfo.bitmap.recycle()
+            result = resizeBitmap(result, dX, dY)
+            return result
+        }
 
+        fun resizeBitmap(src: Bitmap, dX: Float, dY: Float): Bitmap {
+            if (dX == 0f && dY == 0f) {
+                return src
+            }
+            val result = Bitmap.createBitmap(src.width - 2 * dX.toInt(),
+                    src.height - 2 * dY.toInt(), Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(result)
+            canvas.drawBitmap(src, -dX, -dY, null)
+            src.recycle()
             return result
         }
     }

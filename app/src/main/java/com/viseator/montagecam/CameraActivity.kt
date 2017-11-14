@@ -23,6 +23,7 @@ import com.viseator.montagecam.view.HollowImageView
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity
 import com.xinlan.imageeditlibrary.editimage.utils.BitmapUtils
 import com.xinlan.imageeditlibrary.editimage.utils.FileUtil
+import org.jetbrains.anko.toast
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -55,11 +56,11 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     private val mCallback = object : CameraView.Callback() {
 
         override fun onCameraOpened(cameraView: CameraView) {
-            Log.d(TAG, "onCameraOpened")
+//            Log.d(TAG, "onCameraOpened")
         }
 
         override fun onCameraClosed(cameraView: CameraView) {
-            Log.d(TAG, "onCameraClosed")
+//            Log.d(TAG, "onCameraClosed")
         }
 
         override fun onPictureTaken(cameraView: CameraView, data: ByteArray) {
@@ -85,6 +86,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
                     }
                 }
                 FileUtil.ablumUpdate(this@CameraActivity, file.absolutePath)
+                toast("Picture Shoot")
                 if (inHollowMode) {
                     startComposeImage(file)
                 } else {
@@ -168,7 +170,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         //                R.drawable.t5, options)
         val file = File(
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                "picture.png")
+                "test1.png")
         initHollowView(file)
     }
 
