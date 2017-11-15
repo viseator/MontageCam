@@ -64,6 +64,16 @@ public class BitmapUtils {
 //        }
 //    }
 
+    public static Bitmap scaleBitmap(Bitmap bitmap, int h, int w) {
+        int height = bitmap.getHeight();
+        int width = bitmap.getWidth();
+        float scaleX = w / (float) width;
+        float scaleY = h / (float) height;
+        float mainScale = Math.min(scaleX, scaleY);
+        return Bitmap.createScaledBitmap(bitmap, (int) (width * mainScale), (int) (height *
+                mainScale), true);
+    }
+
     public static int getOrientation(final String imagePath) {
         int rotate = 0;
         try {
@@ -425,7 +435,7 @@ public class BitmapUtils {
         }
         try {
             FileOutputStream out = new FileOutputStream(f);
-            bm.compress(Bitmap.CompressFormat.PNG, 100, out);
+            bm.compress(Bitmap.CompressFormat.PNG, 80, out);
             out.flush();
             out.close();
             return true;

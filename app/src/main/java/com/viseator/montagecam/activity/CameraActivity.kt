@@ -171,7 +171,6 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         AndroidNetworking.download(resources.getString(R.string.server_download) + mToken + ".png",
                 file.parent, "download.png").build().setDownloadProgressListener(
                 { bytesDownloaded, totalBytes ->
-                    Log.d(TAG, "$bytesDownloaded / $totalBytes")
                     dialog.progress = (bytesDownloaded / totalBytes.toFloat() * 100).toInt()
                 }).startDownload(object : DownloadListener {
             override fun onError(anError: ANError?) {

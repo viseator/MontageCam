@@ -14,6 +14,9 @@ class BitmapUtil {
     companion object {
         val TAG = "@vir BitmapUtil"
         val paintColor = Color.WHITE
+
+
+
         fun bitmapFixToScreen(bitmap: Bitmap, h: Int, w: Int): BitmapInfo {
             val height = bitmap.height
             val width = bitmap.width
