@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -26,5 +27,8 @@ dependencies {
     implementation 'com.android.support:design:26.1.0'
     compile 'com.amitshekhar.android:android-networking:1.0.0'
     compile 'com.amitshekhar.android:jackson-android-networking:1.0.0'
-
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }

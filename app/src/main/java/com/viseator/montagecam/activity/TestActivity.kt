@@ -11,7 +11,6 @@ import java.io.File
 import com.jacksonandroidnetworking.JacksonParserFactory
 
 
-
 class TestActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,11 +21,9 @@ class TestActivity : AppCompatActivity() {
         val file = File(
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
                 "picture.png")
-        val outputFile = File(
-                Environment.getDataDirectory(),
-                "temp.png")
+        val outputFile = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "temp.png")
         EditImageActivity.start(this, file.absolutePath, outputFile.absolutePath, 1)
-//                startActivity<CameraActivity>()
+        //                startActivity<CameraActivity>()
         finish()
     }
 }

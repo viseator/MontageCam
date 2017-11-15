@@ -20,11 +20,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.StringRequestListener;
+import com.androidnetworking.interfaces.UploadProgressListener;
 import com.xinlan.imageeditlibrary.BaseActivity;
 import com.xinlan.imageeditlibrary.R;
 import com.xinlan.imageeditlibrary.editimage.fragment.AddTextFragment;
@@ -36,16 +40,18 @@ import com.xinlan.imageeditlibrary.editimage.fragment.MainMenuFragment;
 import com.xinlan.imageeditlibrary.editimage.fragment.PaintFragment;
 import com.xinlan.imageeditlibrary.editimage.fragment.RotateFragment;
 import com.xinlan.imageeditlibrary.editimage.fragment.StickerFragment;
-import com.xinlan.imageeditlibrary.editimage.utils.FileUtil;
 import com.xinlan.imageeditlibrary.editimage.view.CropImageView;
 import com.xinlan.imageeditlibrary.editimage.view.CustomPaintView;
 import com.xinlan.imageeditlibrary.editimage.view.CustomViewPager;
 import com.xinlan.imageeditlibrary.editimage.view.RotateImageView;
 import com.xinlan.imageeditlibrary.editimage.view.StickerView;
 import com.xinlan.imageeditlibrary.editimage.view.TextStickerView;
+import com.xinlan.imageeditlibrary.editimage.view.UploadDialog;
 import com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouch;
 import com.xinlan.imageeditlibrary.editimage.utils.BitmapUtils;
 import com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouchBase;
+
+import java.io.File;
 
 /**
  * 一个幽灵
@@ -66,6 +72,7 @@ import com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouchBase;
  */
 public class EditImageActivity extends BaseActivity {
     private static final String TAG = "@vir EditImageActivity";
+    private UploadDialog mDialog;
     public static final String FILE_PATH = "file_path";
     public static final String EXTRA_OUTPUT = "extra_output";
     public static final String SAVE_FILE_PATH = "save_file_path";
@@ -398,16 +405,16 @@ public class EditImageActivity extends BaseActivity {
     private final class SaveBtnClick implements OnClickListener {
         @Override
         public void onClick(View v) {
-            if (mOpTimes == 0) {//并未修改图片
-                showInfoSnackBar(getResources().getString(R.string.need_to_hollow));
-            } else {
-                doSaveImage();
-            }
+//            if (mOpTimes == 0) {//并未修改图片
+//                showInfoSnackBar(getResources().getString(R.string.need_to_hollow));
+//            } else {
+            doSaveImage();
+//            }
         }
     }// end inner class
 
     protected void doSaveImage() {
-        if (mOpTimes <= 0) return;
+//        if (mOpTimes <= 0) return;
 
         if (mSaveImageTask != null) {
             mSaveImageTask.cancel(true);
@@ -471,7 +478,38 @@ public class EditImageActivity extends BaseActivity {
         FileUtil.ablumUpdate(this, saveFilePath);
         setResult(RESULT_OK, returnIntent);
         finish();*/
+        uploadImage();
+    }
 
+    private StringRequestListener mUploadListener = new StringRequestListener() {
+        @Override
+        public void onResponse(String response) {
+            mDialog.progressEnd();
+            mDialog.setResultText(response);
+            mDialog.setTitle(getResources().getString(R.string.your_token));
+            Log.d(TAG, String.valueOf(response));
+        }
+
+        @Override
+        public void onError(ANError anError) {
+            Log.e(TAG, anError.getErrorDetail());
+            Log.e(TAG, anError.getErrorBody());
+        }
+    };
+
+    private void uploadImage() {
+        File file = new File(saveFilePath);
+        mDialog = new UploadDialog();
+        mDialog.setCancelable(false);
+        mDialog.show(getFragmentManager(), TAG);
+        AndroidNetworking.upload(getResources().getString(R.string.server_upload)).setPriority
+                (Priority.HIGH).addMultipartFile("img", file).build().setUploadProgressListener
+                (new UploadProgressListener() {
+            @Override
+            public void onProgress(long bytesUploaded, long totalBytes) {
+                mDialog.setProgress((int) (bytesUploaded / totalBytes * 100));
+            }
+        }).getAsString(mUploadListener);
     }
 
     /**
