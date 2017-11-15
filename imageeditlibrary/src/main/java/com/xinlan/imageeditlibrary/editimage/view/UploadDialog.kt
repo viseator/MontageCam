@@ -13,6 +13,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Context.CLIPBOARD_SERVICE
+import android.util.Log
 import android.widget.*
 
 
@@ -23,6 +24,7 @@ import android.widget.*
  */
 class UploadDialog : DialogFragment(), View.OnClickListener {
 
+    val TAG = "@vir UploadDialog"
     val label = "TOKEN"
     var progressBar: ProgressBar? = null
     var resultText: EditText? = null
@@ -35,6 +37,7 @@ class UploadDialog : DialogFragment(), View.OnClickListener {
         titleText = headerView.findViewById(R.id.upload_dialog_header_text)
         setTitle(activity.resources.getString(R.string.uploading))
         progressBar = view.findViewById(R.id.upload_progressbar)
+        progressBar?.max = 100
         resultText = view.findViewById(R.id.upload_result_text)
         button = view.findViewById(R.id.copy_token_button)
         button?.setOnClickListener(this)

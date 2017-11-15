@@ -1,6 +1,7 @@
 package com.viseator.montagecam.activity
 
 import android.Manifest
+import android.app.ProgressDialog
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -31,7 +32,9 @@ import com.viseator.montagecam.view.HollowImageView
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity
 import com.xinlan.imageeditlibrary.editimage.utils.BitmapUtils
 import com.xinlan.imageeditlibrary.editimage.utils.FileUtil
+import org.jetbrains.anko.alert
 import org.jetbrains.anko.toast
+import org.jetbrains.anko.yesButton
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -73,8 +76,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         override fun onPictureTaken(cameraView: CameraView, data: ByteArray) {
             Log.d(TAG, "onPictureTaken " + data.size)
             getBackgroundHandler().post {
-                val file = File(Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_PICTURES), "picture.jpg")
+                val file = File(externalCacheDir, "shoot_temp.jpg")
                 Log.d(TAG, String().plus(file.absolutePath))
                 var os: OutputStream? = null
                 try {
@@ -160,18 +162,28 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
 
     fun initHollowView() {
         val file = File(externalCacheDir, "download.png")
+        val dialog = ProgressDialog(this)
+        dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
+        dialog.setTitle(R.string.downloading)
+        dialog.max = 100
+        dialog.show()
+        dialog.setCancelable(false)
         AndroidNetworking.download(resources.getString(R.string.server_download) + mToken + ".png",
                 file.parent, "download.png").build().setDownloadProgressListener(
                 { bytesDownloaded, totalBytes ->
                     Log.d(TAG, "$bytesDownloaded / $totalBytes")
+                    dialog.progress = (bytesDownloaded / totalBytes.toFloat() * 100).toInt()
                 }).startDownload(object : DownloadListener {
             override fun onError(anError: ANError?) {
                 Log.e(TAG, anError?.errorBody)
                 Log.e(TAG, anError?.errorDetail)
+                dialog.dismiss()
+                alert(resources.getString(R.string.download_error)) {}
             }
 
             override fun onDownloadComplete() {
                 Log.d(TAG, "download done")
+                dialog.dismiss()
                 val options = BitmapFactory.Options()
                 options.inScaled = false
                 mHollowImageView.bitmap = BitmapFactory.decodeFile(file.absolutePath)
@@ -202,11 +214,10 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
             Toast.makeText(this, resources.getString(R.string.NoImg), Toast.LENGTH_SHORT).show()
         }
 
-        val fileOutput = File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                "picture_output.png")
+        val fileOutput = File(externalCacheDir, "picture_output.png")
         EditImageActivity.start(this, file.absolutePath, fileOutput.absolutePath,
                 CALL_EDIT_ACTIVITY)
+        finish()
     }
 
 
@@ -267,4 +278,8 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
 }

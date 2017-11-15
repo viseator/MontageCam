@@ -12,4 +12,6 @@
     <string name="receive_photo">收到图片</string>
     <string name="input_token">请输入分享码</string>
     <string name="server_download">http://118.89.193.105:9091/</string>
+    <string name="downloading">正在加载图片</string>
+    <string name="download_error">加载错误，请重试</string>
 </resources>

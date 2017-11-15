@@ -58,4 +58,6 @@
     <string name="your_token">你的分享码为</string>
     <string name="copy">复制</string>
     <string name="copy_success">复制成功，快去分享给小伙伴们吧</string>
+    <string name="upload_error">上传失败</string>
+    <string name="return_">返回</string>
 </resources>

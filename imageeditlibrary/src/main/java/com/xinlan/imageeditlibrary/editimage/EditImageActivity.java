@@ -337,25 +337,10 @@ public class EditImageActivity extends BaseActivity {
                 mHollowFragment.backToMain();
                 return;
         }// end switch
-
-        if (canAutoExit()) {
-            onSaveTaskDone();
-        } else {//图片还未被保存    弹出提示框确认
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-            alertDialogBuilder.setMessage(R.string.exit_without_save).setCancelable(false)
-                    .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    mContext.finish();
-                }
-            }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.cancel();
-                }
-            });
-
-            AlertDialog alertDialog = alertDialogBuilder.create();
-            alertDialog.show();
+        if (mDialog.isVisible()) {
+            mDialog.dismiss();
         }
+        finish();
     }
 
     /**
@@ -494,20 +479,21 @@ public class EditImageActivity extends BaseActivity {
         public void onError(ANError anError) {
             Log.e(TAG, anError.getErrorDetail());
             Log.e(TAG, anError.getErrorBody());
+            new AlertDialog.Builder(EditImageActivity.this).setCustomTitle(null).setMessage(R
+                    .string.upload_error).setPositiveButton(R.string.return_, null).create().show();
         }
     };
 
     private void uploadImage() {
         File file = new File(saveFilePath);
         mDialog = new UploadDialog();
-        mDialog.setCancelable(false);
         mDialog.show(getFragmentManager(), TAG);
         AndroidNetworking.upload(getResources().getString(R.string.server_upload)).setPriority
                 (Priority.HIGH).addMultipartFile("img", file).build().setUploadProgressListener
                 (new UploadProgressListener() {
             @Override
             public void onProgress(long bytesUploaded, long totalBytes) {
-                mDialog.setProgress((int) (bytesUploaded / totalBytes * 100));
+                mDialog.setProgress((int) (bytesUploaded / (float) totalBytes * 100));
             }
         }).getAsString(mUploadListener);
     }
@@ -578,4 +564,5 @@ public class EditImageActivity extends BaseActivity {
         Snackbar snackbar = Snackbar.make(mRelativeLayout, info, Snackbar.LENGTH_SHORT);
         snackbar.show();
     }
+
 }// end class

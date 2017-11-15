@@ -29,7 +29,7 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_main)
         super.onCreate(savedInstanceState)
-        startActivity<CameraActivity>(TOKEN to "9dfb96a5")
+//        startActivity<CameraActivity>(TOKEN to "9dfb96a5")
     }
 
     override fun init() {
