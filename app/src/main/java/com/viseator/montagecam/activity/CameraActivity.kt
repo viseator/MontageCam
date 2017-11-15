@@ -13,9 +13,14 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
 import butterknife.BindView
+import com.androidnetworking.AndroidNetworking
+import com.androidnetworking.error.ANError
+import com.androidnetworking.interfaces.DownloadListener
+import com.androidnetworking.interfaces.DownloadProgressListener
 import com.google.android.cameraview.AspectRatio
 import com.google.android.cameraview.CameraView
 import com.viseator.montagecam.R
@@ -54,6 +59,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     private val FRAGMENT_DIALOG = "dialog"
     private var mCurrentFlash: Int = 0
     private var inHollowMode = false
+    var mToken: String? = null
 
     private var mBackgroundHandler: Handler? = null
     private val mCallback = object : CameraView.Callback() {
@@ -101,9 +107,8 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     override fun onCreate(savedInstanceState: Bundle?) {
         checkPermission()
         setFullScreen()
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_camera)
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onResume() {
@@ -129,6 +134,18 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         super.onStop()
     }
 
+    override fun init() {
+        when (intent.getStringExtra(MainActivity.TOKEN)) {
+            null -> {
+                inHollowMode = false
+            }
+            else -> {
+                inHollowMode = true
+                mToken = intent.getStringExtra(MainActivity.TOKEN)
+            }
+        }
+    }
+
     override fun initView() {
         setSupportActionBar(mToolBar)
         val actionBar = supportActionBar
@@ -137,20 +154,31 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         mShotButton.setOnClickListener({
             mCameraView.takePicture()
         })
-        val options = BitmapFactory.Options()
-        options.inScaled = false
-        val file = File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                "test1.png")
-        initHollowView(file)
+        // todo: here
+        if (inHollowMode) initHollowView()
     }
 
-    fun initHollowView(file: File) {
-        mHollowImageView.bitmap = BitmapFactory.decodeFile(file.absolutePath)
-        inHollowMode = true
-    }
+    fun initHollowView() {
+        val file = File(externalCacheDir, "download.png")
+        AndroidNetworking.download(resources.getString(R.string.server_download) + mToken + ".png",
+                file.parent, "download.png").build().setDownloadProgressListener(
+                { bytesDownloaded, totalBytes ->
+                    Log.d(TAG, "$bytesDownloaded / $totalBytes")
+                }).startDownload(object : DownloadListener {
+            override fun onError(anError: ANError?) {
+                Log.e(TAG, anError?.errorBody)
+                Log.e(TAG, anError?.errorDetail)
+            }
 
-    override fun init() {
+            override fun onDownloadComplete() {
+                Log.d(TAG, "download done")
+                val options = BitmapFactory.Options()
+                options.inScaled = false
+                mHollowImageView.bitmap = BitmapFactory.decodeFile(file.absolutePath)
+                mHollowImageView.visibility = View.VISIBLE
+            }
+
+        })
     }
 
     fun startComposeImage(file: File) {

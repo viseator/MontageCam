@@ -45,7 +45,7 @@
 
     <string name="more">more</string>
     <string name="exit_without_save">The edited image is not saved. Do you want to exit? </string>
-    <string name="confirm">confirm</string>
+    <string name="confirm">确定</string>
     <string name="cancel">cancel</string>
 
     <string name="beauty">beauty</string>
