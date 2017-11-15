@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.viseator.montagecam;
+package com.viseator.montagecam.fragment;
 
 import android.app.Dialog;
 import android.content.Context;

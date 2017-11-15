@@ -1,4 +1,4 @@
-package com.viseator.montagecam
+package com.viseator.montagecam.base
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity

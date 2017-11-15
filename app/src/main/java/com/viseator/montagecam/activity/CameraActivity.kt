@@ -1,4 +1,4 @@
-package com.viseator.montagecam
+package com.viseator.montagecam.activity
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -18,6 +18,9 @@ import android.widget.Toast
 import butterknife.BindView
 import com.google.android.cameraview.AspectRatio
 import com.google.android.cameraview.CameraView
+import com.viseator.montagecam.R
+import com.viseator.montagecam.base.BaseActivity
+import com.viseator.montagecam.fragment.AspectRatioFragment
 import com.viseator.montagecam.util.BitmapUtil
 import com.viseator.montagecam.view.HollowImageView
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity
@@ -43,11 +46,12 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     private val FLASH_OPTIONS = intArrayOf(CameraView.FLASH_AUTO, CameraView.FLASH_OFF,
             CameraView.FLASH_ON)
 
-    private val FLASH_ICONS = intArrayOf(R.drawable.ic_flash_auto, R.drawable.ic_flash_off,
+    private val FLASH_ICONS = intArrayOf(R.drawable.ic_flash_auto,
+            R.drawable.ic_flash_off,
             R.drawable.ic_flash_on)
 
-    private val FLASH_TITLES = intArrayOf(R.string.flash_auto, R.string.flash_off,
-            R.string.flash_on)
+    private val FLASH_TITLES = intArrayOf(R.string.flash_auto,
+            R.string.flash_off, R.string.flash_on)
     private val FRAGMENT_DIALOG = "dialog"
     private var mCurrentFlash: Int = 0
     private var inHollowMode = false
@@ -56,11 +60,9 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     private val mCallback = object : CameraView.Callback() {
 
         override fun onCameraOpened(cameraView: CameraView) {
-//            Log.d(TAG, "onCameraOpened")
         }
 
         override fun onCameraClosed(cameraView: CameraView) {
-//            Log.d(TAG, "onCameraClosed")
         }
 
         override fun onPictureTaken(cameraView: CameraView, data: ByteArray) {

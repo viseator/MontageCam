@@ -1,11 +1,9 @@
-package com.viseator.montagecam
+package com.viseator.montagecam.activity
 
 import android.os.Bundle
-import android.os.Environment
 import android.support.v7.app.AppCompatActivity
-import com.xinlan.imageeditlibrary.editimage.EditImageActivity
+import com.viseator.montagecam.R
 import org.jetbrains.anko.startActivity
-import java.io.File
 
 class TestActivity : AppCompatActivity() {
 
