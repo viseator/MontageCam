@@ -46,12 +46,11 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     private val FLASH_OPTIONS = intArrayOf(CameraView.FLASH_AUTO, CameraView.FLASH_OFF,
             CameraView.FLASH_ON)
 
-    private val FLASH_ICONS = intArrayOf(R.drawable.ic_flash_auto,
-            R.drawable.ic_flash_off,
+    private val FLASH_ICONS = intArrayOf(R.drawable.ic_flash_auto, R.drawable.ic_flash_off,
             R.drawable.ic_flash_on)
 
-    private val FLASH_TITLES = intArrayOf(R.string.flash_auto,
-            R.string.flash_off, R.string.flash_on)
+    private val FLASH_TITLES = intArrayOf(R.string.flash_auto, R.string.flash_off,
+            R.string.flash_on)
     private val FRAGMENT_DIALOG = "dialog"
     private var mCurrentFlash: Int = 0
     private var inHollowMode = false
@@ -99,34 +98,6 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
 
     }
 
-    fun startComposeImage(file: File) {
-        val metrics = resources.displayMetrics
-        val options = BitmapFactory.Options()
-        options.inScaled = false
-        val bgImg = BitmapFactory.decodeFile(file.absolutePath, options)
-        val resultBitmap = BitmapUtil.composeBitmap(bgImg, mHollowImageView.bitmap!!,
-                metrics.widthPixels, metrics.heightPixels, mHollowImageView.scale!!,
-                mHollowImageView.dX!!, mHollowImageView.dY!!)
-        val fileOutput = File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                "picture_output.png")
-        BitmapUtils.saveBitmap(resultBitmap, fileOutput.absolutePath)
-        FileUtil.ablumUpdate(this, fileOutput.absolutePath)
-        resultBitmap.recycle()
-    }
-
-    fun startImageEdit(file: File) {
-        if (!file.exists()) {
-            Toast.makeText(this, resources.getString(R.string.NoImg), Toast.LENGTH_SHORT).show()
-        }
-
-        val fileOutput = File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                "picture_output.png")
-        EditImageActivity.start(this, file.absolutePath, fileOutput.absolutePath,
-                CALL_EDIT_ACTIVITY)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         checkPermission()
         setFullScreen()
@@ -168,8 +139,6 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         })
         val options = BitmapFactory.Options()
         options.inScaled = false
-        //        mHollowImageView.bitmap = BitmapFactory.decodeResource(resources,
-        //                R.drawable.t5, options)
         val file = File(
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
                 "test1.png")
@@ -183,6 +152,35 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
 
     override fun init() {
     }
+
+    fun startComposeImage(file: File) {
+        val metrics = resources.displayMetrics
+        val options = BitmapFactory.Options()
+        options.inScaled = false
+        val bgImg = BitmapFactory.decodeFile(file.absolutePath, options)
+        val resultBitmap = BitmapUtil.composeBitmap(bgImg, mHollowImageView.bitmap!!,
+                metrics.widthPixels, metrics.heightPixels, mHollowImageView.scale!!,
+                mHollowImageView.dX!!, mHollowImageView.dY!!)
+        val fileOutput = File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                "picture_output.png")
+        BitmapUtils.saveBitmap(resultBitmap, fileOutput.absolutePath)
+        FileUtil.ablumUpdate(this, fileOutput.absolutePath)
+        resultBitmap.recycle()
+    }
+
+    fun startImageEdit(file: File) {
+        if (!file.exists()) {
+            Toast.makeText(this, resources.getString(R.string.NoImg), Toast.LENGTH_SHORT).show()
+        }
+
+        val fileOutput = File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                "picture_output.png")
+        EditImageActivity.start(this, file.absolutePath, fileOutput.absolutePath,
+                CALL_EDIT_ACTIVITY)
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main, menu)

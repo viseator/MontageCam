@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -19,6 +20,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -108,6 +111,7 @@ public class EditImageActivity extends BaseActivity {
     public CustomViewPager bottomGallery;// 底部gallery
     private BottomGalleryAdapter mBottomGalleryAdapter;// 底部gallery
     private MainMenuFragment mMainMenuFragment;// Menu
+    private RelativeLayout mRelativeLayout;
     public HollowFragment mHollowFragment;
     public StickerFragment mStickerFragment;// 贴图Fragment
     public FilterListFragment mFilterListFragment;// 滤镜FilterListFragment
@@ -159,6 +163,7 @@ public class EditImageActivity extends BaseActivity {
         imageWidth = metrics.widthPixels / 2;
         imageHeight = metrics.heightPixels / 2;
 
+        mRelativeLayout = findViewById(R.id.image_edit_relativelayout);
         bannerFlipper = (ViewFlipper) findViewById(R.id.banner_flipper);
         bannerFlipper.setInAnimation(this, R.anim.in_bottom_to_top);
         bannerFlipper.setOutAnimation(this, R.anim.out_bottom_to_top);
@@ -394,7 +399,7 @@ public class EditImageActivity extends BaseActivity {
         @Override
         public void onClick(View v) {
             if (mOpTimes == 0) {//并未修改图片
-                onSaveTaskDone();
+                showInfoSnackBar(getResources().getString(R.string.need_to_hollow));
             } else {
                 doSaveImage();
             }
@@ -458,14 +463,15 @@ public class EditImageActivity extends BaseActivity {
     }
 
     protected void onSaveTaskDone() {
-        Intent returnIntent = new Intent();
+/*        Intent returnIntent = new Intent();
         returnIntent.putExtra(FILE_PATH, filePath);
         returnIntent.putExtra(EXTRA_OUTPUT, saveFilePath);
         returnIntent.putExtra(IMAGE_IS_EDIT, mOpTimes > 0);
 
         FileUtil.ablumUpdate(this, saveFilePath);
         setResult(RESULT_OK, returnIntent);
-        finish();
+        finish();*/
+
     }
 
     /**
@@ -476,29 +482,17 @@ public class EditImageActivity extends BaseActivity {
         private Dialog dialog;
 
         @Override
-        protected Boolean doInBackground(Bitmap... params) {
-            if (TextUtils.isEmpty(saveFilePath)) return false;
-
-            return BitmapUtils.saveBitmap(params[0], saveFilePath);
-        }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-            dialog.dismiss();
-        }
-
-        @Override
-        protected void onCancelled(Boolean result) {
-            super.onCancelled(result);
-            dialog.dismiss();
-        }
-
-        @Override
         protected void onPreExecute() {
             super.onPreExecute();
             dialog = EditImageActivity.getLoadingDialog(mContext, R.string.saving_image, false);
             dialog.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Bitmap... params) {
+            if (TextUtils.isEmpty(saveFilePath)) return false;
+
+            return BitmapUtils.saveBitmap(params[0], saveFilePath);
         }
 
         @Override
@@ -513,6 +507,37 @@ public class EditImageActivity extends BaseActivity {
                 Toast.makeText(mContext, R.string.save_error, Toast.LENGTH_SHORT).show();
             }
         }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            dialog.dismiss();
+        }
+
+        @Override
+        protected void onCancelled(Boolean result) {
+            super.onCancelled(result);
+            dialog.dismiss();
+        }
+
+
     }//end inner class
 
+    private void showInfoDialog(String info) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(info);
+        builder.setCustomTitle(null);
+        builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        builder.create().show();
+    }
+
+    private void showInfoSnackBar(String info) {
+        Snackbar snackbar = Snackbar.make(mRelativeLayout, info, Snackbar.LENGTH_SHORT);
+        snackbar.show();
+    }
 }// end class

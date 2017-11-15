@@ -52,4 +52,5 @@
     <string name="smooth">smooth</string>
     <string name="white_skin">white skin</string>
     <string name="paint">paint</string>
+    <string name="need_to_hollow">需要对照片进行挖空</string>
 </resources>
