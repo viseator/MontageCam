@@ -26,6 +26,7 @@ import com.viseator.montagecam.base.BaseActivity
 import com.viseator.montagecam.fragment.AspectRatioFragment
 import com.viseator.montagecam.util.BitmapUtil
 import com.viseator.montagecam.view.HollowImageView
+import com.viseator.montagecam.view.ImagePreviewDialog
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity
 import com.xinlan.imageeditlibrary.editimage.utils.BitmapUtils
 import com.xinlan.imageeditlibrary.editimage.utils.FileUtil
@@ -163,6 +164,8 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
         dialog.setTitle(R.string.downloading)
         dialog.max = 100
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.setOnCancelListener { finish() }
         dialog.show()
         AndroidNetworking.download(resources.getString(R.string.server_download) + mToken + ".png",
                 file.parent, "download.png").build().setDownloadProgressListener(
@@ -204,6 +207,8 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         var fileOutput: File? = null
         val dialog = this@CameraActivity.getLoadingDialog(this@CameraActivity,
                 R.string.saving_image, false)
+        val imagePreviewDialog = ImagePreviewDialog()
+        lateinit var bitmap: Bitmap
 
         override fun onPreExecute() {
             super.onPreExecute()
@@ -219,15 +224,16 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
 
         override fun doInBackground(vararg params: Bitmap?) {
             BitmapUtils.saveBitmap(params[0], fileOutput?.absolutePath)
-            params[0]?.recycle()
+            bitmap = params[0]!!
         }
 
         override fun onPostExecute(result: Unit?) {
             super.onPostExecute(result)
             FileUtil.ablumUpdate(this@CameraActivity, fileOutput?.absolutePath)
             dialog.dismiss()
-            toast(this@CameraActivity.resources.getString(
-                    R.string.file_has_save_to) + fileOutput?.absolutePath)
+            imagePreviewDialog.setData(bitmap, this@CameraActivity.resources.getString(
+                    R.string.file_has_save_to) , fileOutput?.absolutePath!!)
+            imagePreviewDialog.show(this@CameraActivity.fragmentManager, TAG)
         }
     }
 
