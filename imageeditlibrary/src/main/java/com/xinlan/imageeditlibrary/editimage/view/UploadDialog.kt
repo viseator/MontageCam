@@ -43,7 +43,7 @@ class UploadDialog : DialogFragment(), View.OnClickListener {
         button?.setOnClickListener(this)
         val builder = AlertDialog.Builder(activity)
 
-        builder.setCustomTitle(headerView).setCancelable(false).setView(view)
+        builder.setCustomTitle(headerView).setView(view)
         return builder.create()
     }
 
