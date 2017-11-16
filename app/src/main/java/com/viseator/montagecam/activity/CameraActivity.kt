@@ -3,11 +3,9 @@ package com.viseator.montagecam.activity
 import android.Manifest
 import android.app.ProgressDialog
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.os.Bundle
-import android.os.Environment
-import android.os.Handler
-import android.os.HandlerThread
+import android.os.*
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
@@ -21,7 +19,6 @@ import butterknife.BindView
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.DownloadListener
-import com.androidnetworking.interfaces.DownloadProgressListener
 import com.google.android.cameraview.AspectRatio
 import com.google.android.cameraview.CameraView
 import com.viseator.montagecam.R
@@ -34,11 +31,12 @@ import com.xinlan.imageeditlibrary.editimage.utils.BitmapUtils
 import com.xinlan.imageeditlibrary.editimage.utils.FileUtil
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.toast
-import org.jetbrains.anko.yesButton
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
+import java.text.SimpleDateFormat
+import java.util.*
 
 class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     val REQUEST_CAMERA_PERMISSION = 0x1
@@ -62,7 +60,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     private val FRAGMENT_DIALOG = "dialog"
     private var mCurrentFlash: Int = 0
     private var inHollowMode = false
-    var mToken: String? = null
+    private var mToken: String? = null
 
     private var mBackgroundHandler: Handler? = null
     private val mCallback = object : CameraView.Callback() {
@@ -156,7 +154,6 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         mShotButton.setOnClickListener({
             mCameraView.takePicture()
         })
-        // todo: here
         if (inHollowMode) initHollowView()
     }
 
@@ -167,7 +164,6 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         dialog.setTitle(R.string.downloading)
         dialog.max = 100
         dialog.show()
-        dialog.setCancelable(false)
         AndroidNetworking.download(resources.getString(R.string.server_download) + mToken + ".png",
                 file.parent, "download.png").build().setDownloadProgressListener(
                 { bytesDownloaded, totalBytes ->
@@ -200,12 +196,39 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         val resultBitmap = BitmapUtil.composeBitmap(bgImg, mHollowImageView.bitmap!!,
                 metrics.widthPixels, metrics.heightPixels, mHollowImageView.scale!!,
                 mHollowImageView.dX!!, mHollowImageView.dY!!)
-        val fileOutput = File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                "picture_output.png")
-        BitmapUtils.saveBitmap(resultBitmap, fileOutput.absolutePath)
-        FileUtil.ablumUpdate(this, fileOutput.absolutePath)
-        resultBitmap.recycle()
+        val task = SaveImageTask()
+        task.execute(resultBitmap)
+    }
+
+    inner class SaveImageTask : AsyncTask<Bitmap, Unit, Unit>() {
+        var fileOutput: File? = null
+        val dialog = this@CameraActivity.getLoadingDialog(this@CameraActivity,
+                R.string.saving_image, false)
+
+        override fun onPreExecute() {
+            super.onPreExecute()
+            val df = SimpleDateFormat("yyyyMMddHHmmss")
+            val time = df.format(Date())
+
+
+            fileOutput = File(
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                    "MontageCam$time.png")
+            dialog.show()
+        }
+
+        override fun doInBackground(vararg params: Bitmap?) {
+            BitmapUtils.saveBitmap(params[0], fileOutput?.absolutePath)
+            params[0]?.recycle()
+        }
+
+        override fun onPostExecute(result: Unit?) {
+            super.onPostExecute(result)
+            FileUtil.ablumUpdate(this@CameraActivity, fileOutput?.absolutePath)
+            dialog.dismiss()
+            toast(this@CameraActivity.resources.getString(
+                    R.string.file_has_save_to) + fileOutput?.absolutePath)
+        }
     }
 
     fun startImageEdit(file: File) {

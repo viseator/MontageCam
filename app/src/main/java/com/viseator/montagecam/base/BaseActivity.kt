@@ -1,5 +1,8 @@
 package com.viseator.montagecam.base
 
+import android.app.Dialog
+import android.app.ProgressDialog
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Window
@@ -29,4 +32,15 @@ abstract class BaseActivity : AppCompatActivity() {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN)
     }
 
+    fun getLoadingDialog(context: Context, titleId: Int,
+                         canCancel: Boolean): Dialog = getLoadingDialog(context,
+            context.getString(titleId), canCancel)
+
+
+    fun getLoadingDialog(context: Context, title: String, canCancel: Boolean): Dialog {
+        val dialog = ProgressDialog(context)
+        dialog.setCancelable(canCancel)
+        dialog.setMessage(title)
+        return dialog
+    }
 }

@@ -101,7 +101,6 @@ class BitmapUtil {
             Log.d(TAG, "result:${result.width}x${result.height}")
             Log.d(TAG, "delta: $dX $dY")
             val canvas = Canvas(result)
-            // todo: handle situation when bitmap are in different size
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
             canvas.save()
             canvas.scale(deltaScale, deltaScale)
@@ -114,7 +113,6 @@ class BitmapUtil {
             //            paint.alpha = 50
             canvas.drawBitmap(fgImg, 0f, 0f, paint)
             canvas.restore()
-            // todo: cut out the region outside of desired result
             bgInfo.bitmap.recycle()
             result = resizeBitmap(result, dX, dY)
             return result

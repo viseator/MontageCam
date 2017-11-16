@@ -14,4 +14,5 @@
     <string name="server_download">http://118.89.193.105:9091/</string>
     <string name="downloading">正在加载图片</string>
     <string name="download_error">加载错误，请重试</string>
+    <string name="file_has_save_to">图片已经保存到相册</string>
 </resources>
