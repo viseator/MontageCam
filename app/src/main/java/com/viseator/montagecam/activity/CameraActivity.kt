@@ -9,6 +9,7 @@ import android.os.*
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -74,6 +75,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
 
         override fun onPictureTaken(cameraView: CameraView, data: ByteArray) {
             Log.d(TAG, "onPictureTaken " + data.size)
+            Log.d(TAG, "cameraView: ${cameraView.width}x${cameraView.height}")
             getBackgroundHandler().post {
                 val file = File(externalCacheDir, "shoot_temp.jpg")
                 Log.d(TAG, String().plus(file.absolutePath))
@@ -194,10 +196,14 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     fun startComposeImage(file: File) {
         val metrics = resources.displayMetrics
         val options = BitmapFactory.Options()
+        val realMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getRealMetrics(realMetrics)
+        Log.d(TAG, "display: ${metrics.widthPixels} x ${metrics.heightPixels}")
+        Log.d(TAG, "realdisplay: ${realMetrics.widthPixels} x ${realMetrics.heightPixels}")
         options.inScaled = false
         val bgImg = BitmapFactory.decodeFile(file.absolutePath, options)
         val resultBitmap = BitmapUtil.composeBitmap(bgImg, mHollowImageView.bitmap!!,
-                metrics.widthPixels, metrics.heightPixels, mHollowImageView.scale!!,
+                realMetrics.widthPixels, realMetrics.heightPixels, mHollowImageView.scale!!,
                 mHollowImageView.dX!!, mHollowImageView.dY!!)
         val task = SaveImageTask()
         task.execute(resultBitmap)
@@ -231,8 +237,9 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
             super.onPostExecute(result)
             FileUtil.ablumUpdate(this@CameraActivity, fileOutput?.absolutePath)
             dialog.dismiss()
-            imagePreviewDialog.setData(bitmap, this@CameraActivity.resources.getString(
-                    R.string.file_has_save_to) , fileOutput?.absolutePath!!)
+            imagePreviewDialog.setData(bitmap,
+                    this@CameraActivity.resources.getString(R.string.file_has_save_to),
+                    fileOutput?.absolutePath!!)
             imagePreviewDialog.show(this@CameraActivity.fragmentManager, TAG)
         }
     }

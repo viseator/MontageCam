@@ -44,7 +44,9 @@ class UploadDialog : DialogFragment(), View.OnClickListener {
         val builder = AlertDialog.Builder(activity)
 
         builder.setCustomTitle(headerView).setView(view)
-        return builder.create()
+        val result = builder.create()
+        result.setCanceledOnTouchOutside(false)
+        return result
     }
 
     override fun onClick(v: View?) {

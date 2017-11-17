@@ -16,7 +16,6 @@ class BitmapUtil {
         val paintColor = Color.WHITE
 
 
-
         fun bitmapFixToScreen(bitmap: Bitmap, h: Int, w: Int): BitmapInfo {
             val height = bitmap.height
             val width = bitmap.width
@@ -110,7 +109,7 @@ class BitmapUtil {
             canvas.save()
             //            canvas.scale(fgScale, fgScale)
             val paint = Paint()
-            //            paint.alpha = 50
+//            paint.alpha = 50
             canvas.drawBitmap(fgImg, 0f, 0f, paint)
             canvas.restore()
             bgInfo.bitmap.recycle()

@@ -70,6 +70,7 @@ public class BitmapUtils {
         float scaleX = w / (float) width;
         float scaleY = h / (float) height;
         float mainScale = Math.min(scaleX, scaleY);
+        if(mainScale > 1) return bitmap;
         return Bitmap.createScaledBitmap(bitmap, (int) (width * mainScale), (int) (height *
                 mainScale), true);
     }

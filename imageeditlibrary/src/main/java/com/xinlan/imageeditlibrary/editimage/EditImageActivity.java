@@ -489,6 +489,7 @@ public class EditImageActivity extends BaseActivity {
     private void uploadImage() {
         File file = new File(saveFilePath);
         mDialog = new UploadDialog();
+
         mDialog.show(getFragmentManager(), TAG);
         AndroidNetworking.upload(getResources().getString(R.string.server_upload)).setPriority
                 (Priority.HIGH).addMultipartFile("img", file).build().setUploadProgressListener
@@ -512,6 +513,7 @@ public class EditImageActivity extends BaseActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             dialog = EditImageActivity.getLoadingDialog(mContext, R.string.saving_image, false);
+            dialog.setCanceledOnTouchOutside(false);
             dialog.show();
         }
 
