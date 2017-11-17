@@ -194,11 +194,10 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     }
 
     fun startComposeImage(file: File) {
-        val metrics = resources.displayMetrics
+//        val metrics = resources.displayMetrics
         val options = BitmapFactory.Options()
         val realMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getRealMetrics(realMetrics)
-        Log.d(TAG, "display: ${metrics.widthPixels} x ${metrics.heightPixels}")
         Log.d(TAG, "realdisplay: ${realMetrics.widthPixels} x ${realMetrics.heightPixels}")
         options.inScaled = false
         val bgImg = BitmapFactory.decodeFile(file.absolutePath, options)

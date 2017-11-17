@@ -13,7 +13,8 @@ import com.viseator.montagecam.view.BitmapInfo
 class BitmapUtil {
     companion object {
         val TAG = "@vir BitmapUtil"
-        val paintColor = Color.WHITE
+        val paintColor = Color.BLACK
+        val paintAlpha = 180
 
 
         fun bitmapFixToScreen(bitmap: Bitmap, h: Int, w: Int): BitmapInfo {
@@ -39,14 +40,15 @@ class BitmapUtil {
             val paint = Paint()
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
             paint.color = paintColor
+            paint.alpha = paintAlpha
             val dX = (screenBitmap.width - bitmap.width) / 2.toFloat()
             val dY = (screenBitmap.height - bitmap.height) / 2.toFloat()
             canvas.drawRect(0f, 0f, screenBitmap.width.toFloat(), dY, paint)
             canvas.drawRect(0f, dY + bitmap.height, screenBitmap.width.toFloat(),
                     screenBitmap.height.toFloat(), paint)
-            canvas.drawRect(0f, 0f, dX, screenBitmap.height.toFloat(), paint)
-            canvas.drawRect(dX + bitmap.width, 0f, screenBitmap.width.toFloat(),
-                    screenBitmap.height.toFloat(), paint)
+            canvas.drawRect(0f, dY, dX, screenBitmap.height.toFloat() - dY, paint)
+            canvas.drawRect(dX + bitmap.width, dY, screenBitmap.width.toFloat(),
+                    screenBitmap.height.toFloat() - dY, paint)
             canvas.drawBitmap(bitmap, dX, dY, null)
             return BitmapInfo(screenBitmap, scale, dX, dY)
         }
@@ -64,6 +66,7 @@ class BitmapUtil {
             val paint = Paint()
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
             paint.color = paintColor
+            paint.alpha = paintAlpha
 
             val delta: Float = if (fitX) {
                 val d = (screenBitmap.height - bitmap.height) / 2.toFloat()
@@ -109,7 +112,7 @@ class BitmapUtil {
             canvas.save()
             //            canvas.scale(fgScale, fgScale)
             val paint = Paint()
-//            paint.alpha = 50
+            //            paint.alpha = 50
             canvas.drawBitmap(fgImg, 0f, 0f, paint)
             canvas.restore()
             bgInfo.bitmap.recycle()

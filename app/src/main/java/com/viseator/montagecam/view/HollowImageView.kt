@@ -12,7 +12,8 @@ import com.viseator.montagecam.util.BitmapUtil
  * Wu Di
  * viseator@gmail.com
  */
-data class BitmapInfo(val bitmap: Bitmap,val scale: Float, val dX: Float, val dY: Float)
+data class BitmapInfo(val bitmap: Bitmap, val scale: Float, val dX: Float, val dY: Float)
+
 class HollowImageView : View {
     val TAG = "@vir TestHollow"
 
