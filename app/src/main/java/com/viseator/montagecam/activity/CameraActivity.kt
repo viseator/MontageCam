@@ -100,7 +100,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
                 if (inHollowMode) {
                     startComposeImage(file)
                 } else {
-                    startImageEdit(file)
+                    startImageEdit(file.absolutePath)
                 }
             }
         }
@@ -194,7 +194,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     }
 
     fun startComposeImage(file: File) {
-//        val metrics = resources.displayMetrics
+        //        val metrics = resources.displayMetrics
         val options = BitmapFactory.Options()
         val realMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getRealMetrics(realMetrics)
@@ -203,7 +203,8 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         val bgImg = BitmapFactory.decodeFile(file.absolutePath, options)
         val resultBitmap = BitmapUtil.composeBitmap(bgImg, mHollowImageView.bitmap!!,
                 realMetrics.widthPixels, realMetrics.heightPixels, mHollowImageView.scale!!,
-                mHollowImageView.dX!!, mHollowImageView.dY!!)
+                mHollowImageView.dX!!, mHollowImageView.dY!!,
+                mCameraView.facing == CameraView.FACING_FRONT)
         val task = SaveImageTask()
         task.execute(resultBitmap)
     }
@@ -243,14 +244,13 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         }
     }
 
-    fun startImageEdit(file: File) {
-        if (!file.exists()) {
-            Toast.makeText(this, resources.getString(R.string.NoImg), Toast.LENGTH_SHORT).show()
-        }
-
+    fun startImageEdit(path: String) {
+        //        if (!file.exists()) {
+        //            Toast.makeText(this, resources.getString(R.string.NoImg), Toast.LENGTH_SHORT).show()
+        //        }
         val fileOutput = File(externalCacheDir, "picture_output.png")
-        EditImageActivity.start(this, file.absolutePath, fileOutput.absolutePath,
-                CALL_EDIT_ACTIVITY)
+        EditImageActivity.start(this, path, fileOutput.absolutePath,
+                mCameraView.facing == CameraView.FACING_FRONT, CALL_EDIT_ACTIVITY)
         finish()
     }
 

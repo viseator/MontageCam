@@ -3,6 +3,11 @@ package com.viseator.montagecam.util
 import android.graphics.*
 import android.util.Log
 import com.viseator.montagecam.view.BitmapInfo
+import android.R.attr.src
+import android.opengl.ETC1.getHeight
+import android.opengl.ETC1.getWidth
+import android.graphics.Bitmap
+
 
 /**
  * Created by viseator on 11/13/17.
@@ -92,7 +97,7 @@ class BitmapUtil {
         }
 
         fun composeBitmap(bgImg: Bitmap, fgImg: Bitmap, w: Int, h: Int, fgScale: Float, dX: Float,
-                          dY: Float): Bitmap {
+                          dY: Float, isFrontCamera: Boolean): Bitmap {
             val bgInfo = bitmapFixToScreen(bgImg, h, w)
             bgImg.recycle()
             val bgScale = bgInfo.scale
@@ -106,7 +111,8 @@ class BitmapUtil {
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
             canvas.save()
             canvas.scale(deltaScale, deltaScale)
-            canvas.drawBitmap(bgInfo.bitmap, 0f, 0f, null)
+            canvas.drawBitmap(if (isFrontCamera) xMirrorBitmap(bgInfo.bitmap) else bgInfo.bitmap,
+                    0f, 0f, null)
             canvas.restore()
 
             canvas.save()
@@ -130,6 +136,15 @@ class BitmapUtil {
             canvas.drawBitmap(src, -dX, -dY, null)
             src.recycle()
             return result
+        }
+
+        fun xMirrorBitmap(src: Bitmap): Bitmap {
+            val m = Matrix()
+            m.preScale(-1f, 1f)
+            val dst = Bitmap.createBitmap(src, 0, 0, src.width, src.height, m, true)
+            dst.density = src.density
+            src.recycle()
+            return dst
         }
     }
 }

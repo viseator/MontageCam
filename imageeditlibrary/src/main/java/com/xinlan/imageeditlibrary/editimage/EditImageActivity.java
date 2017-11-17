@@ -77,6 +77,8 @@ public class EditImageActivity extends BaseActivity {
     private UploadDialog mDialog;
     public static final String FILE_PATH = "file_path";
     public static final String EXTRA_OUTPUT = "extra_output";
+    public static final String EXTRA_FRONT = "extra_front";
+
     public static final String SAVE_FILE_PATH = "save_file_path";
 
     public static final String IMAGE_IS_EDIT = "image_is_edit";
@@ -93,6 +95,7 @@ public class EditImageActivity extends BaseActivity {
 
     public String filePath;// 需要编辑图片路径
     public String saveFilePath;// 生成的新图片路径
+    private boolean isFront;
     private int imageWidth, imageHeight;// 展示图片控件 宽 高
     private LoadImageTask mLoadImageTask;
 
@@ -139,7 +142,7 @@ public class EditImageActivity extends BaseActivity {
      * @param requestCode
      */
     public static void start(Activity context, final String editImagePath, final String
-            outputPath, final int requestCode) {
+            outputPath, boolean isFront, final int requestCode) {
         if (TextUtils.isEmpty(editImagePath)) {
             Toast.makeText(context, R.string.no_choose, Toast.LENGTH_SHORT).show();
             return;
@@ -148,6 +151,7 @@ public class EditImageActivity extends BaseActivity {
         Intent it = new Intent(context, EditImageActivity.class);
         it.putExtra(EditImageActivity.FILE_PATH, editImagePath);
         it.putExtra(EditImageActivity.EXTRA_OUTPUT, outputPath);
+        it.putExtra(EditImageActivity.EXTRA_FRONT, isFront);
         context.startActivityForResult(it, requestCode);
     }
 
@@ -163,6 +167,7 @@ public class EditImageActivity extends BaseActivity {
     private void getData() {
         filePath = getIntent().getStringExtra(FILE_PATH);
         saveFilePath = getIntent().getStringExtra(EXTRA_OUTPUT);// 保存图片路径
+        isFront = getIntent().getBooleanExtra(EXTRA_FRONT, false);
         loadImage(filePath);
     }
 
@@ -299,6 +304,9 @@ public class EditImageActivity extends BaseActivity {
         @Override
         protected void onPostExecute(Bitmap result) {
             super.onPostExecute(result);
+            if (isFront) {
+                result = BitmapUtils.xMirrorBitmap(result);
+            }
             if (mainBitmap != null) {
                 mainBitmap.recycle();
                 mainBitmap = null;
@@ -339,7 +347,7 @@ public class EditImageActivity extends BaseActivity {
                 mHollowFragment.backToMain();
                 return;
         }// end switch
-        if (mDialog.isVisible()) {
+        if (mDialog != null && mDialog.isVisible()) {
             mDialog.dismiss();
         }
         finish();

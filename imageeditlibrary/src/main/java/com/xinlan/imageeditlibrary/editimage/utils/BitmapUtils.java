@@ -70,7 +70,7 @@ public class BitmapUtils {
         float scaleX = w / (float) width;
         float scaleY = h / (float) height;
         float mainScale = Math.min(scaleX, scaleY);
-        if(mainScale > 1) return bitmap;
+        if (mainScale > 1) return bitmap;
         return Bitmap.createScaledBitmap(bitmap, (int) (width * mainScale), (int) (height *
                 mainScale), true);
     }
@@ -450,4 +450,12 @@ public class BitmapUtils {
         // System.out.println("保存文件--->" + f.getAbsolutePath());
     }
 
+    public static Bitmap xMirrorBitmap(Bitmap src) {
+        Matrix m = new Matrix();
+        m.preScale(-1, 1);
+        Bitmap result = Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), m, true);
+        result.setDensity(src.getDensity());
+        src.recycle();
+        return result;
+    }
 }
