@@ -381,14 +381,9 @@ public abstract class ImageViewTouchBase extends ImageView implements IDisposabl
      * @see #setImageDrawable(Drawable, Matrix, float, float)
      */
     public void setImageBitmap(final Bitmap bitmap, Matrix matrix, float min_zoom, float max_zoom) {
-        if (bitmap != null){
-            if (mBitmap != null) {
-                mBitmap.recycle();
-            }
-            mBitmap = bitmap;
+        if (bitmap != null) {
             setImageDrawable(new FastBitmapDrawable(bitmap), matrix, min_zoom, max_zoom);
-        }
-        else setImageDrawable(null, matrix, min_zoom, max_zoom);
+        } else setImageDrawable(null, matrix, min_zoom, max_zoom);
     }
 
     @Override

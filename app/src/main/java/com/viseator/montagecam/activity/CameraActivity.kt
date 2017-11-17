@@ -299,7 +299,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
 
     private fun checkPermission() {
         if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission_group.STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE,
                             Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_STORAGE_PERMISSION)
