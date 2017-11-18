@@ -34,14 +34,15 @@
             android:id="@+id/save_btn"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_marginEnd="10dp"
             android:layout_gravity="right|center_vertical"
+            android:layout_marginEnd="10dp"
             android:gravity="center"
             android:text="@string/save"
             android:textColor="#ffffff"
             android:textSize="20sp"/>
 
     </FrameLayout>
+
 
     <com.xinlan.imageeditlibrary.editimage.view.CustomViewPager
         android:id="@+id/bottom_gallery"
@@ -111,4 +112,25 @@
             />
     </FrameLayout>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottom_gallery"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/button_undo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/undo"/>
+
+        <ImageButton
+            android:id="@+id/button_redo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/redo"/>
+    </LinearLayout>
 </RelativeLayout>

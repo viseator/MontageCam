@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -20,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -110,6 +112,9 @@ public class EditImageActivity extends BaseActivity {
     private View backBtn;
 
     private View saveBtn;// 保存按钮
+
+    private ImageButton undoButton;
+    private ImageButton redoButton;
 
     public StickerView mStickerView;// 贴图层View
     public CropImageView mCropPanel;// 剪切操作控件
@@ -211,11 +216,32 @@ public class EditImageActivity extends BaseActivity {
 
         bottomGallery.setAdapter(mBottomGalleryAdapter);
 
+        undoButton = findViewById(R.id.button_undo);
+        redoButton = findViewById(R.id.button_redo);
+        undoButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mode == MODE_HOLLOW) {
+                    mHollowFragment.undo();
+                }
+            }
+        });
+
+        redoButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mode == MODE_HOLLOW) {
+                    mHollowFragment.redo();
+                }
+            }
+        });
 
         mainImage.setFlingListener(new ImageViewTouch.OnImageFlingListener() {
             @Override
             public void onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                //System.out.println(e1.getAction() + " " + e2.getAction() + " " + velocityX + "
+
+                //System.out.println(e1.getAction() + " " + e2.getAction() + " " +
+                // velocityX + "
                 // " + velocityY);
                 if (velocityY > 1) {
                     closeInputMethod();

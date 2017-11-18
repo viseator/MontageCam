@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -16,7 +17,12 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.xinlan.imageeditlibrary.R;
+import com.xinlan.imageeditlibrary.editimage.cache.BitmapCache;
 import com.xinlan.imageeditlibrary.editimage.fragment.HollowFragment;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by panyi on 17/2/11.
@@ -29,8 +35,9 @@ public class HollowView extends View {
     private Bitmap mDrawBit;
     private Bitmap mPendingBitmap = null;
 
-
     private HollowFragment mFragment;
+    private BitmapCache mBitmapCache = new BitmapCache();
+    private Matrix mMatrix = null;
 
     private Canvas mPaintCanvas = null;
 
@@ -59,26 +66,25 @@ public class HollowView extends View {
         init(context);
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        //System.out.println("width = "+getMeasuredWidth()+"     height = "+getMeasuredHeight());
-        if (mDrawBit == null) {
-            generatorBit();
-        }
-    }
+//    @Override
+//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+//        //System.out.println("width = "+getMeasuredWidth()+"     height = "+getMeasuredHeight());
+//        if (mDrawBit == null) {
+//            generatorBit();
+//        }
+//    }
 
-    private void generatorBit() {
-        mDrawBit = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config
-                .ARGB_8888);
-        mDrawBit.setHasAlpha(true);
-        mPaintCanvas = new Canvas(mDrawBit);
-        if (mPendingBitmap != null) {
-            mPaintCanvas.drawBitmap(mPendingBitmap, mFragment.activity.mainImage.getImageViewMatrix(),
-                    null);
-            mPendingBitmap = null;
-        }
-    }
+//    private void generatorBit() {
+//        mDrawBit = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config
+//                .ARGB_8888);
+//        mDrawBit.setHasAlpha(true);
+//        mPaintCanvas = new Canvas(mDrawBit);
+//        if (mPendingBitmap != null) {
+//            mPaintCanvas.drawBitmap(mPendingBitmap, mMatrix, null);
+//            mPendingBitmap = null;
+//        }
+//    }
 
     private void init(Context context) {
         mContext = context;
@@ -123,6 +129,7 @@ public class HollowView extends View {
                 break;
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
+                mBitmapCache.push(mDrawBit.copy(mDrawBit.getConfig(), true));
                 ret = false;
                 break;
         }
@@ -136,13 +143,24 @@ public class HollowView extends View {
         if (mDrawBit != null && !mDrawBit.isRecycled()) {
             mDrawBit.recycle();
         }
+        mBitmapCache.reset();
     }
 
-    public void resetBitmap(Bitmap bitmap) {
+    public void resetBitmap(Bitmap bitmap, boolean initial) {
+        if (initial) {
+            mBitmapCache.push(bitmap);
+        }
+
+        if (mDrawBit == null) {
+            mDrawBit = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap
+                    .getConfig());
+            mDrawBit.setHasAlpha(true);
+            mPaintCanvas = new Canvas(mDrawBit);
+        }
         if (mPaintCanvas != null) {
             mPaintCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-            mPaintCanvas.drawBitmap(bitmap, mFragment.activity.mainImage.getImageViewMatrix(),
-                    null);
+            mPaintCanvas.drawBitmap(bitmap, mMatrix, null);
+            postInvalidate();
         } else {
             mPendingBitmap = bitmap;
         }
@@ -157,8 +175,7 @@ public class HollowView extends View {
         if (mDrawBit != null && !mDrawBit.isRecycled()) {
             mDrawBit.recycle();
         }
-
-//        generatorBit();
+        mBitmapCache.reset();
     }
 
     public void setFragment(HollowFragment hollowFragment) {
@@ -166,5 +183,14 @@ public class HollowView extends View {
         mFragment.activity.mainImage.setVisibility(GONE);
         mFragment.activity.mFrameLayout.setBackground(mContext.getDrawable(R.drawable
                 .repeat_fill_pattern));
+        mMatrix = new Matrix(mFragment.activity.mainImage.getImageViewMatrix());
+    }
+
+    public void undo() {
+        resetBitmap(mBitmapCache.undo(), false);
+    }
+
+    public void redo() {
+        resetBitmap(mBitmapCache.redo(), false);
     }
 }//end class

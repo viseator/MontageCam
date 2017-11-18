@@ -58,7 +58,7 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
         super.onActivityCreated(savedInstanceState);
 
         mHollowView.setFragment(this);
-        mHollowView.resetBitmap(activity.mainBitmap);
+        mHollowView.resetBitmap(activity.mainBitmap, true);
 
         backToMenu.setOnClickListener(this);// 返回主菜单
 
@@ -179,5 +179,11 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
         }
     }//end inner class
 
+    public void undo(){
+        mHollowView.undo();
+    }
+    public void redo() {
+        mHollowView.redo();
+    }
 
 }// end class
