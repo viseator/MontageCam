@@ -166,7 +166,6 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         val actionBar = supportActionBar
         actionBar?.setDisplayShowTitleEnabled(false)
         mCameraView.addCallback(mCallback)
-        mCameraView.setMocaOnScrollListener(mMocaScrollListener)
         mCameraView.setManualFocus(true)
         mCameraView.setPinchZoom(true)
         mShotButton.setOnClickListener({
@@ -176,6 +175,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     }
 
     fun initHollowView() {
+        mCameraView.setMocaOnScrollListener(mMocaScrollListener)
         val file = File(externalCacheDir, "download.png")
         val dialog = ProgressDialog(this)
         dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
