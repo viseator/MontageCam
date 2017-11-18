@@ -110,6 +110,7 @@ public class EditImageActivity extends BaseActivity {
     public Bitmap mainBitmap;// 底层显示Bitmap
     public ImageViewTouch mainImage;
     private View backBtn;
+    private boolean shouldSave = false;
 
     private View saveBtn;// 保存按钮
 
@@ -346,32 +347,6 @@ public class EditImageActivity extends BaseActivity {
             }
             finish();
         }
-//        switch (mode) {
-//            case MODE_STICKERS:
-//                mStickerFragment.backToMain();
-//                return;
-//            case MODE_FILTER:// 滤镜编辑状态
-//                mFilterListFragment.backToMain();// 保存滤镜贴图
-//                return;
-//            case MODE_CROP:// 剪切图片保存
-//                mCropFragment.backToMain();
-//                return;
-//            case MODE_ROTATE:// 旋转图片保存
-//                mRotateFragment.backToMain();
-//                return;
-//            case MODE_TEXT:
-//                mAddTextFragment.backToMain();
-//                return;
-//            case MODE_PAINT:
-//                mPaintFragment.backToMain();
-//                return;
-//            case MODE_BEAUTY://从美颜模式中返回
-//                mBeautyFragment.backToMain();
-//                return;
-//            case MODE_HOLLOW:
-//                mHollowFragment.backToMain();
-//                return;
-//        }// end switch
         applyChange();
     }
 
@@ -417,7 +392,10 @@ public class EditImageActivity extends BaseActivity {
 //            if (mOpTimes == 0) {//并未修改图片
 //                showInfoSnackBar(getResources().getString(R.string.need_to_hollow));
 //            } else {
-            doSaveImage();
+            if (mode != MODE_NONE) {
+                applyChange();
+                shouldSave = true;
+            }
 //            }
         }
     }// end inner class
@@ -439,6 +417,7 @@ public class EditImageActivity extends BaseActivity {
      * @param newBit
      */
     public void changeMainBitmap(Bitmap newBit) {
+        Log.d(TAG, String.valueOf("new main bit:") + newBit.getWidth() + "x" + newBit.getHeight());
         if (newBit == null) return;
 
         if (mainBitmap != null) {
@@ -451,6 +430,10 @@ public class EditImageActivity extends BaseActivity {
         mainImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
 
         increaseOpTimes();
+        if(shouldSave){
+            shouldSave = false;
+            doSaveImage();
+        }
     }
 
     @Override
@@ -554,6 +537,7 @@ public class EditImageActivity extends BaseActivity {
             if (result) {
                 resetOpTimes();
                 onSaveTaskDone();
+
             } else {
                 Toast.makeText(mContext, R.string.save_error, Toast.LENGTH_SHORT).show();
             }

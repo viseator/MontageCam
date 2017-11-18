@@ -19,6 +19,7 @@ import android.view.View;
 import com.xinlan.imageeditlibrary.R;
 import com.xinlan.imageeditlibrary.editimage.cache.BitmapCache;
 import com.xinlan.imageeditlibrary.editimage.fragment.HollowFragment;
+import com.xinlan.imageeditlibrary.editimage.utils.BitmapUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -35,6 +36,7 @@ public class HollowView extends View {
     private Bitmap mDrawBit;
     private Bitmap mPendingBitmap = null;
 
+    private int rawW, rawH;
     private HollowFragment mFragment;
     private BitmapCache mBitmapCache = new BitmapCache();
     private Matrix mMatrix = null;
@@ -66,25 +68,25 @@ public class HollowView extends View {
         init(context);
     }
 
-//    @Override
-//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-//        //System.out.println("width = "+getMeasuredWidth()+"     height = "+getMeasuredHeight());
-//        if (mDrawBit == null) {
-//            generatorBit();
-//        }
-//    }
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        //System.out.println("width = "+getMeasuredWidth()+"     height = "+getMeasuredHeight());
+        if (mDrawBit == null) {
+            generatorBit();
+        }
+    }
 
-//    private void generatorBit() {
-//        mDrawBit = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config
-//                .ARGB_8888);
-//        mDrawBit.setHasAlpha(true);
-//        mPaintCanvas = new Canvas(mDrawBit);
-//        if (mPendingBitmap != null) {
-//            mPaintCanvas.drawBitmap(mPendingBitmap, mMatrix, null);
-//            mPendingBitmap = null;
-//        }
-//    }
+    private void generatorBit() {
+        mDrawBit = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config
+                .ARGB_8888);
+        mDrawBit.setHasAlpha(true);
+        mPaintCanvas = new Canvas(mDrawBit);
+        if (mPendingBitmap != null) {
+            mPaintCanvas.drawBitmap(mPendingBitmap, mMatrix, null);
+            mPendingBitmap = null;
+        }
+    }
 
     private void init(Context context) {
         mContext = context;
@@ -129,7 +131,7 @@ public class HollowView extends View {
                 break;
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
-                mBitmapCache.push(mDrawBit.copy(mDrawBit.getConfig(), true));
+                mBitmapCache.push(BitmapUtils.restoreBitmap(mDrawBit, mMatrix, rawW, rawH));
                 ret = false;
                 break;
         }
@@ -143,26 +145,25 @@ public class HollowView extends View {
         if (mDrawBit != null && !mDrawBit.isRecycled()) {
             mDrawBit.recycle();
         }
-        mBitmapCache.reset();
     }
 
     public void resetBitmap(Bitmap bitmap, boolean initial) {
         if (initial) {
             mBitmapCache.push(bitmap);
+            rawH = bitmap.getHeight();
+            rawW = bitmap.getWidth();
         }
 
-        if (mDrawBit == null) {
-            mDrawBit = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap
-                    .getConfig());
-            mDrawBit.setHasAlpha(true);
-            mPaintCanvas = new Canvas(mDrawBit);
-        }
-        if (mPaintCanvas != null) {
+        if (mPaintCanvas == null) {
+            mPendingBitmap = bitmap;
+        } else {
             mPaintCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
             mPaintCanvas.drawBitmap(bitmap, mMatrix, null);
+            Log.d(TAG, String.valueOf("reset"));
+//        mPaintCanvas.setMatrix(mMatrix);
+//        mPaintCanvas.drawBitmap(bitmap, 0, 0, null);
+            Log.d(TAG, String.valueOf(mDrawBit.getWidth()) + "x" + mDrawBit.getHeight());
             postInvalidate();
-        } else {
-            mPendingBitmap = bitmap;
         }
     }
 
@@ -175,7 +176,6 @@ public class HollowView extends View {
         if (mDrawBit != null && !mDrawBit.isRecycled()) {
             mDrawBit.recycle();
         }
-        mBitmapCache.reset();
     }
 
     public void setFragment(HollowFragment hollowFragment) {

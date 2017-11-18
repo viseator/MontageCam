@@ -7,6 +7,7 @@ import android.R.attr.src
 import android.opengl.ETC1.getHeight
 import android.opengl.ETC1.getWidth
 import android.graphics.Bitmap
+import com.xinlan.imageeditlibrary.editimage.utils.Matrix3
 
 
 /**
@@ -145,6 +146,30 @@ class BitmapUtil {
             dst.density = src.density
             src.recycle()
             return dst
+        }
+
+        fun restoreBitmap(src: Bitmap, matrix: Matrix, w: Int, h: Int): Bitmap {
+            val result = Bitmap.createBitmap(w, h, src.config)
+            result.density = src.density
+            val canvas = Canvas(result)
+            val data = FloatArray(9)
+            matrix.getValues(data)
+            val cal = Matrix3(data) // 辅助矩阵计算类
+            val inverseMatrix = cal.inverseMatrix() // 计算逆矩阵
+            val m = Matrix()
+            val f = FloatArray(9)
+            m.getValues(f)
+            m.setValues(inverseMatrix.values)
+            val dx = f[Matrix.MTRANS_X].toInt()
+            val dy = f[Matrix.MTRANS_Y].toInt()
+            val scale_x = f[Matrix.MSCALE_X]
+            val scale_y = f[Matrix.MSCALE_Y]
+            canvas.save()
+            canvas.translate(dx.toFloat(), dy.toFloat())
+            canvas.scale(scale_x, scale_y)
+            canvas.drawBitmap(src, 0f, 0f, null)
+            canvas.restore()
+            return result
         }
     }
 }

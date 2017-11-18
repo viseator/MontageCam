@@ -32,6 +32,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory.Options;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.os.Environment;
@@ -456,6 +457,30 @@ public class BitmapUtils {
         Bitmap result = Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), m, true);
         result.setDensity(src.getDensity());
         src.recycle();
+        return result;
+    }
+
+    public static Bitmap restoreBitmap(Bitmap src, Matrix matrix, int w, int h) {
+        Bitmap result = Bitmap.createBitmap(w, h, src.getConfig());
+        result.setDensity(src.getDensity());
+        Canvas canvas = new Canvas(result);
+        float[] data = new float[9];
+        matrix.getValues(data);// 底部图片变化记录矩阵原始数据
+        Matrix3 cal = new Matrix3(data);// 辅助矩阵计算类
+        Matrix3 inverseMatrix = cal.inverseMatrix();// 计算逆矩阵
+        Matrix m = new Matrix();
+        m.setValues(inverseMatrix.getValues());
+        float[] f = new float[9];
+        m.getValues(f);
+        int dx = (int) f[Matrix.MTRANS_X];
+        int dy = (int) f[Matrix.MTRANS_Y];
+        float scale_x = f[Matrix.MSCALE_X];
+        float scale_y = f[Matrix.MSCALE_Y];
+        canvas.save();
+        canvas.translate(dx, dy);
+        canvas.scale(scale_x, scale_y);
+        canvas.drawBitmap(src,0,0,null);
+        canvas.restore();
         return result;
     }
 }
