@@ -263,7 +263,6 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         val fileOutput = File(externalCacheDir, "picture_output.png")
         EditImageActivity.start(this, path, fileOutput.absolutePath,
                 mCameraView.facing == CameraView.FACING_FRONT, CALL_EDIT_ACTIVITY)
-        finish()
     }
 
 
