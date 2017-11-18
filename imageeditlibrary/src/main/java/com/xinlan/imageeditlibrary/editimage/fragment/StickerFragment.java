@@ -121,7 +121,6 @@ public class StickerFragment extends BaseEditFragment {
         activity.mode = EditImageActivity.MODE_STICKERS;
         activity.mStickerFragment.getmStickerView().setVisibility(
                 View.VISIBLE);
-        activity.bannerFlipper.showNext();
     }
 
     //导入贴图数据
@@ -243,7 +242,7 @@ public class StickerFragment extends BaseEditFragment {
     private final class BackToMenuClick implements OnClickListener {
         @Override
         public void onClick(View v) {
-            backToMain();
+            applyStickers();
         }
     }// end inner class
 
@@ -251,7 +250,6 @@ public class StickerFragment extends BaseEditFragment {
         activity.mode = EditImageActivity.MODE_NONE;
         activity.bottomGallery.setCurrentItem(0);
         mStickerView.setVisibility(View.GONE);
-        activity.bannerFlipper.showPrevious();
     }
 
     /**

@@ -36,7 +36,6 @@ public class HollowView extends View {
     private float last_y;
     private boolean eraser;
 
-    private int mColor;
     private boolean inited = false;
 
     public HollowView(Context context) {
@@ -84,18 +83,7 @@ public class HollowView extends View {
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-//        Bitmap patternBitmap = BitmapFactory.decodeResource(getResources(), R.drawable
-//                .fill_pattern);
-//        BitmapShader patternBitmapShader = new BitmapShader(patternBitmap, Shader.TileMode
-//                .REPEAT, Shader.TileMode.REPEAT);
-//        mPaint.setColor(0xFFFFFFFF);
-//        mPaint.setShader(patternBitmapShader);
 
-    }
-
-    public void setColor(int color) {
-        this.mColor = color;
-//        this.mPaint.setColor(mColor);
     }
 
     public void setWidth(float width) {

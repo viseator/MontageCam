@@ -67,7 +67,7 @@ public class FilterListFragment extends BaseEditFragment {
         backBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                backToMain();
+                applyFilterImage();
             }
         });
         setUpFliters();
@@ -80,7 +80,6 @@ public class FilterListFragment extends BaseEditFragment {
         activity.mainImage.setImageBitmap(activity.mainBitmap);
         activity.mainImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
         activity.mainImage.setScaleEnabled(false);
-        activity.bannerFlipper.showNext();
     }
 
     /**
@@ -93,7 +92,6 @@ public class FilterListFragment extends BaseEditFragment {
         activity.mode = EditImageActivity.MODE_NONE;
         activity.bottomGallery.setCurrentItem(0);
         activity.mainImage.setScaleEnabled(true);
-        activity.bannerFlipper.showPrevious();
     }
 
     /**

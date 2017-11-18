@@ -107,7 +107,6 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
                     }
                 }
                 FileUtil.ablumUpdate(this@CameraActivity, file.absolutePath)
-                toast("Picture Shoot")
                 if (inHollowMode) {
                     startComposeImage(file)
                 } else {

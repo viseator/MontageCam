@@ -109,8 +109,6 @@ public class EditImageActivity extends BaseActivity {
     public ImageViewTouch mainImage;
     private View backBtn;
 
-    public ViewFlipper bannerFlipper;
-    private View applyBtn;// 应用按钮
     private View saveBtn;// 保存按钮
 
     public StickerView mStickerView;// 贴图层View
@@ -178,12 +176,7 @@ public class EditImageActivity extends BaseActivity {
         imageHeight = metrics.heightPixels / 2;
 
         mRelativeLayout = findViewById(R.id.image_edit_relativelayout);
-        bannerFlipper = (ViewFlipper) findViewById(R.id.banner_flipper);
-        bannerFlipper.setInAnimation(this, R.anim.in_bottom_to_top);
-        bannerFlipper.setOutAnimation(this, R.anim.out_bottom_to_top);
         mFrameLayout = (FrameLayout) findViewById(R.id.work_space);
-        applyBtn = findViewById(R.id.apply);
-        applyBtn.setOnClickListener(new ApplyBtnClick());
         saveBtn = findViewById(R.id.save_btn);
         saveBtn.setOnClickListener(new SaveBtnClick());
 
@@ -321,76 +314,71 @@ public class EditImageActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        switch (mode) {
-            case MODE_STICKERS:
-                mStickerFragment.backToMain();
-                return;
-            case MODE_FILTER:// 滤镜编辑状态
-                mFilterListFragment.backToMain();// 保存滤镜贴图
-                return;
-            case MODE_CROP:// 剪切图片保存
-                mCropFragment.backToMain();
-                return;
-            case MODE_ROTATE:// 旋转图片保存
-                mRotateFragment.backToMain();
-                return;
-            case MODE_TEXT:
-                mAddTextFragment.backToMain();
-                return;
-            case MODE_PAINT:
-                mPaintFragment.backToMain();
-                return;
-            case MODE_BEAUTY://从美颜模式中返回
-                mBeautyFragment.backToMain();
-                return;
-            case MODE_HOLLOW:
-                mHollowFragment.backToMain();
-                return;
-        }// end switch
-        if (mDialog != null && mDialog.isVisible()) {
-            mDialog.dismiss();
+        if (mode == MODE_NONE) {
+            if (mDialog != null && mDialog.isVisible()) {
+                mDialog.dismiss();
+            }
+            finish();
         }
-        finish();
+//        switch (mode) {
+//            case MODE_STICKERS:
+//                mStickerFragment.backToMain();
+//                return;
+//            case MODE_FILTER:// 滤镜编辑状态
+//                mFilterListFragment.backToMain();// 保存滤镜贴图
+//                return;
+//            case MODE_CROP:// 剪切图片保存
+//                mCropFragment.backToMain();
+//                return;
+//            case MODE_ROTATE:// 旋转图片保存
+//                mRotateFragment.backToMain();
+//                return;
+//            case MODE_TEXT:
+//                mAddTextFragment.backToMain();
+//                return;
+//            case MODE_PAINT:
+//                mPaintFragment.backToMain();
+//                return;
+//            case MODE_BEAUTY://从美颜模式中返回
+//                mBeautyFragment.backToMain();
+//                return;
+//            case MODE_HOLLOW:
+//                mHollowFragment.backToMain();
+//                return;
+//        }// end switch
+        applyChange();
     }
 
-    /**
-     * 应用按钮点击
-     *
-     * @author panyi
-     */
-    private final class ApplyBtnClick implements OnClickListener {
-        @Override
-        public void onClick(View v) {
-            switch (mode) {
-                case MODE_STICKERS:
-                    mStickerFragment.applyStickers();// 保存贴图
-                    break;
-                case MODE_FILTER:// 滤镜编辑状态
-                    mFilterListFragment.applyFilterImage();// 保存滤镜贴图
-                    break;
-                case MODE_CROP:// 剪切图片保存
-                    mCropFragment.applyCropImage();
-                    break;
-                case MODE_ROTATE:// 旋转图片保存
-                    mRotateFragment.applyRotateImage();
-                    break;
-                case MODE_TEXT://文字贴图 图片保存
-                    mAddTextFragment.applyTextImage();
-                    break;
-                case MODE_PAINT://保存涂鸦
-                    mPaintFragment.savePaintImage();
-                    break;
-                case MODE_BEAUTY://保存美颜后的图片
-                    mBeautyFragment.applyBeauty();
-                    break;
-                case MODE_HOLLOW:
-                    mHollowFragment.savePaintImage();
-                    break;
-                default:
-                    break;
-            }// end switch
+    public void applyChange() {
+        switch (mode) {
+            case MODE_STICKERS:
+                mStickerFragment.applyStickers();// 保存贴图
+                break;
+            case MODE_FILTER:// 滤镜编辑状态
+                mFilterListFragment.applyFilterImage();// 保存滤镜贴图
+                break;
+            case MODE_CROP:// 剪切图片保存
+                mCropFragment.applyCropImage();
+                break;
+            case MODE_ROTATE:// 旋转图片保存
+                mRotateFragment.applyRotateImage();
+                break;
+            case MODE_TEXT://文字贴图 图片保存
+                mAddTextFragment.applyTextImage();
+                break;
+            case MODE_PAINT://保存涂鸦
+                mPaintFragment.savePaintImage();
+                break;
+            case MODE_BEAUTY://保存美颜后的图片
+                mBeautyFragment.applyBeauty();
+                break;
+            case MODE_HOLLOW:
+                mHollowFragment.savePaintImage();
+                break;
+            default:
+                break;
         }
-    }// end inner class
+    }
 
     /**
      * 保存按钮 点击退出

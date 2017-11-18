@@ -154,7 +154,7 @@ public class AddTextFragment extends BaseEditFragment implements TextWatcher {
     private final class BackToMenuClick implements OnClickListener {
         @Override
         public void onClick(View v) {
-            backToMain();
+            applyTextImage();
         }
     }// end class
 
@@ -166,7 +166,6 @@ public class AddTextFragment extends BaseEditFragment implements TextWatcher {
         activity.mode = EditImageActivity.MODE_NONE;
         activity.bottomGallery.setCurrentItem(MainMenuFragment.INDEX);
         activity.mainImage.setVisibility(View.VISIBLE);
-        activity.bannerFlipper.showPrevious();
         mTextStickerView.setVisibility(View.GONE);
     }
 
@@ -174,7 +173,6 @@ public class AddTextFragment extends BaseEditFragment implements TextWatcher {
     public void onShow() {
         activity.mode = EditImageActivity.MODE_TEXT;
         activity.mainImage.setImageBitmap(activity.mainBitmap);
-        activity.bannerFlipper.showNext();
         mTextStickerView.setVisibility(View.VISIBLE);
         mInputText.clearFocus();
     }

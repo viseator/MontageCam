@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -33,7 +32,6 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
 
     private SeekBar mStokenWidthSeekBar;
 
-    private ImageView mEraserView;
 
     public boolean isEraser = false;//是否是擦除模式
 
@@ -47,11 +45,10 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
-        mainView = inflater.inflate(R.layout.fragment_hollow, container, false);
+        mainView = inflater.inflate(R.layout.fragment_edit_hollow, container, false);
         mHollowView = (HollowView) getActivity().findViewById(R.id.hollow_view);
         backToMenu = mainView.findViewById(R.id.hollow_back_to_main);
         mPaintModeView = (PaintModeView) mainView.findViewById(R.id.hollow_paint_thumb);
-        mEraserView = (ImageView) mainView.findViewById(R.id.hollow_paint_eraser);
         mStokenWidthSeekBar = (SeekBar) mainView.findViewById(R.id.hollow_stoke_width_seekbar);
         mHollowView.setFragment(this);
         return mainView;
@@ -66,18 +63,12 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
 
         mPaintModeView.setOnClickListener(this);
 
-        mEraserView.setOnClickListener(this);
-        updateEraserView();
     }
 
 
     @Override
     public void onClick(View v) {
-        if (v == backToMenu) {//back button click
-            backToMain();
-        } else if (v == mEraserView) {
-            toggleEraserView();
-        }//end if
+        savePaintImage();
     }
 
     public void backToMain() {
@@ -85,7 +76,6 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
         activity.mode = EditImageActivity.MODE_NONE;
         activity.bottomGallery.setCurrentItem(MainMenuFragment.INDEX);
         activity.mainImage.setVisibility(View.VISIBLE);
-        activity.bannerFlipper.showPrevious();
         activity.mFrameLayout.setBackgroundColor(getResources().getColor(R.color.main_backgroud));
 
         this.mHollowView.setVisibility(View.GONE);
@@ -96,16 +86,13 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
     public void onShow() {
         activity.mode = EditImageActivity.MODE_HOLLOW;
 //        activity.mainImage.setImageBitmap(activity.mainBitmap);
-        activity.bannerFlipper.showNext();
         this.mHollowView.setVisibility(View.VISIBLE);
     }
 
 
     private void updatePaintView() {
         isEraser = false;
-        updateEraserView();
 
-        this.mHollowView.setColor(mPaintModeView.getStokenColor());
         this.mHollowView.setWidth(mPaintModeView.getStokenWidth());
     }
 
@@ -140,16 +127,6 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
 
             }
         });
-    }
-
-    private void toggleEraserView() {
-        isEraser = !isEraser;
-        updateEraserView();
-    }
-
-    private void updateEraserView() {
-        mEraserView.setImageResource(isEraser ? R.drawable.eraser_seleced : R.drawable
-                .eraser_normal);
     }
 
     public void savePaintImage() {

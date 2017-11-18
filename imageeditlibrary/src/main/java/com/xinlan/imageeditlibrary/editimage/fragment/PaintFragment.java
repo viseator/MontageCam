@@ -117,7 +117,7 @@ public class PaintFragment extends BaseEditFragment implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if (v == backToMenu) {//back button click
-            backToMain();
+            savePaintImage();
         } else if (v == mPaintModeView) {//设置绘制画笔粗细
             setStokeWidth();
         } else if (v == mEraserView) {
@@ -132,7 +132,6 @@ public class PaintFragment extends BaseEditFragment implements View.OnClickListe
         activity.mode = EditImageActivity.MODE_NONE;
         activity.bottomGallery.setCurrentItem(MainMenuFragment.INDEX);
         activity.mainImage.setVisibility(View.VISIBLE);
-        activity.bannerFlipper.showPrevious();
 
         this.mPaintView.setVisibility(View.GONE);
     }
@@ -140,7 +139,6 @@ public class PaintFragment extends BaseEditFragment implements View.OnClickListe
     public void onShow() {
         activity.mode = EditImageActivity.MODE_PAINT;
         activity.mainImage.setImageBitmap(activity.mainBitmap);
-        activity.bannerFlipper.showNext();
         this.mPaintView.setVisibility(View.VISIBLE);
     }
 
