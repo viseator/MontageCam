@@ -154,6 +154,8 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         val actionBar = supportActionBar
         actionBar?.setDisplayShowTitleEnabled(false)
         mCameraView.addCallback(mCallback)
+        mCameraView.setManualFocus(true)
+        mCameraView.setPinchZoom(true)
         mShotButton.setOnClickListener({
             mCameraView.takePicture()
         })
