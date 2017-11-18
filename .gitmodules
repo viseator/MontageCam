@@ -1,3 +1,4 @@
 [submodule "cameralibrary"]
 	path = cameralibrary
 	url = https://github.com/viseator/cameraview.git
+    branch = moca
