@@ -1,1 +1,1 @@
-include ':app', ':imageeditlibrary', ':cameralibrary'
+include ':app', ':imageeditlibrary'
