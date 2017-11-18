@@ -1,0 +1,3 @@
+[submodule "cameralibrary"]
+	path = cameralibrary
+	url = git@github.com:viseator/cameraview.git
