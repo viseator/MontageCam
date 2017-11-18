@@ -69,9 +69,11 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
 
     private var mBackgroundHandler: Handler? = null
     private val mMocaScrollListener = MocaOnScrollListener { e1, e2, distanceX, distanceY ->
-        val ratio = distanceY / realMetrics.heightPixels
-        mHollowImageView.paintAlpha = (mHollowImageView.paintAlpha + ratio * ALPHA_SPEED).toInt()
-//        Log.d(TAG, "paintAlpha:${mHollowImageView.paintAlpha}")
+        val ratioY = distanceY / realMetrics.heightPixels
+        if (e2.x !in realMetrics.widthPixels * 0.7..realMetrics.widthPixels.toDouble()) {
+            return@MocaOnScrollListener false
+        }
+        mHollowImageView.paintAlpha = (mHollowImageView.paintAlpha + ratioY * ALPHA_SPEED).toInt()
         true
     }
     private val mCallback = object : CameraView.Callback() {
