@@ -73,6 +73,7 @@ public class HollowView extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         //System.out.println("width = "+getMeasuredWidth()+"     height = "+getMeasuredHeight());
         if (mDrawBit == null) {
+            Log.d(TAG, String.valueOf("onMeasure"));
             generatorBit();
         }
     }
@@ -106,6 +107,9 @@ public class HollowView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (mDrawBit != null) {
+            if (mDrawBit.isRecycled()) {
+                Log.e(TAG, String.valueOf("recycled!"));
+            }
             canvas.drawBitmap(mDrawBit, 0, 0, null);
         }
     }
@@ -143,11 +147,15 @@ public class HollowView extends View {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         if (mDrawBit != null && !mDrawBit.isRecycled()) {
+            Log.d(TAG, String.valueOf("recycle beacause detached"));
             mDrawBit.recycle();
         }
     }
 
     public void resetBitmap(Bitmap bitmap, boolean initial) {
+        if (bitmap == null) {
+            return;
+        }
         if (initial) {
             mBitmapCache.push(bitmap);
             rawH = bitmap.getHeight();
@@ -159,10 +167,6 @@ public class HollowView extends View {
         } else {
             mPaintCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
             mPaintCanvas.drawBitmap(bitmap, mMatrix, null);
-            Log.d(TAG, String.valueOf("reset"));
-//        mPaintCanvas.setMatrix(mMatrix);
-//        mPaintCanvas.drawBitmap(bitmap, 0, 0, null);
-            Log.d(TAG, String.valueOf(mDrawBit.getWidth()) + "x" + mDrawBit.getHeight());
             postInvalidate();
         }
     }
