@@ -22,6 +22,7 @@ import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.DownloadListener
 import com.google.android.cameraview.AspectRatio
 import com.google.android.cameraview.CameraView
+import com.google.android.cameraview.MocaOnScrollListener
 import com.viseator.montagecam.R
 import com.viseator.montagecam.base.BaseActivity
 import com.viseator.montagecam.fragment.AspectRatioFragment
@@ -51,6 +52,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     @BindView(R.id.camera_shot_button) lateinit var mShotButton: ImageButton
     @BindView(R.id.hollow_image) lateinit var mHollowImageView: HollowImageView
 
+    private val ALPHA_SPEED = 500
     private val FLASH_OPTIONS = intArrayOf(CameraView.FLASH_AUTO, CameraView.FLASH_OFF,
             CameraView.FLASH_ON)
 
@@ -63,8 +65,15 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     private var mCurrentFlash: Int = 0
     private var inHollowMode = false
     private var mToken: String? = null
+    private val realMetrics = DisplayMetrics()
 
     private var mBackgroundHandler: Handler? = null
+    private val mMocaScrollListener = MocaOnScrollListener { e1, e2, distanceX, distanceY ->
+        val ratio = distanceY / realMetrics.heightPixels
+        mHollowImageView.paintAlpha = (mHollowImageView.paintAlpha + ratio * ALPHA_SPEED).toInt()
+//        Log.d(TAG, "paintAlpha:${mHollowImageView.paintAlpha}")
+        true
+    }
     private val mCallback = object : CameraView.Callback() {
 
         override fun onCameraOpened(cameraView: CameraView) {
@@ -138,6 +147,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     }
 
     override fun init() {
+        windowManager.defaultDisplay.getRealMetrics(realMetrics)
         when (intent.getStringExtra(MainActivity.TOKEN)) {
             null -> {
                 inHollowMode = false
@@ -154,6 +164,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         val actionBar = supportActionBar
         actionBar?.setDisplayShowTitleEnabled(false)
         mCameraView.addCallback(mCallback)
+        mCameraView.setMocaOnScrollListener(mMocaScrollListener)
         mCameraView.setManualFocus(true)
         mCameraView.setPinchZoom(true)
         mShotButton.setOnClickListener({
@@ -198,8 +209,6 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     fun startComposeImage(file: File) {
         //        val metrics = resources.displayMetrics
         val options = BitmapFactory.Options()
-        val realMetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getRealMetrics(realMetrics)
         Log.d(TAG, "realdisplay: ${realMetrics.widthPixels} x ${realMetrics.heightPixels}")
         options.inScaled = false
         val bgImg = BitmapFactory.decodeFile(file.absolutePath, options)

@@ -3,6 +3,7 @@ package com.viseator.montagecam.view
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 import com.viseator.montagecam.util.BitmapUtil
@@ -22,9 +23,15 @@ class HollowImageView : View {
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs,
             defStyleAttr)
 
+    private val mPaint = Paint()
+    var paintAlpha: Int = 255
+        set(value) {
+            if (value > 255) field = 255 else if (value < 0) field = 0 else field = value
+            mPaint.alpha = field
+            invalidate()
+        }
     var dX: Float? = null
     var dY: Float? = null
-
     var scale: Float? = null
     var bitmap: Bitmap? = null
         set(value) {
@@ -50,7 +57,8 @@ class HollowImageView : View {
         if (scale!! < 1) {
             canvas.scale(scale!!, scale!!)
         }
-        canvas.drawBitmap(bitmap, 0f, 0f, null)
+
+        canvas.drawBitmap(bitmap, 0f, 0f, mPaint)
         canvas.restore()
     }
 }

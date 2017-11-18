@@ -28,7 +28,7 @@
             android:layout_gravity="center"
             android:layout_margin="@dimen/image_edit_menu_margin"
             android:gravity="center"
-            android:text="@string/paint"
+            android:text="@string/mPaint"
             android:textColor="@color/white"
             android:textSize="@dimen/image_edit_text_size"/>
 

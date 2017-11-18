@@ -45,6 +45,6 @@
     <string name="beauty">美颜</string>
     <string name="smooth">磨皮</string>
     <string name="white_skin">美白</string>
-    <string name="paint">画笔</string>
+    <string name="mPaint">画笔</string>
     <string name="need_to_hollow">需要对照片进行挖空</string>
 </resources>

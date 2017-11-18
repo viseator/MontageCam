@@ -51,7 +51,7 @@
     <string name="beauty">beauty</string>
     <string name="smooth">smooth</string>
     <string name="white_skin">white skin</string>
-    <string name="paint">paint</string>
+    <string name="mPaint">mPaint</string>
     <string name="need_to_hollow">需要对照片进行挖空</string>
     <!--<string name="server_upload">http://118.89.193.105:9090</string>-->
     <string name="server_upload">http://mocau.viseator.com:9090</string>
