@@ -204,7 +204,6 @@ public class BeautyFragment extends BaseEditFragment implements SeekBar.OnSeekBa
 
             mResultBitmapRef = new WeakReference<Bitmap>(result);
             activity.mainImage.setImageBitmap(mResultBitmapRef.get());
-            backToMain();
         }
     }//end inner class
 

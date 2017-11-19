@@ -487,6 +487,7 @@ public class EditImageActivity extends BaseActivity {
         if (mSaveImageTask != null) {
             mSaveImageTask.cancel(true);
         }
+        mBitmapCache.reset();
     }
 
     public void increaseOpTimes() {
