@@ -179,6 +179,9 @@ public class HollowView extends View {
         if (mDrawBit != null && !mDrawBit.isRecycled()) {
             mDrawBit.recycle();
         }
+    }
+
+    public void resetCache() {
         mBitmapCache.reset();
     }
 
@@ -196,5 +199,9 @@ public class HollowView extends View {
 
     public void redo() {
         resetBitmap(mBitmapCache.redo(), false);
+    }
+
+    public void setCacheListener(BitmapCache.CacheStateChangeListener listener) {
+        mBitmapCache.setListener(listener);
     }
 }//end class

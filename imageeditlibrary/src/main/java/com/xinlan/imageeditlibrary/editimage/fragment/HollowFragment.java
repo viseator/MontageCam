@@ -13,9 +13,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
+import com.fasterxml.jackson.databind.type.MapLikeType;
 import com.xinlan.imageeditlibrary.R;
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity;
 import com.xinlan.imageeditlibrary.editimage.ModuleConfig;
+import com.xinlan.imageeditlibrary.editimage.cache.BitmapCache;
 import com.xinlan.imageeditlibrary.editimage.task.StickerTask;
 import com.xinlan.imageeditlibrary.editimage.view.HollowView;
 import com.xinlan.imageeditlibrary.editimage.view.PaintModeView;
@@ -26,6 +28,7 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
     private View mainView;
     private View backToMenu;// 返回主菜单
     private PaintModeView mPaintModeView;
+    private BitmapCache.CacheStateChangeListener mListener;
 
     private HollowView mHollowView;
 
@@ -47,6 +50,7 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
             savedInstanceState) {
         mainView = inflater.inflate(R.layout.fragment_edit_hollow, container, false);
         mHollowView = (HollowView) getActivity().findViewById(R.id.hollow_view);
+        mHollowView.setCacheListener(mListener);
         backToMenu = mainView.findViewById(R.id.hollow_back_to_main);
         mPaintModeView = (PaintModeView) mainView.findViewById(R.id.hollow_paint_thumb);
         mStokenWidthSeekBar = (SeekBar) mainView.findViewById(R.id.hollow_stoke_width_seekbar);
@@ -71,6 +75,7 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
 
     public void backToMain() {
         activity.mainImage.setVisibility(View.VISIBLE);
+        mHollowView.resetCache();
         activity.mode = EditImageActivity.MODE_NONE;
         activity.bottomGallery.setCurrentItem(MainMenuFragment.INDEX);
         activity.mainImage.setVisibility(View.VISIBLE);
@@ -185,6 +190,14 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
 
     public void redo() {
         mHollowView.redo();
+    }
+
+    public void setCacheListener(BitmapCache.CacheStateChangeListener listener) {
+        if (mHollowView == null) {
+            mListener = listener;
+        } else {
+            mHollowView.setCacheListener(listener);
+        }
     }
 
 }// end class

@@ -141,6 +141,23 @@ public class EditImageActivity extends BaseActivity {
     private SaveImageTask mSaveImageTask;
 
     private BitmapCache mBitmapCache = new BitmapCache();
+    private BitmapCache.CacheStateChangeListener mHollowViewCacheListener = new BitmapCache
+            .CacheStateChangeListener() {
+
+        @Override
+        public void canUndo(boolean b) {
+            if (mode == MODE_HOLLOW) {
+                undoButton.setVisibility(b ? View.VISIBLE : View.GONE);
+            }
+        }
+
+        @Override
+        public void canRedo(boolean b) {
+            if (mode == MODE_HOLLOW) {
+                redoButton.setVisibility(b ? View.VISIBLE : View.GONE);
+            }
+        }
+    };
 
     /**
      * @param context
@@ -219,6 +236,7 @@ public class EditImageActivity extends BaseActivity {
         mBeautyFragment = BeautyFragment.newInstance();
 
         bottomGallery.setAdapter(mBottomGalleryAdapter);
+        mHollowFragment.setCacheListener(mHollowViewCacheListener);
 
         undoButton = findViewById(R.id.button_undo);
         redoButton = findViewById(R.id.button_redo);
@@ -239,6 +257,7 @@ public class EditImageActivity extends BaseActivity {
                 }
             }
         });
+
 
         mainImage.setFlingListener(new ImageViewTouch.OnImageFlingListener() {
             @Override
@@ -337,6 +356,7 @@ public class EditImageActivity extends BaseActivity {
             }
             mainBitmap = result;
             mainBitmap.setHasAlpha(true);
+            mBitmapCache.push(mainBitmap.copy(mainBitmap.getConfig(), false));
             mainImage.setImageBitmap(result);
             mainImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
         }
@@ -398,7 +418,7 @@ public class EditImageActivity extends BaseActivity {
             if (mode != MODE_NONE) {
                 applyChange();
                 shouldSave = true;
-            }else {
+            } else {
                 doSaveImage();
             }
         }
@@ -415,26 +435,31 @@ public class EditImageActivity extends BaseActivity {
         mSaveImageTask.execute(mainBitmap);
     }
 
+    public void changeMainBitmap(Bitmap newBit, boolean changeByCache) {
+        if (newBit == null) {
+            return;
+        }
+
+        mainBitmap = newBit;
+        mainImage.setImageBitmap(mainBitmap);
+        mainImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
+    }
+
     /**
      * 切换底图Bitmap
      *
      * @param newBit
      */
     public void changeMainBitmap(Bitmap newBit) {
-        Log.d(TAG, String.valueOf("new main bit:") + newBit.getWidth() + "x" + newBit.getHeight());
         if (newBit == null) return;
 
-        if (mainBitmap != null) {
-            if (!mainBitmap.isRecycled()) {// 回收
-                mainBitmap.recycle();
-            }
-        }
         mainBitmap = newBit;
+        mBitmapCache.push(mainBitmap);
         mainImage.setImageBitmap(mainBitmap);
         mainImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
 
         increaseOpTimes();
-        if(shouldSave){
+        if (shouldSave) {
             shouldSave = false;
             doSaveImage();
         }
@@ -571,5 +596,7 @@ public class EditImageActivity extends BaseActivity {
         Snackbar snackbar = Snackbar.make(mRelativeLayout, info, Snackbar.LENGTH_SHORT);
         snackbar.show();
     }
+
+
 
 }// end class

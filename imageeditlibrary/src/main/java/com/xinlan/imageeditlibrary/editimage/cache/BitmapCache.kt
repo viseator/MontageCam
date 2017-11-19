@@ -10,17 +10,25 @@ import android.util.Log
  */
 
 class BitmapCache {
+    interface CacheStateChangeListener {
+        fun canUndo(b: Boolean)
+        fun canRedo(b: Boolean)
+    }
+
     val TAG = "@vir BitmapCache"
 
     val CACHE_SIZE = 10
     val cacheBitmap = ArrayList<Bitmap>()
     var currentPos = -1
+    var listener: CacheStateChangeListener? = null
 
     fun push(bitmap: Bitmap) {
         Log.d(TAG, "push bitmap : ${bitmap.density} ${bitmap.width} x ${bitmap.height}")
         if (currentPos == -1) {
             cacheBitmap.add(bitmap)
             ++currentPos
+            listener?.canUndo(false)
+            listener?.canRedo(false)
             return
         }
         if (currentPos != cacheBitmap.size - 1) {
@@ -40,29 +48,39 @@ class BitmapCache {
             cacheBitmap.add(bitmap)
             ++currentPos
         }
+        listener?.canUndo(true)
+        listener?.canRedo(false)
     }
 
     fun canUndo() = currentPos > 0
     fun canRedo() = currentPos != -1 && currentPos != cacheBitmap.size - 1
     fun undo(): Bitmap? {
         if (canUndo()) {
-            return cacheBitmap[--currentPos]
+            --currentPos
+            listener?.canUndo(canUndo())
+            listener?.canRedo(true)
+            return cacheBitmap[currentPos]
         }
         return null
     }
 
     fun redo(): Bitmap? {
         if (canRedo()) {
-            return cacheBitmap[++currentPos]
+            ++currentPos
+            listener?.canUndo(true)
+            listener?.canRedo(canRedo())
+            return cacheBitmap[currentPos]
         }
         return null
     }
 
-    fun reset(){
+    fun reset() {
         while (cacheBitmap.size != 0) {
             cacheBitmap.removeAt(0).recycle()
         }
         currentPos = -1
+        listener?.canUndo(false)
+        listener?.canRedo(false)
     }
 
 }
