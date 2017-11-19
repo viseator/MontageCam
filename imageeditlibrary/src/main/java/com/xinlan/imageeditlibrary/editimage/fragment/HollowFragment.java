@@ -5,11 +5,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PorterDuff;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
@@ -19,6 +21,7 @@ import com.xinlan.imageeditlibrary.editimage.EditImageActivity;
 import com.xinlan.imageeditlibrary.editimage.ModuleConfig;
 import com.xinlan.imageeditlibrary.editimage.cache.BitmapCache;
 import com.xinlan.imageeditlibrary.editimage.task.StickerTask;
+import com.xinlan.imageeditlibrary.editimage.view.HollowCropView;
 import com.xinlan.imageeditlibrary.editimage.view.HollowView;
 import com.xinlan.imageeditlibrary.editimage.view.PaintModeView;
 
@@ -31,9 +34,9 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
     private BitmapCache.CacheStateChangeListener mListener;
 
     private HollowView mHollowView;
-
-
+    private HollowCropView mHollowCropView;
     private SeekBar mStokenWidthSeekBar;
+    private ImageButton mCropButton;
 
 
     public boolean isEraser = false;//是否是擦除模式
@@ -49,11 +52,13 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         mainView = inflater.inflate(R.layout.fragment_edit_hollow, container, false);
-        mHollowView = (HollowView) getActivity().findViewById(R.id.hollow_view);
+        mHollowView = getActivity().findViewById(R.id.hollow_view);
         mHollowView.setCacheListener(mListener);
+        mHollowCropView = getActivity().findViewById(R.id.hollow_crop_panel);
         backToMenu = mainView.findViewById(R.id.hollow_back_to_main);
-        mPaintModeView = (PaintModeView) mainView.findViewById(R.id.hollow_paint_thumb);
-        mStokenWidthSeekBar = (SeekBar) mainView.findViewById(R.id.hollow_stoke_width_seekbar);
+        mCropButton = mainView.findViewById(R.id.hollow_crop_button);
+        mPaintModeView = mainView.findViewById(R.id.hollow_paint_thumb);
+        mStokenWidthSeekBar = mainView.findViewById(R.id.hollow_stoke_width_seekbar);
         return mainView;
     }
 
@@ -62,15 +67,26 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
         super.onActivityCreated(savedInstanceState);
 
         backToMenu.setOnClickListener(this);// 返回主菜单
-
-        mPaintModeView.setOnClickListener(this);
+        mCropButton.setOnClickListener(this);
 
     }
 
 
     @Override
     public void onClick(View v) {
-        savePaintImage();
+        if (v == backToMenu) {
+            savePaintImage();
+        } else if (v == mCropButton) {
+            if (mHollowCropView.getVisibility() != View.VISIBLE) {
+                mHollowCropView.setVisibility(View.VISIBLE);
+                mCropButton.setImageResource(R.drawable.ic_action_tick);
+                mHollowCropView.setCropRect(activity.mainImage.getBitmapRect());
+            } else {
+                mHollowView.hollowRect(mHollowCropView.getCropRect());
+                mCropButton.setImageResource(R.drawable.image_edit_icon_crop);
+                mHollowCropView.setVisibility(View.GONE);
+            }
+        }
     }
 
     public void backToMain() {

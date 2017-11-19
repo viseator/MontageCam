@@ -8,6 +8,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.RectF;
 import android.graphics.Xfermode;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -71,7 +72,6 @@ public class HollowView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        //System.out.println("width = "+getMeasuredWidth()+"     height = "+getMeasuredHeight());
         if (mDrawBit == null || mDrawBit.isRecycled()) {
             generatorBit();
         }
@@ -191,6 +191,12 @@ public class HollowView extends View {
         mFragment.activity.mFrameLayout.setBackground(mContext.getDrawable(R.drawable
                 .repeat_fill_pattern));
         mMatrix = new Matrix(mFragment.activity.mainImage.getImageViewMatrix());
+    }
+
+    public void hollowRect(RectF rectf) {
+        mPaintCanvas.drawRect(rectf, mPaint);
+        postInvalidate();
+        mBitmapCache.push(BitmapUtils.restoreBitmap(mDrawBit, mMatrix, rawW, rawH));
     }
 
     public void undo() {

@@ -36,7 +36,6 @@ import com.xinlan.imageeditlibrary.editimage.EditImageActivity
 import com.xinlan.imageeditlibrary.editimage.utils.BitmapUtils
 import com.xinlan.imageeditlibrary.editimage.utils.FileUtil
 import org.jetbrains.anko.alert
-import org.jetbrains.anko.toast
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -364,7 +363,6 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
             val imageStream = contentResolver.openInputStream(params[0])
             val bitmap = BitmapFactory.decodeStream(imageStream)
             BitmapUtils.saveBitmap(bitmap, file.absolutePath)
-
         }
 
         override fun onPostExecute(result: Unit?) {
