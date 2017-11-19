@@ -159,6 +159,19 @@ public class EditImageActivity extends BaseActivity {
         }
     };
 
+    private BitmapCache.CacheStateChangeListener mCacheListener = new BitmapCache
+            .CacheStateChangeListener() {
+        @Override
+        public void canUndo(boolean b) {
+            undoButton.setVisibility(b ? View.VISIBLE : View.GONE);
+        }
+
+        @Override
+        public void canRedo(boolean b) {
+            redoButton.setVisibility(b ? View.VISIBLE : View.GONE);
+        }
+    };
+
     /**
      * @param context
      * @param editImagePath
@@ -197,6 +210,7 @@ public class EditImageActivity extends BaseActivity {
 
     private void initView() {
         mContext = this;
+        mBitmapCache.setListener(mCacheListener);
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         imageWidth = metrics.widthPixels / 2;
         imageHeight = metrics.heightPixels / 2;
@@ -245,6 +259,8 @@ public class EditImageActivity extends BaseActivity {
             public void onClick(View v) {
                 if (mode == MODE_HOLLOW) {
                     mHollowFragment.undo();
+                } else {
+                    changeMainBitmap(mBitmapCache.undo(), true);
                 }
             }
         });
@@ -254,6 +270,8 @@ public class EditImageActivity extends BaseActivity {
             public void onClick(View v) {
                 if (mode == MODE_HOLLOW) {
                     mHollowFragment.redo();
+                } else {
+                    changeMainBitmap(mBitmapCache.redo(), true);
                 }
             }
         });
@@ -263,9 +281,6 @@ public class EditImageActivity extends BaseActivity {
             @Override
             public void onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
-                //System.out.println(e1.getAction() + " " + e2.getAction() + " " +
-                // velocityX + "
-                // " + velocityY);
                 if (velocityY > 1) {
                     closeInputMethod();
                 }
@@ -292,6 +307,8 @@ public class EditImageActivity extends BaseActivity {
 
         @Override
         public Fragment getItem(int index) {
+            undoButton.setVisibility(View.GONE);
+            redoButton.setVisibility(View.GONE);
             // System.out.println("createFragment-->"+index);
             switch (index) {
                 case MainMenuFragment.INDEX:// 主菜单
@@ -445,11 +462,6 @@ public class EditImageActivity extends BaseActivity {
         mainImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
     }
 
-    /**
-     * 切换底图Bitmap
-     *
-     * @param newBit
-     */
     public void changeMainBitmap(Bitmap newBit) {
         if (newBit == null) return;
 
@@ -596,7 +608,6 @@ public class EditImageActivity extends BaseActivity {
         Snackbar snackbar = Snackbar.make(mRelativeLayout, info, Snackbar.LENGTH_SHORT);
         snackbar.show();
     }
-
 
 
 }// end class

@@ -79,8 +79,6 @@ class BitmapCache {
             cacheBitmap.removeAt(0).recycle()
         }
         currentPos = -1
-        listener?.canUndo(false)
-        listener?.canRedo(false)
     }
 
 }
