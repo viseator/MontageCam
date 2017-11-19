@@ -57,10 +57,6 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mHollowView.setFragment(this);
-        mHollowView.resetBitmap(activity.mainBitmap.copy(activity.mainBitmap.getConfig(), false),
-                true);
-
         backToMenu.setOnClickListener(this);// 返回主菜单
 
         mPaintModeView.setOnClickListener(this);
@@ -81,10 +77,15 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
         activity.mFrameLayout.setBackgroundColor(getResources().getColor(R.color.main_backgroud));
 
         mHollowView.setVisibility(View.GONE);
+        mHollowView.reset();
     }
 
     public void onShow() {
         activity.mode = EditImageActivity.MODE_HOLLOW;
+        mHollowView.setFragment(this);
+        mHollowView.resetBitmap(activity.mainBitmap.copy(activity.mainBitmap.getConfig(), false),
+                true);
+
 //        activity.mainImage.setImageBitmap(activity.mainBitmap);
         this.mHollowView.setVisibility(View.VISIBLE);
     }

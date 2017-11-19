@@ -33,6 +33,7 @@ import com.androidnetworking.interfaces.StringRequestListener;
 import com.androidnetworking.interfaces.UploadProgressListener;
 import com.xinlan.imageeditlibrary.BaseActivity;
 import com.xinlan.imageeditlibrary.R;
+import com.xinlan.imageeditlibrary.editimage.cache.BitmapCache;
 import com.xinlan.imageeditlibrary.editimage.fragment.AddTextFragment;
 import com.xinlan.imageeditlibrary.editimage.fragment.BeautyFragment;
 import com.xinlan.imageeditlibrary.editimage.fragment.CropFragment;
@@ -138,6 +139,8 @@ public class EditImageActivity extends BaseActivity {
     public BeautyFragment mBeautyFragment;//美颜模式Fragment
 
     private SaveImageTask mSaveImageTask;
+
+    private BitmapCache mBitmapCache = new BitmapCache();
 
     /**
      * @param context
@@ -395,8 +398,9 @@ public class EditImageActivity extends BaseActivity {
             if (mode != MODE_NONE) {
                 applyChange();
                 shouldSave = true;
+            }else {
+                doSaveImage();
             }
-//            }
         }
     }// end inner class
 
@@ -462,14 +466,6 @@ public class EditImageActivity extends BaseActivity {
     }
 
     protected void onSaveTaskDone() {
-/*        Intent returnIntent = new Intent();
-        returnIntent.putExtra(FILE_PATH, filePath);
-        returnIntent.putExtra(EXTRA_OUTPUT, saveFilePath);
-        returnIntent.putExtra(IMAGE_IS_EDIT, mOpTimes > 0);
-
-        FileUtil.ablumUpdate(this, saveFilePath);
-        setResult(RESULT_OK, returnIntent);
-        finish();*/
         uploadImage();
     }
 

@@ -72,8 +72,7 @@ public class HollowView extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         //System.out.println("width = "+getMeasuredWidth()+"     height = "+getMeasuredHeight());
-        if (mDrawBit == null) {
-            Log.d(TAG, String.valueOf("onMeasure"));
+        if (mDrawBit == null || mDrawBit.isRecycled()) {
             generatorBit();
         }
     }
@@ -162,7 +161,7 @@ public class HollowView extends View {
             rawW = bitmap.getWidth();
         }
 
-        if (mPaintCanvas == null) {
+        if (mPaintCanvas == null || mDrawBit.isRecycled()) {
             mPendingBitmap = bitmap;
         } else {
             mPaintCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
@@ -180,6 +179,7 @@ public class HollowView extends View {
         if (mDrawBit != null && !mDrawBit.isRecycled()) {
             mDrawBit.recycle();
         }
+        mBitmapCache.reset();
     }
 
     public void setFragment(HollowFragment hollowFragment) {
