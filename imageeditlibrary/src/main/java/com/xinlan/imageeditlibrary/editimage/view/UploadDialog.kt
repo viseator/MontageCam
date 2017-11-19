@@ -30,6 +30,7 @@ class UploadDialog : DialogFragment(), View.OnClickListener {
     var resultText: EditText? = null
     var titleText: TextView? = null
     var button: Button? = null
+    var selfButton: Button? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val view = activity.layoutInflater.inflate(R.layout.upload_dialog, null)
@@ -41,6 +42,8 @@ class UploadDialog : DialogFragment(), View.OnClickListener {
         resultText = view.findViewById(R.id.upload_result_text)
         button = view.findViewById(R.id.copy_token_button)
         button?.setOnClickListener(this)
+        selfButton = view.findViewById(R.id.token_use_myself)
+        selfButton?.setOnClickListener(this)
         val builder = AlertDialog.Builder(activity)
 
         builder.setCustomTitle(headerView).setView(view)
@@ -50,11 +53,15 @@ class UploadDialog : DialogFragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        val clipboard = activity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText(label, resultText?.text)
-        clipboard.primaryClip = clip
-        Toast.makeText(activity, R.string.copy_success, Toast.LENGTH_LONG).show()
-        isCancelable = true
+        if (v == button) {
+            val clipboard = activity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText(label, resultText?.text)
+            clipboard.primaryClip = clip
+            Toast.makeText(activity, R.string.copy_success, Toast.LENGTH_LONG).show()
+            isCancelable = true
+        } else if (v == selfButton) {
+            // todo: self edit logic
+        }
     }
 
     fun setTitle(s: String) {
@@ -69,6 +76,7 @@ class UploadDialog : DialogFragment(), View.OnClickListener {
         progressBar?.visibility = View.GONE
         resultText?.visibility = View.VISIBLE
         button?.visibility = View.VISIBLE
+        selfButton?.visibility = View.VISIBLE
     }
 
     fun setResultText(result: String) {

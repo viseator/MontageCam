@@ -27,10 +27,6 @@ public class HollowCropRectView extends View {
     private float oldx, oldy;
     private int status = STATUS_IDLE;
     private int selectedControllerCircle;
-    private RectF backUpRect = new RectF();// 上
-    private RectF backLeftRect = new RectF();// 左
-    private RectF backRightRect = new RectF();// 右
-    private RectF backDownRect = new RectF();// 下
 
     private RectF cropRect = new RectF();// 剪切矩形
 
@@ -72,7 +68,7 @@ public class HollowCropRectView extends View {
         mBackgroundPaint.setAlpha(200);
         circleBit = BitmapFactory.decodeResource(context.getResources(), R.drawable.sticker_rotate);
         circleRect.set(0, 0, circleBit.getWidth(), circleBit.getHeight());
-        leftTopCircleRect = new RectF(0, 0, CIRCLE_WIDTH, CIRCLE_WIDTH );
+        leftTopCircleRect = new RectF(0, 0, CIRCLE_WIDTH, CIRCLE_WIDTH);
         rightTopCircleRect = new RectF(leftTopCircleRect);
         leftBottomRect = new RectF(leftTopCircleRect);
         rightBottomRect = new RectF(leftTopCircleRect);
@@ -99,8 +95,6 @@ public class HollowCropRectView extends View {
 
         imageRect.set(rect);
         cropRect.set(rect);
-        // setCropRect(rect);
-        // 调整Rect
 
         float h, w;
         if (cropRect.width() >= cropRect.height()) {// w>=h
@@ -168,10 +162,8 @@ public class HollowCropRectView extends View {
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (status == STATUS_SCALE) {// 缩放控制
-                    // System.out.println("缩放控制");
                     scaleCropController(x, y);
                 } else if (status == STATUS_MOVE) {// 移动控制
-                    // System.out.println("移动控制");
                     translateCrop(x - oldx, y - oldy);
                 }
                 break;
@@ -198,23 +190,6 @@ public class HollowCropRectView extends View {
         tempRect.set(cropRect);// 存贮原有数据，以便还原
 
         translateRect(cropRect, dx, dy);
-        // 边界判定算法优化
-//        float mdLeft = imageRect.left - cropRect.left;
-//        if (mdLeft > 0) {
-//            translateRect(cropRect, mdLeft, 0);
-//        }
-//        float mdRight = imageRect.right - cropRect.right;
-//        if (mdRight < 0) {
-//            translateRect(cropRect, mdRight, 0);
-//        }
-//        float mdTop = imageRect.top - cropRect.top;
-//        if (mdTop > 0) {
-//            translateRect(cropRect, 0, mdTop);
-//        }
-//        float mdBottom = imageRect.bottom - cropRect.bottom;
-//        if (mdBottom < 0) {
-//            translateRect(cropRect, 0, mdBottom);
-//        }
 
         this.invalidate();
     }

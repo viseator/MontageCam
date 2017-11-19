@@ -74,8 +74,8 @@ import java.io.File;
  *         包含 1.贴图 2.滤镜 3.剪裁 4.底图旋转 功能
  */
 public class EditImageActivity extends BaseActivity {
-    private static final int OUT_HEIGHT = 1920;
-    private static final int OUT_WIDTH = 1080;
+    public static final int OUT_HEIGHT = 1920;
+    public static final int OUT_WIDTH = 1080;
     private static final String TAG = "@vir EditImageActivity";
     private UploadDialog mDialog;
     public static final String FILE_PATH = "file_path";
@@ -356,8 +356,10 @@ public class EditImageActivity extends BaseActivity {
         @Override
         protected Bitmap doInBackground(String... params) {
 
-//            return BitmapUtils.getSampledBitmap(params[0], imageWidth, imageHeight);
-            return BitmapFactory.decodeFile(params[0]);
+            Bitmap bitmap = BitmapFactory.decodeFile(params[0]);
+//            Bitmap scaledBitmap = BitmapUtils.scaleBitmap(bitmap, OUT_HEIGHT, OUT_WIDTH);
+//            bitmap.recycle();
+            return bitmap;
         }
 
         @Override

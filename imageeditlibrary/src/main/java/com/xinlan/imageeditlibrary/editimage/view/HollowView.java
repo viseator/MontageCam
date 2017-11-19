@@ -9,7 +9,6 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
-import android.graphics.Xfermode;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
@@ -22,13 +21,6 @@ import com.xinlan.imageeditlibrary.editimage.cache.BitmapCache;
 import com.xinlan.imageeditlibrary.editimage.fragment.HollowFragment;
 import com.xinlan.imageeditlibrary.editimage.utils.BitmapUtils;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
-/**
- * Created by panyi on 17/2/11.
- */
 
 public class HollowView extends View {
     private static final String TAG = "@vir HollowView";
@@ -188,8 +180,13 @@ public class HollowView extends View {
     public void setFragment(HollowFragment hollowFragment) {
         mFragment = hollowFragment;
         mFragment.activity.mainImage.setVisibility(GONE);
-        mFragment.activity.mFrameLayout.setBackground(mContext.getDrawable(R.drawable
-                .repeat_fill_pattern));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mFragment.activity.mFrameLayout.setBackground(mContext.getDrawable(R.drawable
+                    .repeat_fill_pattern));
+        }else{
+            mFragment.activity.mFrameLayout.setBackground(mContext.getResources().getDrawable(R
+                    .drawable.repeat_fill_pattern));
+        }
         mMatrix = new Matrix(mFragment.activity.mainImage.getImageViewMatrix());
     }
 

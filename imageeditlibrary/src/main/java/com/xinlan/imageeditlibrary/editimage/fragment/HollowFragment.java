@@ -116,6 +116,7 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
 
     public void onShow() {
         activity.mode = EditImageActivity.MODE_HOLLOW;
+        mPaintModeView.setPaintStrokeColor(Color.WHITE);
         mHollowView.setFragment(this);
         mHollowView.resetBitmap(activity.mainBitmap.copy(activity.mainBitmap.getConfig(), false),
                 true);

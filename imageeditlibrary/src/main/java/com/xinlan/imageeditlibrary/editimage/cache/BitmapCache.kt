@@ -17,7 +17,7 @@ class BitmapCache {
 
     val TAG = "@vir BitmapCache"
 
-    val CACHE_SIZE = 10
+    val CACHE_SIZE = 5
     val cacheBitmap = ArrayList<Bitmap>()
     var currentPos = -1
     var listener: CacheStateChangeListener? = null

@@ -1,13 +1,20 @@
 package com.xinlan.imageeditlibrary.editimage.view;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Shader;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.xinlan.imageeditlibrary.R;
 
 /**
  * Created by panyi on 17/2/11.
@@ -18,6 +25,7 @@ public class PaintModeView extends View {
 
     private int mStokeColor;
     private float mStokeWidth = -1;
+    private Context mContext;
 
     private float mRadius;
 
@@ -43,6 +51,7 @@ public class PaintModeView extends View {
     }
 
     protected void initView(Context context) {
+        mContext = context;
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setColor(Color.RED);
@@ -79,6 +88,13 @@ public class PaintModeView extends View {
 
     public int getStokenColor() {
         return mStokeColor;
+    }
+
+    public void setShader(int resourceId) {
+        Bitmap pattern = BitmapFactory.decodeResource(mContext.getResources(), resourceId);
+        BitmapShader bitmapShader = new BitmapShader(pattern, Shader.TileMode.REPEAT, Shader
+                .TileMode.REPEAT);
+        mPaint.setShader(bitmapShader);
     }
 
 }//end class

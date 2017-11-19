@@ -27,11 +27,9 @@ public class HollowCropCircleView extends View {
     private Context mContext;
     private float oldx, oldy;
     private int status = STATUS_IDLE;
-    private int selectedControllerCircle;
     private float mCx, mCy;
     private float mRadius;
 
-    private RectF cropRect = new RectF();// 剪切矩形
 
     private Paint mBackgroundPaint = new Paint();// 背景Paint
     private Bitmap circleBit;
@@ -39,9 +37,7 @@ public class HollowCropCircleView extends View {
     private RectF handleCircleRect;
 
     private RectF imageRect = new RectF();// 存贮图片位置信息
-    private RectF tempRect = new RectF();// 临时存贮矩形数据
 
-    private float ratio = -1;// 剪裁缩放比率
 
     public HollowCropCircleView(Context context) {
         super(context);
@@ -178,36 +174,6 @@ public class HollowCropCircleView extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-    }
-
-    /**
-     * 返回剪切矩形
-     *
-     * @return
-     */
-    public RectF getCropRect() {
-        return new RectF(this.cropRect);
-    }
-
-    /**
-     * 缩放指定矩形
-     *
-     * @param rect
-     */
-    private static void scaleRect(RectF rect, float scaleX, float scaleY) {
-        float w = rect.width();
-        float h = rect.height();
-
-        float newW = scaleX * w;
-        float newH = scaleY * h;
-
-        float dx = (newW - w) / 2;
-        float dy = (newH - h) / 2;
-
-        rect.left -= dx;
-        rect.top -= dy;
-        rect.right += dx;
-        rect.bottom += dy;
     }
 
     public float getCx() {

@@ -71,7 +71,7 @@ public class BitmapUtils {
         float scaleX = w / (float) width;
         float scaleY = h / (float) height;
         float mainScale = Math.min(scaleX, scaleY);
-        if (mainScale > 1) return bitmap;
+        if (mainScale >= 1) return Bitmap.createBitmap(bitmap);
         return Bitmap.createScaledBitmap(bitmap, (int) (width * mainScale), (int) (height *
                 mainScale), true);
     }
@@ -437,7 +437,7 @@ public class BitmapUtils {
         }
         try {
             FileOutputStream out = new FileOutputStream(f);
-            bm.compress(Bitmap.CompressFormat.PNG, 80, out);
+            bm.compress(Bitmap.CompressFormat.PNG, 100, out);
             out.flush();
             out.close();
             return true;
@@ -479,7 +479,7 @@ public class BitmapUtils {
         canvas.save();
         canvas.translate(dx, dy);
         canvas.scale(scale_x, scale_y);
-        canvas.drawBitmap(src,0,0,null);
+        canvas.drawBitmap(src, 0, 0, null);
         canvas.restore();
         return result;
     }
