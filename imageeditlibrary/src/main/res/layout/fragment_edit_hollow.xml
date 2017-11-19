@@ -28,7 +28,16 @@
         android:max="100"/>
 
     <ImageButton
-        android:id="@+id/hollow_crop_button"
+        android:id="@+id/hollow_crop_circle_button"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="10dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_donut_large"/>
+    <ImageButton
+        android:id="@+id/hollow_crop_rect_button"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_gravity="center_vertical"

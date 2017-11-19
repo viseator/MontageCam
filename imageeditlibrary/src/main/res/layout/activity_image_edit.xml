@@ -112,8 +112,15 @@
             android:visibility="gone"
             />
 
-        <com.xinlan.imageeditlibrary.editimage.view.HollowCropView
-            android:id="@+id/hollow_crop_panel"
+        <com.xinlan.imageeditlibrary.editimage.view.HollowCropRectView
+            android:id="@+id/hollow_crop_rect_panel"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
+        <com.xinlan.imageeditlibrary.editimage.view.HollowCropCircleView
+            android:id="@+id/hollow_crop_circle_panel"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_gravity="center"

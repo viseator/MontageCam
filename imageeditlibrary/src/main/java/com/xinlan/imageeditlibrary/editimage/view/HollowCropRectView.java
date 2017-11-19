@@ -10,19 +10,19 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.xinlan.imageeditlibrary.R;
 
 
-public class HollowCropView extends View {
+public class HollowCropRectView extends View {
     private static int STATUS_IDLE = 1;// 空闲状态
     private static int STATUS_MOVE = 2;// 移动状态
     private static int STATUS_SCALE = 3;// 缩放状态
 
     private final int CIRCLE_WIDTH = 60;
-    private final int CIRCLE_SLOT = 20;
     private Context mContext;
     private float oldx, oldy;
     private int status = STATUS_IDLE;
@@ -47,17 +47,17 @@ public class HollowCropView extends View {
 
     private float ratio = -1;// 剪裁缩放比率
 
-    public HollowCropView(Context context) {
+    public HollowCropRectView(Context context) {
         super(context);
         init(context);
     }
 
-    public HollowCropView(Context context, AttributeSet attrs) {
+    public HollowCropRectView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public HollowCropView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public HollowCropRectView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
@@ -199,22 +199,22 @@ public class HollowCropView extends View {
 
         translateRect(cropRect, dx, dy);
         // 边界判定算法优化
-        float mdLeft = imageRect.left - cropRect.left;
-        if (mdLeft > 0) {
-            translateRect(cropRect, mdLeft, 0);
-        }
-        float mdRight = imageRect.right - cropRect.right;
-        if (mdRight < 0) {
-            translateRect(cropRect, mdRight, 0);
-        }
-        float mdTop = imageRect.top - cropRect.top;
-        if (mdTop > 0) {
-            translateRect(cropRect, 0, mdTop);
-        }
-        float mdBottom = imageRect.bottom - cropRect.bottom;
-        if (mdBottom < 0) {
-            translateRect(cropRect, 0, mdBottom);
-        }
+//        float mdLeft = imageRect.left - cropRect.left;
+//        if (mdLeft > 0) {
+//            translateRect(cropRect, mdLeft, 0);
+//        }
+//        float mdRight = imageRect.right - cropRect.right;
+//        if (mdRight < 0) {
+//            translateRect(cropRect, mdRight, 0);
+//        }
+//        float mdTop = imageRect.top - cropRect.top;
+//        if (mdTop > 0) {
+//            translateRect(cropRect, 0, mdTop);
+//        }
+//        float mdBottom = imageRect.bottom - cropRect.bottom;
+//        if (mdBottom < 0) {
+//            translateRect(cropRect, 0, mdBottom);
+//        }
 
         this.invalidate();
     }
@@ -262,7 +262,7 @@ public class HollowCropView extends View {
 
         if (ratio < 0) {// 任意缩放比
             // 边界条件检测
-            validateCropRect();
+//            validateCropRect();
             invalidate();
         } else {
             // 更新剪切矩形长宽

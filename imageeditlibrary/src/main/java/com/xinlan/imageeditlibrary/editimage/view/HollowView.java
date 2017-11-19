@@ -199,6 +199,12 @@ public class HollowView extends View {
         mBitmapCache.push(BitmapUtils.restoreBitmap(mDrawBit, mMatrix, rawW, rawH));
     }
 
+    public void hollowCircle(float x, float y, float radius) {
+        mPaintCanvas.drawCircle(x, y, radius, mPaint);
+        postInvalidate();
+        mBitmapCache.push(BitmapUtils.restoreBitmap(mDrawBit, mMatrix, rawW, rawH));
+    }
+
     public void undo() {
         resetBitmap(mBitmapCache.undo(), false);
     }

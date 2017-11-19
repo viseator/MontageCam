@@ -56,8 +56,8 @@ public class BeautyFragment extends BaseEditFragment implements SeekBar.OnSeekBa
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         mainView = inflater.inflate(R.layout.fragment_edit_image_beauty, null);
 
         mSmoothValueBar = (SeekBar) mainView.findViewById(R.id.smooth_value_bar);
@@ -143,7 +143,8 @@ public class BeautyFragment extends BaseEditFragment implements SeekBar.OnSeekBa
     }
 
     public void applyBeauty() {
-        if (mResultBitmapRef.get() != null && (mSmooth != 0 || mWhiteSkin != 0)) {
+        if (mResultBitmapRef != null && mResultBitmapRef.get() != null && (mSmooth != 0 ||
+                mWhiteSkin != 0)) {
             activity.changeMainBitmap(mResultBitmapRef.get());
         }
 
@@ -168,15 +169,14 @@ public class BeautyFragment extends BaseEditFragment implements SeekBar.OnSeekBa
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            dialog = BaseActivity.getLoadingDialog(getActivity(), R.string.handing,
-                    false);
+            dialog = BaseActivity.getLoadingDialog(getActivity(), R.string.handing, false);
             dialog.show();
         }
 
         @Override
         protected Bitmap doInBackground(Integer... params) {
-            srcBitmap = Bitmap.createBitmap(activity.mainBitmap.copy(
-                    Bitmap.Config.ARGB_8888, true));
+            srcBitmap = Bitmap.createBitmap(activity.mainBitmap.copy(Bitmap.Config.ARGB_8888,
+                    true));
             //System.out.println("smoothVal = "+smoothVal+"     whiteVal = "+whiteVal);
             PhotoProcessing.handleSmoothAndWhiteSkin(srcBitmap, smoothVal, whiteVal);
             return srcBitmap;
@@ -199,8 +199,7 @@ public class BeautyFragment extends BaseEditFragment implements SeekBar.OnSeekBa
         protected void onPostExecute(Bitmap result) {
             super.onPostExecute(result);
             dialog.dismiss();
-            if (result == null)
-                return;
+            if (result == null) return;
 
             mResultBitmapRef = new WeakReference<Bitmap>(result);
             activity.mainImage.setImageBitmap(mResultBitmapRef.get());

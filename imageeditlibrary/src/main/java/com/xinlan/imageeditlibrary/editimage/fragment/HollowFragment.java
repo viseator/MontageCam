@@ -5,23 +5,21 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PorterDuff;
-import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 
-import com.fasterxml.jackson.databind.type.MapLikeType;
 import com.xinlan.imageeditlibrary.R;
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity;
 import com.xinlan.imageeditlibrary.editimage.ModuleConfig;
 import com.xinlan.imageeditlibrary.editimage.cache.BitmapCache;
 import com.xinlan.imageeditlibrary.editimage.task.StickerTask;
-import com.xinlan.imageeditlibrary.editimage.view.HollowCropView;
+import com.xinlan.imageeditlibrary.editimage.view.HollowCropCircleView;
+import com.xinlan.imageeditlibrary.editimage.view.HollowCropRectView;
 import com.xinlan.imageeditlibrary.editimage.view.HollowView;
 import com.xinlan.imageeditlibrary.editimage.view.PaintModeView;
 
@@ -34,9 +32,11 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
     private BitmapCache.CacheStateChangeListener mListener;
 
     private HollowView mHollowView;
-    private HollowCropView mHollowCropView;
+    private HollowCropRectView mHollowCropRectView;
+    private HollowCropCircleView mHollowCropCircleView;
     private SeekBar mStokenWidthSeekBar;
     private ImageButton mCropButton;
+    private ImageButton mCropCircleButton;
 
 
     public boolean isEraser = false;//是否是擦除模式
@@ -54,9 +54,11 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
         mainView = inflater.inflate(R.layout.fragment_edit_hollow, container, false);
         mHollowView = getActivity().findViewById(R.id.hollow_view);
         mHollowView.setCacheListener(mListener);
-        mHollowCropView = getActivity().findViewById(R.id.hollow_crop_panel);
+        mHollowCropRectView = getActivity().findViewById(R.id.hollow_crop_rect_panel);
+        mHollowCropCircleView = getActivity().findViewById(R.id.hollow_crop_circle_panel);
         backToMenu = mainView.findViewById(R.id.hollow_back_to_main);
-        mCropButton = mainView.findViewById(R.id.hollow_crop_button);
+        mCropButton = mainView.findViewById(R.id.hollow_crop_rect_button);
+        mCropCircleButton = mainView.findViewById(R.id.hollow_crop_circle_button);
         mPaintModeView = mainView.findViewById(R.id.hollow_paint_thumb);
         mStokenWidthSeekBar = mainView.findViewById(R.id.hollow_stoke_width_seekbar);
         return mainView;
@@ -68,7 +70,7 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
 
         backToMenu.setOnClickListener(this);// 返回主菜单
         mCropButton.setOnClickListener(this);
-
+        mCropCircleButton.setOnClickListener(this);
     }
 
 
@@ -77,14 +79,25 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
         if (v == backToMenu) {
             savePaintImage();
         } else if (v == mCropButton) {
-            if (mHollowCropView.getVisibility() != View.VISIBLE) {
-                mHollowCropView.setVisibility(View.VISIBLE);
+            if (mHollowCropRectView.getVisibility() != View.VISIBLE) {
+                mHollowCropRectView.setVisibility(View.VISIBLE);
                 mCropButton.setImageResource(R.drawable.ic_action_tick);
-                mHollowCropView.setCropRect(activity.mainImage.getBitmapRect());
+                mHollowCropRectView.setCropRect(activity.mainImage.getBitmapRect());
             } else {
-                mHollowView.hollowRect(mHollowCropView.getCropRect());
+                mHollowView.hollowRect(mHollowCropRectView.getCropRect());
                 mCropButton.setImageResource(R.drawable.image_edit_icon_crop);
-                mHollowCropView.setVisibility(View.GONE);
+                mHollowCropRectView.setVisibility(View.GONE);
+            }
+        } else if (v == mCropCircleButton) {
+            if (mHollowCropCircleView.getVisibility() != View.VISIBLE) {
+                mHollowCropCircleView.setVisibility(View.VISIBLE);
+                mCropCircleButton.setImageResource(R.drawable.ic_action_tick);
+                mHollowCropCircleView.setCropRect(activity.mainImage.getBitmapRect());
+            } else {
+                mHollowView.hollowCircle(mHollowCropCircleView.getCx(), mHollowCropCircleView
+                        .getCy(), mHollowCropCircleView.getRadius());
+                mCropCircleButton.setImageResource(R.drawable.ic_donut_large);
+                mHollowCropCircleView.setVisibility(View.GONE);
             }
         }
     }
@@ -152,6 +165,12 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
     }
 
     public void savePaintImage() {
+        if (mHollowCropCircleView.getVisibility() == View.VISIBLE) {
+            mHollowCropCircleView.setVisibility(View.GONE);
+        }
+        if (mHollowCropRectView.getVisibility() == View.VISIBLE) {
+            mHollowCropRectView.setVisibility(View.GONE);
+        }
         if (mSavePaintImageTask != null && !mSavePaintImageTask.isCancelled()) {
             mSavePaintImageTask.cancel(true);
         }
