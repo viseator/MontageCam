@@ -1,10 +1,13 @@
 package com.viseator.montagecam.activity
 
 import android.Manifest
+import android.app.Activity
 import android.app.ProgressDialog
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.*
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
@@ -45,12 +48,14 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     val REQUEST_CAMERA_PERMISSION = 0x1
     val REQUEST_STORAGE_PERMISSION = 0x2
     val CALL_EDIT_ACTIVITY = 0x3
+    val CALL_CHOOSE_IMAGE_REQUEST = 0x4;
     val TAG = "@vir CameraActivity"
 
     @BindView(R.id.main_camera_view) lateinit var mCameraView: CameraView
     @BindView(R.id.camera_toolbar) lateinit var mToolBar: Toolbar
     @BindView(R.id.camera_shot_button) lateinit var mShotButton: ImageButton
     @BindView(R.id.hollow_image) lateinit var mHollowImageView: HollowImageView
+    @BindView(R.id.camera_album_button) lateinit var mAlbumButton: ImageButton
 
     private val ALPHA_SPEED = 500
     private val FLASH_OPTIONS = intArrayOf(CameraView.FLASH_AUTO, CameraView.FLASH_OFF,
@@ -170,7 +175,18 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         mShotButton.setOnClickListener({
             mCameraView.takePicture()
         })
-        if (inHollowMode) initHollowView()
+
+        if (inHollowMode) initHollowView() else {
+            mAlbumButton.visibility = View.VISIBLE
+            mAlbumButton.setOnClickListener({
+                val intent = Intent()
+                intent.type = "image/*"
+                intent.action = Intent.ACTION_GET_CONTENT
+                startActivityForResult(
+                        Intent.createChooser(intent, resources.getString(R.string.choose_image)),
+                        CALL_CHOOSE_IMAGE_REQUEST)
+            })
+        }
     }
 
     fun initHollowView() {
@@ -327,4 +343,34 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         super.onBackPressed()
         finish()
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == CALL_CHOOSE_IMAGE_REQUEST && data != null) {
+                LoadImageTask().execute(data.data)
+            }
+        }
+    }
+
+    inner class LoadImageTask : AsyncTask<Uri, Unit, Unit>() {
+        val file = File(externalCacheDir, "shoot_temp.jpg")
+        val dialog = getLoadingDialog(this@CameraActivity, R.string.loading, false)
+
+        override fun onPreExecute() {
+            dialog.show()
+        }
+
+        override fun doInBackground(vararg params: Uri?) {
+            val imageStream = contentResolver.openInputStream(params[0])
+            val bitmap = BitmapFactory.decodeStream(imageStream)
+            BitmapUtils.saveBitmap(bitmap, file.absolutePath)
+
+        }
+
+        override fun onPostExecute(result: Unit?) {
+            dialog.dismiss()
+            startImageEdit(file.absolutePath)
+        }
+    }
+
 }
