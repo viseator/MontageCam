@@ -7,6 +7,8 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import butterknife.BindView
 import com.androidnetworking.AndroidNetworking
@@ -19,6 +21,7 @@ import com.viseator.montagecam.view.OnInputDialogResultListener
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
+import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
 
 
 class MainActivity : BaseActivity() {
@@ -55,7 +58,6 @@ class MainActivity : BaseActivity() {
             startActivity<CameraActivity>()
         })
         receiverPhotoButton.setOnClickListener({
-            dialog.editText.text = null
             dialog.show(fragmentManager, null)
         })
     }
@@ -106,5 +108,6 @@ class MainActivity : BaseActivity() {
             dialog.dismiss()
         }
     }
+
 }
 

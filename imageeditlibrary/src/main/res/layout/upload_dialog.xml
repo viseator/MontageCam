@@ -14,10 +14,11 @@
         android:padding="20dp"/>
 
     <TextView
+        android:textIsSelectable="true"
         android:id="@+id/upload_result_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
         android:layout_margin="10dp"
         android:gravity="center"
         android:textSize="18sp"

@@ -38,9 +38,10 @@ class TokenInputDialog : DialogFragment() {
         if (token != null) {
             editText.text = SpannableStringBuilder(token)
             editText.selectAll()
-        }else {
-            editText.text = null
         }
+        editText.setOnClickListener({
+            editText.selectAll()
+        })
         val builder = AlertDialog.Builder(activity).setTitle(R.string.input_token).setView(view)
         button.setOnClickListener({
             resultListener?.onResult(editText.text.toString())
