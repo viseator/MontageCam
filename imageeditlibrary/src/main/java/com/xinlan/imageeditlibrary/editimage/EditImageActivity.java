@@ -2,6 +2,9 @@ package com.xinlan.imageeditlibrary.editimage;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -80,6 +83,7 @@ public class EditImageActivity extends BaseActivity {
     public static final String BITMAP_FILE = "bitmap";
     private UploadDialog mDialog;
     public static final String FILE_PATH = "file_path";
+    public static final String CLIP_LABEL = "token";
     public static final String EXTRA_OUTPUT = "extra_output";
     public static final String EXTRA_FRONT = "extra_front";
 
@@ -515,8 +519,13 @@ public class EditImageActivity extends BaseActivity {
         @Override
         public void onResponse(String response) {
             mDialog.progressEnd();
-            mDialog.setResultText(response);
+            String resultString = mDialog.genShareText(response);
+            mDialog.setResultText(resultString);
             mDialog.setTitle(getResources().getString(R.string.your_token));
+            ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context
+                    .CLIPBOARD_SERVICE);
+            ClipData data = ClipData.newPlainText(CLIP_LABEL, resultString);
+            clipboardManager.setPrimaryClip(data);
             mDialog.setListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {

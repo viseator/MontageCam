@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/apk/res-auto"
                 android:layout_width="240dp"
-                android:layout_height="100dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
     <ProgressBar
@@ -13,24 +13,14 @@
         android:layout_centerInParent="true"
         android:padding="20dp"/>
 
-    <EditText
+    <TextView
         android:id="@+id/upload_result_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:layout_centerInParent="true"
         android:layout_margin="10dp"
-        android:layout_toStartOf="@+id/copy_token_button"
-        android:textSize="20sp"
-        android:visibility="gone"
-        />
-
-    <Button
-        android:id="@+id/copy_token_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toStartOf="@+id/token_use_myself"
-        android:text="@string/copy"
+        android:gravity="center"
+        android:textSize="18sp"
         android:visibility="gone"
         />
 
@@ -38,9 +28,9 @@
         android:id="@+id/token_use_myself"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="20dp"
+        android:layout_below="@id/upload_result_text"
+        android:layout_margin="10dp"
+        android:layout_centerHorizontal="true"
         android:text="@string/self_fill"
         android:visibility="gone"/>
 

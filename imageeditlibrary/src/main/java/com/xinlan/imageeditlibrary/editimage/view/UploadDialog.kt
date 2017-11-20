@@ -4,17 +4,12 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.app.DialogFragment
 import android.os.Bundle
-import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.view.View
+import android.widget.Button
+import android.widget.ProgressBar
+import android.widget.TextView
 import com.xinlan.imageeditlibrary.R
-import android.R.attr.label
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Context.CLIPBOARD_SERVICE
-import android.util.Log
-import android.widget.*
 
 
 /**
@@ -27,11 +22,10 @@ class UploadDialog : DialogFragment(), View.OnClickListener {
     val TAG = "@vir UploadDialog"
     val label = "TOKEN"
     var progressBar: ProgressBar? = null
-    var resultText: EditText? = null
+    var resultText: TextView? = null
     var titleText: TextView? = null
-    var button: Button? = null
     var selfButton: Button? = null
-    var listener:View.OnClickListener? = null
+    var listener: View.OnClickListener? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val view = activity.layoutInflater.inflate(R.layout.upload_dialog, null)
@@ -41,8 +35,6 @@ class UploadDialog : DialogFragment(), View.OnClickListener {
         progressBar = view.findViewById(R.id.upload_progressbar)
         progressBar?.max = 100
         resultText = view.findViewById(R.id.upload_result_text)
-        button = view.findViewById(R.id.copy_token_button)
-        button?.setOnClickListener(this)
         selfButton = view.findViewById(R.id.token_use_myself)
         selfButton?.setOnClickListener(this)
         val builder = AlertDialog.Builder(activity)
@@ -54,15 +46,7 @@ class UploadDialog : DialogFragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        if (v == button) {
-            val clipboard = activity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val clip = ClipData.newPlainText(label, resultText?.text)
-            clipboard.primaryClip = clip
-            Toast.makeText(activity, R.string.copy_success, Toast.LENGTH_LONG).show()
-            isCancelable = true
-        } else if (v == selfButton) {
-            listener?.onClick(v)
-        }
+        listener?.onClick(v)
     }
 
     fun setTitle(s: String) {
@@ -76,12 +60,17 @@ class UploadDialog : DialogFragment(), View.OnClickListener {
     fun progressEnd() {
         progressBar?.visibility = View.GONE
         resultText?.visibility = View.VISIBLE
-        button?.visibility = View.VISIBLE
         selfButton?.visibility = View.VISIBLE
     }
 
     fun setResultText(result: String) {
         resultText?.text = SpannableStringBuilder(result)
-        resultText?.selectAll()
+        isCancelable = true
+    }
+
+    fun genShareText(token: String): String {
+        return "${activity.resources.getString(
+                R.string.share_info_pre)}|$token|${activity.resources.getString(
+                R.string.share_info_suf)}"
     }
 }

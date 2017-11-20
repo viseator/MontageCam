@@ -62,4 +62,6 @@
     <string name="upload_error">上传失败</string>
     <string name="return_">返回</string>
     <string name="self_fill">自己制作</string>
+    <string name="share_info_pre">嘿～你的朋友在摩卡相机邀请你一同完成一张属于你们的照片哦～分享码如下</string>
+    <string name="share_info_suf">。复制这条消息，打开摩卡相机完成你和TA的照片故事吧！</string>
 </resources>

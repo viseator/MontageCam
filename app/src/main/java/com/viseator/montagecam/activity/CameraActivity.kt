@@ -36,6 +36,7 @@ import com.xinlan.imageeditlibrary.editimage.EditImageActivity
 import com.xinlan.imageeditlibrary.editimage.utils.BitmapUtils
 import com.xinlan.imageeditlibrary.editimage.utils.FileUtil
 import org.jetbrains.anko.alert
+import org.jetbrains.anko.toast
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -160,7 +161,12 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
             else -> {
                 inHollowMode = true
                 mToken = intent.getStringExtra(MainActivity.TOKEN)
-                initHollowView()
+                if (mToken == "error") {
+                    toast(resources.getString(R.string.error_token))
+                    finish()
+                } else {
+                    initHollowView()
+                }
             }
         }
         val filePath = intent.getStringExtra(MainActivity.BITMAP_FILE)
@@ -243,11 +249,11 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
                 realMetrics.widthPixels, realMetrics.heightPixels, mHollowImageView.scale!!,
                 mHollowImageView.dX!!, mHollowImageView.dY!!,
                 mCameraView.facing == CameraView.FACING_FRONT)
-        val task = SaveImageTask()
+        val task = UploadImageTask()
         task.execute(resultBitmap)
     }
 
-    inner class SaveImageTask : AsyncTask<Bitmap, Unit, Unit>() {
+    inner class UploadImageTask : AsyncTask<Bitmap, Unit, Unit>() {
         var fileOutput: File? = null
         val dialog = this@CameraActivity.getLoadingDialog(this@CameraActivity,
                 R.string.saving_image, false)
