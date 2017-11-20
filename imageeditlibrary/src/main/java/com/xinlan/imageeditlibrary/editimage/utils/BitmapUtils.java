@@ -396,7 +396,7 @@ public class BitmapUtils {
         BitmapFactory.decodeFile(filePath, options);
         int inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
         options.inSampleSize = inSampleSize;
-        options.inPreferredConfig = Bitmap.Config.RGB_565;
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeFile(filePath, options);
     }
