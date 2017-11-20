@@ -87,6 +87,7 @@ public class EditImageActivity extends BaseActivity {
     public static final String CLIP_LABEL = "token";
     public static final String EXTRA_OUTPUT = "extra_output";
     public static final String EXTRA_FRONT = "extra_front";
+    public static final String EXTRA_ROTATION = "extra_rotation";
 
     public static final String SAVE_FILE_PATH = "save_file_path";
 
@@ -106,6 +107,7 @@ public class EditImageActivity extends BaseActivity {
     public String filePath;// 需要编辑图片路径
     public String saveFilePath;// 生成的新图片路径
     private boolean isFront;
+    private float rotation;
     private int imageWidth, imageHeight;// 展示图片控件 宽 高
     private LoadImageTask mLoadImageTask;
 
@@ -186,7 +188,7 @@ public class EditImageActivity extends BaseActivity {
      * @param requestCode
      */
     public static void start(Activity context, final String editImagePath, final String
-            outputPath, boolean isFront, final int requestCode) {
+            outputPath, boolean isFront, float rotation, final int requestCode) {
         if (TextUtils.isEmpty(editImagePath)) {
             Toast.makeText(context, R.string.no_choose, Toast.LENGTH_SHORT).show();
             return;
@@ -196,6 +198,8 @@ public class EditImageActivity extends BaseActivity {
         it.putExtra(EditImageActivity.FILE_PATH, editImagePath);
         it.putExtra(EditImageActivity.EXTRA_OUTPUT, outputPath);
         it.putExtra(EditImageActivity.EXTRA_FRONT, isFront);
+        it.putExtra(EditImageActivity.EXTRA_ROTATION, rotation);
+
         context.startActivityForResult(it, requestCode);
     }
 
@@ -212,6 +216,8 @@ public class EditImageActivity extends BaseActivity {
         filePath = getIntent().getStringExtra(FILE_PATH);
         saveFilePath = getIntent().getStringExtra(EXTRA_OUTPUT);// 保存图片路径
         isFront = getIntent().getBooleanExtra(EXTRA_FRONT, false);
+        rotation = getIntent().getFloatExtra(EXTRA_ROTATION, 0f);
+
         loadImage(filePath);
     }
 
@@ -369,8 +375,8 @@ public class EditImageActivity extends BaseActivity {
             }
             Bitmap bitmap = BitmapFactory.decodeFile(params[0], option);
             Bitmap scaledBitmap = BitmapUtils.scaleBitmap(bitmap, OUT_HEIGHT, OUT_WIDTH);
-            bitmap.recycle();
-            return scaledBitmap;
+            Bitmap rotatedBitmap = BitmapUtils.rotateBitmap(scaledBitmap, rotation);
+            return rotatedBitmap;
         }
 
         @Override
@@ -523,6 +529,10 @@ public class EditImageActivity extends BaseActivity {
     private StringRequestListener mUploadListener = new StringRequestListener() {
         @Override
         public void onResponse(String response) {
+            if (!mDialog.isAdded()) {
+                Log.d(TAG, String.valueOf("Invisible Dialog"));
+                return;
+            }
             mDialog.progressEnd();
             String resultString = mDialog.genShareText(response);
             mDialog.setResultText(resultString);

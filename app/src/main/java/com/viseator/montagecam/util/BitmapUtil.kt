@@ -171,5 +171,6 @@ class BitmapUtil {
             canvas.restore()
             return result
         }
+
     }
 }
