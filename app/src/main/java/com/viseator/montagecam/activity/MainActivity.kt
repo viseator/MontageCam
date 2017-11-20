@@ -6,22 +6,19 @@ import android.content.Context
 import android.content.IntentFilter
 import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
-import android.util.Log
-import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.ImageView
 import butterknife.BindView
 import com.androidnetworking.AndroidNetworking
 import com.jacksonandroidnetworking.JacksonParserFactory
 import com.viseator.montagecam.R
 import com.viseator.montagecam.base.BaseActivity
 import com.viseator.montagecam.receiver.CameraActivityReceiver
-import com.viseator.montagecam.view.TokenInputDialog
 import com.viseator.montagecam.view.OnInputDialogResultListener
+import com.viseator.montagecam.view.TokenInputDialog
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
-import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
 
 
 class MainActivity : BaseActivity() {
@@ -35,10 +32,11 @@ class MainActivity : BaseActivity() {
         val BITMAP_FILE = "bitmap"
     }
 
-    @BindView(R.id.main_take_photo_button) lateinit var takePhotoButton: Button
-    @BindView(R.id.main_receive_photo_button) lateinit var receiverPhotoButton: Button
+    @BindView(R.id.main_take_photo_button) lateinit var takePhotoButton: ImageView
+    @BindView(R.id.main_receive_photo_button) lateinit var receiverPhotoButton: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setFullScreen()
         setContentView(R.layout.activity_main)
         super.onCreate(savedInstanceState)
         //        startActivity<CameraActivity>(TOKEN to "9dfb96a5")

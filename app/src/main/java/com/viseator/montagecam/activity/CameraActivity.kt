@@ -18,6 +18,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.Toast
 import butterknife.BindView
 import com.androidnetworking.AndroidNetworking
@@ -53,16 +55,16 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
 
     @BindView(R.id.main_camera_view) lateinit var mCameraView: CameraView
     @BindView(R.id.camera_toolbar) lateinit var mToolBar: Toolbar
-    @BindView(R.id.camera_shot_button) lateinit var mShotButton: ImageButton
+    @BindView(R.id.camera_shot_button) lateinit var mShotButton: ImageView
     @BindView(R.id.hollow_image) lateinit var mHollowImageView: HollowImageView
-    @BindView(R.id.camera_album_button) lateinit var mAlbumButton: ImageButton
+    @BindView(R.id.camera_album_button) lateinit var mAlbumButton: ImageView
 
     private val ALPHA_SPEED = 500
     private val FLASH_OPTIONS = intArrayOf(CameraView.FLASH_AUTO, CameraView.FLASH_OFF,
             CameraView.FLASH_ON)
 
     private val FLASH_ICONS = intArrayOf(R.drawable.ic_flash_auto, R.drawable.ic_flash_off,
-            R.drawable.ic_flash_on)
+            R.drawable.icon_flash)
 
     private val FLASH_TITLES = intArrayOf(R.string.flash_auto, R.string.flash_off,
             R.string.flash_on)
