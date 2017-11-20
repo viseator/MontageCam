@@ -160,7 +160,18 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
             else -> {
                 inHollowMode = true
                 mToken = intent.getStringExtra(MainActivity.TOKEN)
+                initHollowView()
             }
+        }
+        val filePath = intent.getStringExtra(MainActivity.BITMAP_FILE)
+        if (filePath != null) {
+            inHollowMode = true
+            mCameraView.setMocaOnScrollListener(mMocaScrollListener)
+            val options = BitmapFactory.Options()
+            options.inScaled = false
+            val bitmap = BitmapFactory.decodeFile(filePath, options)
+            mHollowImageView.bitmap = bitmap
+            mHollowImageView.visibility = View.VISIBLE
         }
     }
 
@@ -175,7 +186,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
             mCameraView.takePicture()
         })
 
-        if (inHollowMode) initHollowView() else {
+        if (!inHollowMode) {
             mAlbumButton.visibility = View.VISIBLE
             mAlbumButton.setOnClickListener({
                 val intent = Intent()

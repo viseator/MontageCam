@@ -31,6 +31,7 @@ class UploadDialog : DialogFragment(), View.OnClickListener {
     var titleText: TextView? = null
     var button: Button? = null
     var selfButton: Button? = null
+    var listener:View.OnClickListener? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val view = activity.layoutInflater.inflate(R.layout.upload_dialog, null)
@@ -60,7 +61,7 @@ class UploadDialog : DialogFragment(), View.OnClickListener {
             Toast.makeText(activity, R.string.copy_success, Toast.LENGTH_LONG).show()
             isCancelable = true
         } else if (v == selfButton) {
-            // todo: self edit logic
+            listener?.onClick(v)
         }
     }
 

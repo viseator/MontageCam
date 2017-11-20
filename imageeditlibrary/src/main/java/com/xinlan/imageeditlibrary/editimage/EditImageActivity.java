@@ -6,13 +6,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -24,7 +24,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import android.widget.ViewFlipper;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
@@ -77,6 +76,8 @@ public class EditImageActivity extends BaseActivity {
     public static final int OUT_HEIGHT = 1920;
     public static final int OUT_WIDTH = 1080;
     private static final String TAG = "@vir EditImageActivity";
+    public static final String INTENT_START_CAMERA_ACTIVITY = "com.viseator.START_CAMERA_ACTIVITY";
+    public static final String BITMAP_FILE = "bitmap";
     private UploadDialog mDialog;
     public static final String FILE_PATH = "file_path";
     public static final String EXTRA_OUTPUT = "extra_output";
@@ -96,6 +97,7 @@ public class EditImageActivity extends BaseActivity {
     public static final int MODE_BEAUTY = 7;//美颜模式
     public static final int MODE_HOLLOW = 8;
 
+    public static final int CALL_EDIT_ACTIVITY = 0x11;
     public String filePath;// 需要编辑图片路径
     public String saveFilePath;// 生成的新图片路径
     private boolean isFront;
@@ -389,10 +391,10 @@ public class EditImageActivity extends BaseActivity {
             }
             finish();
         }
-        applyChange();
+        applyChange(true);
     }
 
-    public void applyChange() {
+    public void applyChange(boolean isBack) {
         switch (mode) {
             case MODE_STICKERS:
                 mStickerFragment.applyStickers();// 保存贴图
@@ -416,7 +418,7 @@ public class EditImageActivity extends BaseActivity {
                 mBeautyFragment.applyBeauty();
                 break;
             case MODE_HOLLOW:
-                mHollowFragment.savePaintImage();
+                mHollowFragment.savePaintImage(isBack);
                 break;
             default:
                 break;
@@ -435,7 +437,7 @@ public class EditImageActivity extends BaseActivity {
 //                showInfoSnackBar(getResources().getString(R.string.need_to_hollow));
 //            } else {
             if (mode != MODE_NONE) {
-                applyChange();
+                applyChange(false);
                 shouldSave = true;
             } else {
                 doSaveImage();
@@ -515,6 +517,16 @@ public class EditImageActivity extends BaseActivity {
             mDialog.progressEnd();
             mDialog.setResultText(response);
             mDialog.setTitle(getResources().getString(R.string.your_token));
+            mDialog.setListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setAction(INTENT_START_CAMERA_ACTIVITY);
+                    intent.putExtra(BITMAP_FILE, saveFilePath);
+                    LocalBroadcastManager.getInstance(EditImageActivity.this).sendBroadcast(intent);
+                    finish();
+                }
+            });
             Log.d(TAG, String.valueOf(response));
         }
 
@@ -530,7 +542,6 @@ public class EditImageActivity extends BaseActivity {
     private void uploadImage() {
         File file = new File(saveFilePath);
         mDialog = new UploadDialog();
-
         mDialog.show(getFragmentManager(), TAG);
         AndroidNetworking.upload(getResources().getString(R.string.server_upload)).setPriority
                 (Priority.HIGH).addMultipartFile("img", file).build().setUploadProgressListener
@@ -573,7 +584,6 @@ public class EditImageActivity extends BaseActivity {
             if (result) {
                 resetOpTimes();
                 onSaveTaskDone();
-
             } else {
                 Toast.makeText(mContext, R.string.save_error, Toast.LENGTH_SHORT).show();
             }
