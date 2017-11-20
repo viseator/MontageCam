@@ -71,9 +71,14 @@ public class BitmapUtils {
         float scaleX = w / (float) width;
         float scaleY = h / (float) height;
         float mainScale = Math.min(scaleX, scaleY);
-        if (mainScale >= 1) return Bitmap.createBitmap(bitmap);
-        return Bitmap.createScaledBitmap(bitmap, (int) (width * mainScale), (int) (height *
-                mainScale), false);
+        Bitmap result;
+        if (mainScale >= 1f) {
+            result = bitmap.copy(bitmap.getConfig(), false);
+        } else {
+            result = Bitmap.createScaledBitmap(bitmap, (int) (width * mainScale), (int) (height *
+                    mainScale), false);
+        }
+        return result;
     }
 
     public static int getOrientation(final String imagePath) {
