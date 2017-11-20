@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -362,10 +363,14 @@ public class EditImageActivity extends BaseActivity {
         @Override
         protected Bitmap doInBackground(String... params) {
 
-            Bitmap bitmap = BitmapFactory.decodeFile(params[0]);
-//            Bitmap scaledBitmap = BitmapUtils.scaleBitmap(bitmap, OUT_HEIGHT, OUT_WIDTH);
-//            bitmap.recycle();
-            return bitmap;
+            BitmapFactory.Options option = new BitmapFactory.Options();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                option.outConfig = Bitmap.Config.ARGB_8888;
+            }
+            Bitmap bitmap = BitmapFactory.decodeFile(params[0], option);
+            Bitmap scaledBitmap = BitmapUtils.scaleBitmap(bitmap, OUT_HEIGHT, OUT_WIDTH);
+            bitmap.recycle();
+            return scaledBitmap;
         }
 
         @Override
@@ -581,8 +586,9 @@ public class EditImageActivity extends BaseActivity {
         @Override
         protected Boolean doInBackground(Bitmap... params) {
             if (TextUtils.isEmpty(saveFilePath)) return false;
-            return BitmapUtils.saveBitmap(BitmapUtils.scaleBitmap(params[0], OUT_HEIGHT,
-                    OUT_WIDTH), saveFilePath);
+//            return BitmapUtils.saveBitmap(BitmapUtils.scaleBitmap(params[0], OUT_HEIGHT,
+//                    OUT_WIDTH), saveFilePath);
+            return BitmapUtils.saveBitmap(params[0], saveFilePath);
         }
 
         @Override
