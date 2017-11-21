@@ -12,10 +12,8 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -25,8 +23,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
@@ -42,19 +39,17 @@ import com.xinlan.imageeditlibrary.editimage.fragment.BeautyFragment;
 import com.xinlan.imageeditlibrary.editimage.fragment.CropFragment;
 import com.xinlan.imageeditlibrary.editimage.fragment.FilterListFragment;
 import com.xinlan.imageeditlibrary.editimage.fragment.HollowFragment;
-import com.xinlan.imageeditlibrary.editimage.fragment.MainMenuFragment;
 import com.xinlan.imageeditlibrary.editimage.fragment.PaintFragment;
 import com.xinlan.imageeditlibrary.editimage.fragment.RotateFragment;
 import com.xinlan.imageeditlibrary.editimage.fragment.StickerFragment;
+import com.xinlan.imageeditlibrary.editimage.utils.BitmapUtils;
 import com.xinlan.imageeditlibrary.editimage.view.CropImageView;
 import com.xinlan.imageeditlibrary.editimage.view.CustomPaintView;
-import com.xinlan.imageeditlibrary.editimage.view.CustomViewPager;
 import com.xinlan.imageeditlibrary.editimage.view.RotateImageView;
 import com.xinlan.imageeditlibrary.editimage.view.StickerView;
 import com.xinlan.imageeditlibrary.editimage.view.TextStickerView;
 import com.xinlan.imageeditlibrary.editimage.view.UploadDialog;
 import com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouch;
-import com.xinlan.imageeditlibrary.editimage.utils.BitmapUtils;
 import com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouchBase;
 
 import java.io.File;
@@ -112,18 +107,18 @@ public class EditImageActivity extends BaseActivity {
     public int mode = MODE_NONE;// 当前操作模式
 
     protected int mOpTimes = 0;
+    private boolean shouldSave = false;
     protected boolean isBeenSaved = false;
 
     private EditImageActivity mContext;
     public Bitmap mainBitmap;// 底层显示Bitmap
+
     public ImageViewTouch mainImage;
-    private View backBtn;
-    private boolean shouldSave = false;
+    private ImageView backBtn;  // v updated
 
-    private View saveBtn;// 保存按钮
+    private ImageView saveBtn;// 保存按钮 v updated
 
-    private ImageButton undoButton;
-    private ImageButton redoButton;
+    private ImageView undoButton;
 
     public StickerView mStickerView;// 贴图层View
     public CropImageView mCropPanel;// 剪切操作控件
@@ -132,10 +127,8 @@ public class EditImageActivity extends BaseActivity {
     public CustomPaintView mPaintView;//涂鸦模式画板
     public FrameLayout mFrameLayout;
 
-    public CustomViewPager bottomGallery;// 底部gallery
-    private BottomGalleryAdapter mBottomGalleryAdapter;// 底部gallery
-    private MainMenuFragment mMainMenuFragment;// Menu
-    private RelativeLayout mRelativeLayout;
+//    private MainMenuFragment mMainMenuFragment;// Menu
+    private ConstraintLayout mConstraintLayout;
     public HollowFragment mHollowFragment;
     public StickerFragment mStickerFragment;// 贴图Fragment
     public FilterListFragment mFilterListFragment;// 滤镜FilterListFragment
@@ -160,9 +153,6 @@ public class EditImageActivity extends BaseActivity {
 
         @Override
         public void canRedo(boolean b) {
-            if (mode == MODE_HOLLOW) {
-                redoButton.setVisibility(b ? View.VISIBLE : View.GONE);
-            }
         }
     };
 
@@ -175,7 +165,6 @@ public class EditImageActivity extends BaseActivity {
 
         @Override
         public void canRedo(boolean b) {
-            redoButton.setVisibility(b ? View.VISIBLE : View.GONE);
         }
     };
 
@@ -222,13 +211,13 @@ public class EditImageActivity extends BaseActivity {
         imageWidth = metrics.widthPixels / 2;
         imageHeight = metrics.heightPixels / 2;
 
-        mRelativeLayout = findViewById(R.id.image_edit_relativelayout);
-        mFrameLayout = (FrameLayout) findViewById(R.id.work_space);
-        saveBtn = findViewById(R.id.save_btn);
+        mConstraintLayout = findViewById(R.id.image_edit_relativelayout);
+        mFrameLayout = findViewById(R.id.work_space);
+        saveBtn = findViewById(R.id.edit_main_confirm);
         saveBtn.setOnClickListener(new SaveBtnClick());
 
-        mainImage = (ImageViewTouch) findViewById(R.id.main_image);
-        backBtn = findViewById(R.id.back_btn);// 退出按钮
+        mainImage = findViewById(R.id.main_image);
+        backBtn = findViewById(R.id.edit_image_main_back);// 退出按钮
         backBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -236,17 +225,13 @@ public class EditImageActivity extends BaseActivity {
             }
         });
 
-        mStickerView = (StickerView) findViewById(R.id.sticker_panel);
-        mCropPanel = (CropImageView) findViewById(R.id.crop_panel);
-        mRotatePanel = (RotateImageView) findViewById(R.id.rotate_panel);
-        mTextStickerView = (TextStickerView) findViewById(R.id.text_sticker_panel);
-        mPaintView = (CustomPaintView) findViewById(R.id.custom_paint_view);
+        mStickerView = findViewById(R.id.sticker_panel);
+        mCropPanel = findViewById(R.id.crop_panel);
+        mRotatePanel = findViewById(R.id.rotate_panel);
+        mTextStickerView = findViewById(R.id.text_sticker_panel);
+        mPaintView = findViewById(R.id.custom_paint_view);
 
-        // 底部gallery
-        bottomGallery = (CustomViewPager) findViewById(R.id.bottom_gallery);
-        //bottomGallery.setOffscreenPageLimit(7);
-        mMainMenuFragment = MainMenuFragment.newInstance();
-        mBottomGalleryAdapter = new BottomGalleryAdapter(this.getSupportFragmentManager());
+//        mMainMenuFragment = MainMenuFragment.newInstance();
         mHollowFragment = HollowFragment.newInstance();
         mStickerFragment = StickerFragment.newInstance();
         mFilterListFragment = FilterListFragment.newInstance();
@@ -256,11 +241,9 @@ public class EditImageActivity extends BaseActivity {
         mPaintFragment = PaintFragment.newInstance();
         mBeautyFragment = BeautyFragment.newInstance();
 
-        bottomGallery.setAdapter(mBottomGalleryAdapter);
         mHollowFragment.setCacheListener(mHollowViewCacheListener);
 
-        undoButton = findViewById(R.id.button_undo);
-        redoButton = findViewById(R.id.button_redo);
+        undoButton = findViewById(R.id.edit_main_undo);
         undoButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -268,17 +251,6 @@ public class EditImageActivity extends BaseActivity {
                     mHollowFragment.undo();
                 } else {
                     changeMainBitmap(mBitmapCache.undo(), true);
-                }
-            }
-        });
-
-        redoButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mode == MODE_HOLLOW) {
-                    mHollowFragment.redo();
-                } else {
-                    changeMainBitmap(mBitmapCache.redo(), true);
                 }
             }
         });
@@ -304,10 +276,8 @@ public class EditImageActivity extends BaseActivity {
         }
     }
 
-    /**
-     * @author panyi
-     */
-    private final class BottomGalleryAdapter extends FragmentPagerAdapter {
+    // TODO: 11/21/17 handle new fragment logic
+/*    private final class BottomGalleryAdapter extends FragmentPagerAdapter {
         public BottomGalleryAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -315,7 +285,6 @@ public class EditImageActivity extends BaseActivity {
         @Override
         public Fragment getItem(int index) {
             undoButton.setVisibility(View.GONE);
-            redoButton.setVisibility(View.GONE);
             // System.out.println("createFragment-->"+index);
             switch (index) {
                 case MainMenuFragment.INDEX:// 主菜单
@@ -344,7 +313,7 @@ public class EditImageActivity extends BaseActivity {
         public int getCount() {
             return 9;
         }
-    }// end inner class
+    }// end inner class*/
 
     /**
      * 异步载入编辑图片
@@ -633,7 +602,7 @@ public class EditImageActivity extends BaseActivity {
     }
 
     private void showInfoSnackBar(String info) {
-        Snackbar snackbar = Snackbar.make(mRelativeLayout, info, Snackbar.LENGTH_SHORT);
+        Snackbar snackbar = Snackbar.make(mConstraintLayout, info, Snackbar.LENGTH_SHORT);
         snackbar.show();
     }
 

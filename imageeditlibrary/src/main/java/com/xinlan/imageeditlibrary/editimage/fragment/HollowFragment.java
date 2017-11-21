@@ -106,7 +106,7 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
         activity.mainImage.setVisibility(View.VISIBLE);
         mHollowView.resetCache();
         activity.mode = EditImageActivity.MODE_NONE;
-        activity.bottomGallery.setCurrentItem(MainMenuFragment.INDEX);
+//        activity.bottomGallery.setCurrentItem(MainMenuFragment.INDEX);
         activity.mainImage.setVisibility(View.VISIBLE);
         activity.mFrameLayout.setBackgroundColor(getResources().getColor(R.color.main_backgroud));
 

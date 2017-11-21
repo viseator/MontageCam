@@ -94,6 +94,8 @@
         android:id="@+id/edit_blank_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
         android:src="@drawable/icon_setblank_noshader"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -105,6 +107,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="28dp"
         android:background="@drawable/gradient_circle"
+        android:clickable="true"
+        android:focusable="true"
         android:src="@drawable/icon_undo"
         app:layout_constraintBottom_toBottomOf="@id/edit_blank_button"
         app:layout_constraintRight_toLeftOf="@id/edit_blank_button"
@@ -116,6 +120,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:focusable="true"
         android:src="@drawable/icon_back"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
@@ -135,6 +141,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
         android:background="@drawable/gradient_circle"
+        android:clickable="true"
+        android:focusable="true"
         android:src="@drawable/icon_ok_noshader"
         app:layout_constraintBottom_toBottomOf="@id/edit_blank_button"
         app:layout_constraintLeft_toRightOf="@id/edit_blank_button"
@@ -142,59 +150,80 @@
         />
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/edit_panel"
+        android:id="@+id/edit_panel_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_blank_button">
+        app:layout_constraintTop_toBottomOf="@id/edit_blank_button"
+        >
 
 
-        <ImageView
-            android:id="@+id/edit_panel_rotate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon_rotate"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/edit_panel"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/edit_panel_trim"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            >
 
-        <ImageView
-            android:id="@+id/edit_panel_trim"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon_trim"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/edit_panel_filter"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/edit_panel_rotate"
-            app:layout_constraintTop_toTopOf="parent"/>
 
-        <ImageView
-            android:id="@+id/edit_panel_filter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon_filter"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/edit_panel_text"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/edit_panel_trim"
-            app:layout_constraintTop_toTopOf="parent"/>
+            <ImageView
+                android:id="@+id/edit_panel_rotate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/icon_rotate"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/edit_panel_trim"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
-        <ImageView
-            android:id="@+id/edit_panel_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon_text"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/edit_panel_filter"
-            app:layout_constraintTop_toTopOf="parent"/>
+            <ImageView
+                android:id="@+id/edit_panel_trim"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/icon_trim"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/edit_panel_filter"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/edit_panel_rotate"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <ImageView
+                android:id="@+id/edit_panel_filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/icon_filter"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/edit_panel_text"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/edit_panel_trim"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <ImageView
+                android:id="@+id/edit_panel_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/icon_text"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/edit_panel_filter"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        </android.support.constraint.ConstraintLayout>
 
     </android.support.constraint.ConstraintLayout>
-
 </android.support.constraint.ConstraintLayout>

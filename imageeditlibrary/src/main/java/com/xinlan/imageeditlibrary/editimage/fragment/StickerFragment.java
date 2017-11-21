@@ -248,7 +248,7 @@ public class StickerFragment extends BaseEditFragment {
 
     public void backToMain() {
         activity.mode = EditImageActivity.MODE_NONE;
-        activity.bottomGallery.setCurrentItem(0);
+//        activity.bottomGallery.setCurrentItem(0);
         mStickerView.setVisibility(View.GONE);
     }
 

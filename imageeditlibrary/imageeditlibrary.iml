@@ -36,7 +36,10 @@
           <option name="languageVersion" value="1.1" />
           <option name="apiVersion" value="1.1" />
           <option name="pluginOptions">
-            <array />
+            <array>
+              <option value="plugin:org.jetbrains.kotlin.kapt:output=/home/viseator/Projects/AndroidStudioProjects/MontageCam/imageeditlibrary/build/tmp/kapt/debug/wrappers/annotations.debug.txt" />
+              <option value="plugin:org.jetbrains.kotlin.kapt:inherited=true" />
+            </array>
           </option>
           <option name="pluginClasspaths">
             <array />
@@ -50,6 +53,7 @@
     <output-test url="file://$MODULE_DIR$/build/intermediates/classes/test/debug" />
     <exclude-output />
     <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/kapt/debug" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/apt/debug" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/debug" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/debug" isTestSource="false" generated="true" />
@@ -57,6 +61,7 @@
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/debug" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/debug" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/debug" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/kapt/debugAndroidTest" isTestSource="true" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/apt/androidTest/debug" isTestSource="true" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/androidTest/debug" isTestSource="true" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/androidTest/debug" isTestSource="true" generated="true" />
@@ -64,6 +69,7 @@
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/androidTest/debug" isTestSource="true" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/androidTest/debug" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/androidTest/debug" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/kapt/debugUnitTest" isTestSource="true" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/apt/test/debug" isTestSource="true" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/resources" type="java-resource" />
@@ -107,7 +113,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/shaders" isTestSource="true" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/annotations" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/attr" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/blame" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/bundles" />
@@ -124,7 +129,6 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/transforms" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/typedefs.txt" />
       <excludeFolder url="file://$MODULE_DIR$/build/kotlin" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
@@ -147,7 +151,9 @@
     <orderEntry type="library" name="com.android.support:support-core-ui-26.1.0" level="project" />
     <orderEntry type="library" name="com.amitshekhar.android:android-networking-1.0.0" level="project" />
     <orderEntry type="library" name="com.fasterxml.jackson.core:jackson-databind:2.8.2@jar" level="project" />
+    <orderEntry type="library" name="com.jakewharton:butterknife-8.8.1" level="project" />
     <orderEntry type="library" name="com.android.support:support-compat-26.1.0" level="project" />
+    <orderEntry type="library" name="com.jakewharton:butterknife-annotations:8.8.1@jar" level="project" />
     <orderEntry type="library" name="com.squareup.okhttp3:okhttp:3.6.0@jar" level="project" />
     <orderEntry type="library" name="android.arch.core:common:1.0.0@jar" level="project" />
     <orderEntry type="library" name="org.jetbrains.kotlin:kotlin-stdlib:1.1.60@jar" level="project" />
