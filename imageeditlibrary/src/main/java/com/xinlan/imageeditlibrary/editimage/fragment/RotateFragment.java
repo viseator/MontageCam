@@ -107,7 +107,7 @@ public class RotateFragment extends BaseEditFragment implements OnClickListener 
     private final class BackToMenuClick implements OnClickListener {
         @Override
         public void onClick(View v) {
-            applyRotateImage();
+            backToMain();
         }
     }// end class
 

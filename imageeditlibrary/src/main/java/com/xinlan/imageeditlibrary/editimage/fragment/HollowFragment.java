@@ -77,7 +77,7 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
     @Override
     public void onClick(View v) {
         if (v == backToMenu) {
-            savePaintImage(true);
+            backToMain();
         } else if (v == mCropButton) {
             if (mHollowCropRectView.getVisibility() != View.VISIBLE) {
                 mHollowCropRectView.setVisibility(View.VISIBLE);
@@ -164,18 +164,11 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
         });
     }
 
-    public void savePaintImage(boolean isBack) {
+    public void savePaintImage() {
         if (mHollowCropCircleView.getVisibility() == View.VISIBLE) {
-            if (!isBack) {
-                mHollowView.hollowCircle(mHollowCropCircleView.getCx(), mHollowCropCircleView
-                        .getCy(), mHollowCropCircleView.getRadius());
-            }
             mHollowCropCircleView.setVisibility(View.GONE);
         }
         if (mHollowCropRectView.getVisibility() == View.VISIBLE) {
-            if (!isBack) {
-                mHollowView.hollowRect(mHollowCropRectView.getCropRect());
-            }
             mHollowCropRectView.setVisibility(View.GONE);
         }
         if (mSavePaintImageTask != null && !mSavePaintImageTask.isCancelled()) {

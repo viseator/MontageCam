@@ -293,6 +293,7 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
 
     public void backToMainMenu() {
         mode = MODE_NONE;
+        hollowButton.setVisibility(View.VISIBLE);
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.remove(mCurrentPanelFragment);
         fragmentTransaction.add(R.id.edit_panel_container, mMainMenuFragment);
@@ -375,10 +376,16 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
             }
             finish();
         }
-        applyChange(true);
+        fragmentBackToMain();
     }
 
-    public void applyChange(boolean isBack) {
+    public void fragmentBackToMain() {
+        if (mode != MODE_NONE) {
+            mCurrentPanelFragment.backToMain();
+        }
+    }
+
+    public void applyChange() {
         switch (mode) {
             case MODE_STICKERS:
                 mStickerFragment.applyStickers();// 保存贴图
@@ -402,7 +409,7 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
                 mBeautyFragment.applyBeauty();
                 break;
             case MODE_HOLLOW:
-                mHollowFragment.savePaintImage(isBack);
+                mHollowFragment.savePaintImage();
                 break;
             default:
                 break;
@@ -418,7 +425,7 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
         @Override
         public void onClick(View v) {
             if (mode != MODE_NONE) {
-                applyChange(false);
+                applyChange();
             } else {
                 doSaveImage();
             }
@@ -596,11 +603,14 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
 
     public void onRotateButtonClicked() {
         switchPanelFragment(mRotateFragment);
+        hollowButton.setVisibility(View.INVISIBLE);
         mode = MODE_ROTATE;
     }
 
     public void onTrimButtonClicked() {
-
+        switchPanelFragment(mCropFragment);
+        hollowButton.setVisibility(View.INVISIBLE);
+        mode = MODE_CROP;
     }
 
     public void onFilterButtonClicked() {

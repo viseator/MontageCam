@@ -63,6 +63,11 @@ public class MainMenuFragment extends BaseEditFragment implements View.OnClickLi
     }
 
     @Override
+    public void backToMain() {
+
+    }
+
+    @Override
     public void onClick(View v) {
         if (v == rotateButton) {
             activity.onRotateButtonClicked();
