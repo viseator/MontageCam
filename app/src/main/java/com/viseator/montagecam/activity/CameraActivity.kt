@@ -32,6 +32,7 @@ import com.viseator.montagecam.R
 import com.viseator.montagecam.base.BaseActivity
 import com.viseator.montagecam.fragment.AspectRatioFragment
 import com.viseator.montagecam.util.BitmapUtil
+import com.viseator.montagecam.util.ExifUtil
 import com.viseator.montagecam.view.HollowImageView
 import com.viseator.montagecam.view.ImagePreviewDialog
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity
@@ -92,8 +93,8 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         }
 
         override fun onPictureTaken(cameraView: CameraView, data: ByteArray) {
-            Log.d(TAG, "onPictureTaken " + data.size)
-            Log.d(TAG, "cameraView: ${cameraView.width}x${cameraView.height}")
+            Log.d(TAG, "Rotation:${ExifUtil.getOrientation(data)}")
+            val rotation = ExifUtil.getOrientation(data).toFloat()
             getBackgroundHandler().post {
                 val file = File(externalCacheDir, "shoot_temp.jpg")
                 Log.d(TAG, String().plus(file.absolutePath))
@@ -115,9 +116,9 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
                 }
                 FileUtil.ablumUpdate(this@CameraActivity, file.absolutePath)
                 if (inHollowMode) {
-                    startComposeImage(file)
+                    startComposeImage(file, rotation)
                 } else {
-                    startImageEdit(file.absolutePath)
+                    startImageEdit(file.absolutePath, rotation)
                 }
             }
         }
@@ -241,13 +242,14 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         })
     }
 
-    fun startComposeImage(file: File) {
+    fun startComposeImage(file: File, rotation: Float) {
         //        val metrics = resources.displayMetrics
         val options = BitmapFactory.Options()
         Log.d(TAG, "realdisplay: ${realMetrics.widthPixels} x ${realMetrics.heightPixels}")
         options.inScaled = false
         val bgImg = BitmapFactory.decodeFile(file.absolutePath, options)
-        val resultBitmap = BitmapUtil.composeBitmap(bgImg, mHollowImageView.bitmap!!,
+        val rotatedImg = BitmapUtils.rotateBitmap(bgImg, rotation)
+        val resultBitmap = BitmapUtil.composeBitmap(rotatedImg!!, mHollowImageView.bitmap!!,
                 realMetrics.widthPixels, realMetrics.heightPixels, mHollowImageView.scale!!,
                 mHollowImageView.dX!!, mHollowImageView.dY!!,
                 mCameraView.facing == CameraView.FACING_FRONT)
@@ -290,13 +292,13 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         }
     }
 
-    fun startImageEdit(path: String) {
+    fun startImageEdit(path: String, rotation: Float) {
         //        if (!file.exists()) {
         //            Toast.makeText(this, resources.getString(R.string.NoImg), Toast.LENGTH_SHORT).show()
         //        }
         val fileOutput = File(externalCacheDir, "picture_output.png")
         EditImageActivity.start(this, path, fileOutput.absolutePath,
-                mCameraView.facing == CameraView.FACING_FRONT, CALL_EDIT_ACTIVITY)
+                mCameraView.facing == CameraView.FACING_FRONT, rotation, CALL_EDIT_ACTIVITY)
     }
 
 
@@ -386,7 +388,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
 
         override fun onPostExecute(result: Unit?) {
             dialog.dismiss()
-            startImageEdit(file.absolutePath)
+            startImageEdit(file.absolutePath, 0f)
         }
     }
 

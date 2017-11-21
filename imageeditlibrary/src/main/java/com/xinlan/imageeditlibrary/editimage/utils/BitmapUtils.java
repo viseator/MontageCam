@@ -78,6 +78,7 @@ public class BitmapUtils {
             result = Bitmap.createScaledBitmap(bitmap, (int) (width * mainScale), (int) (height *
                     mainScale), false);
         }
+        bitmap.recycle();
         return result;
     }
 
@@ -486,6 +487,17 @@ public class BitmapUtils {
         canvas.scale(scale_x, scale_y);
         canvas.drawBitmap(src, 0, 0, null);
         canvas.restore();
+        return result;
+    }
+
+    public static Bitmap rotateBitmap(Bitmap src, float angle) {
+        if (angle == 0f) {
+            return src;
+        }
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        Bitmap result = Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), matrix, false);
+        src.recycle();
         return result;
     }
 }
