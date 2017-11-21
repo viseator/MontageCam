@@ -23,6 +23,7 @@ public abstract class BaseEditFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ensureEditActivity();
+        onShow();
     }
 
      public abstract void onShow();

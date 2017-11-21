@@ -7,8 +7,10 @@
     <color name="moca_button_text_color">#64b3f4</color>
     <color name="moca_main_blue">#b364b3f4</color>
     <color name="moca_main_white">#0064b3f4</color>
-    <color name="moca_gra_green">#80c2e59c</color>
-    <color name="moca_gra_blue">#8064b3f4</color>
+    <color name="moca_gra_green_0.5">#80c2e59c</color>
+    <color name="moca_gra_blue_0.5">#8064b3f4</color>
+    <color name="moca_gra_blue">@color/moca_button_text_color</color>
+    <color name="moca_gra_green">#c2e59c</color>
     <color name="main_backgroud">#000000</color>
     <color name="materialcolorpicker__white">#ffffff</color>
     <color name="materialcolorpicker__red">#f44336</color>

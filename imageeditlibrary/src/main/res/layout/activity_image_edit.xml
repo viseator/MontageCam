@@ -5,7 +5,7 @@
     android:id="@+id/image_edit_relativelayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_backgroud"
+    android:background="@drawable/gradient_full_background"
     >
 
 
@@ -13,7 +13,6 @@
         android:id="@+id/work_space"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/main_backgroud"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -149,7 +148,7 @@
         app:layout_constraintTop_toTopOf="@id/edit_blank_button"
         />
 
-    <android.support.constraint.ConstraintLayout
+    <FrameLayout
         android:id="@+id/edit_panel_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -159,71 +158,5 @@
         app:layout_constraintTop_toBottomOf="@id/edit_blank_button"
         >
 
-
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/edit_panel"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            >
-
-
-            <ImageView
-                android:id="@+id/edit_panel_rotate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:src="@drawable/icon_rotate"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/edit_panel_trim"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <ImageView
-                android:id="@+id/edit_panel_trim"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:src="@drawable/icon_trim"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/edit_panel_filter"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/edit_panel_rotate"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <ImageView
-                android:id="@+id/edit_panel_filter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:src="@drawable/icon_filter"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/edit_panel_text"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/edit_panel_trim"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <ImageView
-                android:id="@+id/edit_panel_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:src="@drawable/icon_text"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/edit_panel_filter"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-        </android.support.constraint.ConstraintLayout>
-
-    </android.support.constraint.ConstraintLayout>
+    </FrameLayout>
 </android.support.constraint.ConstraintLayout>
