@@ -95,6 +95,7 @@ public class PaintFragment extends BaseEditFragment implements View.OnClickListe
 
         mEraserView.setOnClickListener(this);
         updateEraserView();
+        onShow();
     }
 
     /**
@@ -117,7 +118,7 @@ public class PaintFragment extends BaseEditFragment implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if (v == backToMenu) {//back button click
-            savePaintImage();
+            backToMain();
         } else if (v == mPaintModeView) {//设置绘制画笔粗细
             setStokeWidth();
         } else if (v == mEraserView) {
@@ -129,8 +130,7 @@ public class PaintFragment extends BaseEditFragment implements View.OnClickListe
      * 返回主菜单
      */
     public void backToMain() {
-        activity.mode = EditImageActivity.MODE_NONE;
-//        activity.bottomGallery.setCurrentItem(MainMenuFragment.INDEX);
+        activity.backToMainMenu();
         activity.mainImage.setVisibility(View.VISIBLE);
 
         this.mPaintView.setVisibility(View.GONE);
@@ -211,9 +211,9 @@ public class PaintFragment extends BaseEditFragment implements View.OnClickListe
         });
 
         int[] locations = new int[2];
-//        activity.bottomGallery.getLocationOnScreen(locations);
-//        setStokenWidthWindow.showAtLocation(activity.bottomGallery, Gravity.NO_GRAVITY, 0,
-//                locations[1] - popView.getMeasuredHeight());
+        activity.mPanelContainer.getLocationOnScreen(locations);
+        setStokenWidthWindow.showAtLocation(activity.mPanelContainer, Gravity.NO_GRAVITY, 0,
+                locations[1] - popView.getMeasuredHeight());
     }
 
     private void initStokeWidthPopWindow() {

@@ -25,6 +25,8 @@ public class MainMenuFragment extends BaseEditFragment implements View.OnClickLi
     private ImageView trimButton;
     private ImageView filterButton;
     private ImageView textButton;
+    private ImageView brushButton;
+    private ImageView beautiButton;
 
     public static MainMenuFragment newInstance() {
         MainMenuFragment fragment = new MainMenuFragment();
@@ -50,11 +52,15 @@ public class MainMenuFragment extends BaseEditFragment implements View.OnClickLi
         trimButton = mainView.findViewById(R.id.edit_panel_trim);
         filterButton = mainView.findViewById(R.id.edit_panel_filter);
         textButton = mainView.findViewById(R.id.edit_panel_text);
+        brushButton = mainView.findViewById(R.id.edit_panel_brush);
+        beautiButton = mainView.findViewById(R.id.edit_panel_beauty);
 
         rotateButton.setOnClickListener(this);
         trimButton.setOnClickListener(this);
         filterButton.setOnClickListener(this);
         textButton.setOnClickListener(this);
+        brushButton.setOnClickListener(this);
+        beautiButton.setOnClickListener(this);
     }
 
     @Override
@@ -77,6 +83,10 @@ public class MainMenuFragment extends BaseEditFragment implements View.OnClickLi
             activity.onFilterButtonClicked();
         } else if (v == textButton) {
             activity.onTextButtonClicked();
+        } else if (v == brushButton) {
+            activity.onBrushButtonClicked();
+        } else if (v == beautiButton) {
+            activity.onBeautyButtonClicked();
         }
     }
 

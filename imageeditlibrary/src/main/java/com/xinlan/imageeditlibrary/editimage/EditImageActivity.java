@@ -122,6 +122,7 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
     private ImageView saveButton;// 保存按钮 v updated
     private ImageView undoButton;
     private ConstraintLayout mConstraintLayout;
+    public FrameLayout mPanelContainer;
 
     public StickerView mStickerView;// 贴图层View
     public CropImageView mCropPanel;// 剪切操作控件
@@ -240,6 +241,7 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
         mRotatePanel = findViewById(R.id.rotate_panel);
         mTextStickerView = findViewById(R.id.text_sticker_panel);
         mPaintView = findViewById(R.id.custom_paint_view);
+        mPanelContainer = findViewById(R.id.edit_panel_container);
 
         mMainMenuFragment = MainMenuFragment.newInstance();
         mHollowFragment = HollowFragment.newInstance();
@@ -332,7 +334,7 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
             }
         } else if (v == hollowButton) {
             mode = MODE_HOLLOW;
-            hollowButton.setVisibility(View.INVISIBLE);
+            hollowButton.setImageResource(R.drawable.icon_setblank_press_noshader);
             switchPanelFragment(mHollowFragment);
         } else {
             undoButton.setVisibility(View.GONE);
@@ -636,5 +638,17 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
         switchPanelFragment(mAddTextFragment);
         hollowButton.setVisibility(View.INVISIBLE);
         mode = MODE_TEXT;
+    }
+
+    public void onBrushButtonClicked() {
+        switchPanelFragment(mPaintFragment);
+        hollowButton.setVisibility(View.INVISIBLE);
+        mode = MODE_PAINT;
+    }
+
+    public void onBeautyButtonClicked() {
+        switchPanelFragment(mBeautyFragment);
+        hollowButton.setVisibility(View.INVISIBLE);
+        mode = MODE_BEAUTY;
     }
 }// end class

@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#000000"
-    android:orientation="horizontal">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/back_to_main"
@@ -10,13 +10,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/image_edit_back" />
+        android:src="@drawable/image_edit_back"/>
 
     <LinearLayout
-        android:layout_toRightOf="@id/back_to_main"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/back_to_main"
         android:orientation="vertical"
         android:padding="5dp">
 
@@ -30,14 +30,18 @@
                 android:layout_height="wrap_content"
                 android:text="@string/smooth"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="14sp"/>
 
             <SeekBar
                 android:id="@+id/smooth_value_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:max="500" />
+                android:max="500"
+                android:progressTint="@color/moca_gra_blue"
+                android:secondaryProgressTint="@color/white"
+                android:thumbTint="@color/moca_gra_blue"
+                tools:targetApi="lollipop"/>
         </LinearLayout>
 
         <LinearLayout
@@ -51,14 +55,18 @@
                 android:layout_height="wrap_content"
                 android:text="@string/white_skin"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="14sp"/>
 
             <SeekBar
                 android:id="@+id/white_skin_value_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:max="10" />
+                android:max="10"
+                android:progressTint="@color/moca_gra_blue"
+                android:secondaryProgressTint="@color/white"
+                android:thumbTint="@color/moca_gra_blue"
+                tools:targetApi="lollipop"/>
         </LinearLayout>
 
     </LinearLayout>

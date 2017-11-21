@@ -81,22 +81,22 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
         } else if (v == mCropButton) {
             if (mHollowCropRectView.getVisibility() != View.VISIBLE) {
                 mHollowCropRectView.setVisibility(View.VISIBLE);
-                mCropButton.setImageResource(R.drawable.ic_action_tick);
+                mCropButton.setImageResource(R.drawable.icon_blankrec_press);
                 mHollowCropRectView.setCropRect(activity.mainImage.getBitmapRect());
             } else {
                 mHollowView.hollowRect(mHollowCropRectView.getCropRect());
-                mCropButton.setImageResource(R.drawable.image_edit_icon_crop);
+                mCropButton.setImageResource(R.drawable.icon_blankrec);
                 mHollowCropRectView.setVisibility(View.GONE);
             }
         } else if (v == mCropCircleButton) {
             if (mHollowCropCircleView.getVisibility() != View.VISIBLE) {
                 mHollowCropCircleView.setVisibility(View.VISIBLE);
-                mCropCircleButton.setImageResource(R.drawable.ic_action_tick);
+                mCropCircleButton.setImageResource(R.drawable.icon_blankcir_press);
                 mHollowCropCircleView.setCropRect(activity.mainImage.getBitmapRect());
             } else {
                 mHollowView.hollowCircle(mHollowCropCircleView.getCx(), mHollowCropCircleView
                         .getCy(), mHollowCropCircleView.getRadius());
-                mCropCircleButton.setImageResource(R.drawable.ic_donut_large);
+                mCropCircleButton.setImageResource(R.drawable.icon_blankcir);
                 mHollowCropCircleView.setVisibility(View.GONE);
             }
         }
@@ -107,6 +107,7 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
         mHollowView.resetCache();
         activity.backToMainMenu();
         activity.hollowButton.setVisibility(View.VISIBLE);
+        activity.hollowButton.setImageResource(R.drawable.icon_setblank_noshader);
         activity.mainImage.setVisibility(View.VISIBLE);
         activity.mFrameLayout.setBackgroundColor(Color.TRANSPARENT);
 

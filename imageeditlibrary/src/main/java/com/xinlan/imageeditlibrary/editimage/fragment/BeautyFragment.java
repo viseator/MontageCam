@@ -73,6 +73,7 @@ public class BeautyFragment extends BaseEditFragment implements SeekBar.OnSeekBa
 
         mSmoothValueBar.setOnSeekBarChangeListener(this);
         mWhiteValueBar.setOnSeekBarChangeListener(this);
+        onShow();
     }
 
 
@@ -113,7 +114,7 @@ public class BeautyFragment extends BaseEditFragment implements SeekBar.OnSeekBa
     private final class BackToMenuClick implements OnClickListener {
         @Override
         public void onClick(View v) {
-            applyBeauty();
+            backToMain();
         }
     }// end class
 
@@ -126,8 +127,8 @@ public class BeautyFragment extends BaseEditFragment implements SeekBar.OnSeekBa
         mSmoothValueBar.setProgress(0);
         mWhiteValueBar.setProgress(0);
 
-        activity.mode = EditImageActivity.MODE_NONE;
-//        activity.bottomGallery.setCurrentItem(MainMenuFragment.INDEX);
+
+        activity.backToMainMenu();
         activity.mainImage.setImageBitmap(activity.mainBitmap);// 返回原图
 
         activity.mainImage.setVisibility(View.VISIBLE);
