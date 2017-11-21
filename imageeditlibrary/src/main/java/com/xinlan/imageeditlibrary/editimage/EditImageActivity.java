@@ -299,44 +299,6 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
         mCurrentPanelFragment = mMainMenuFragment;
         fragmentTransaction.commit();
     }
-/*    private final class BottomGalleryAdapter extends FragmentPagerAdapter {
-        public BottomGalleryAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int index) {
-            undoButton.setVisibility(View.GONE);
-            // System.out.println("createFragment-->"+index);
-            switch (index) {
-                case MainMenuFragment.INDEX:// 主菜单
-                    return mMainMenuFragment;
-                case StickerFragment.INDEX:// 贴图
-                    return mStickerFragment;
-                case FilterListFragment.INDEX:// 滤镜
-                    return mFilterListFragment;
-                case CropFragment.INDEX://剪裁
-                    return mCropFragment;
-                case RotateFragment.INDEX://旋转
-                    return mRotateFragment;
-                case AddTextFragment.INDEX://添加文字
-                    return mAddTextFragment;
-                case PaintFragment.INDEX:
-                    return mPaintFragment;//绘制
-                case BeautyFragment.INDEX://美颜
-                    return mBeautyFragment;
-                case HollowFragment.INDEX:
-                    return mHollowFragment;
-            }//end switch
-            return MainMenuFragment.newInstance();
-        }
-
-        @Override
-        public int getCount() {
-            return 9;
-        }
-    }// end inner class*/
-
     /**
      * 异步载入编辑图片
      *
@@ -365,6 +327,9 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
             mode = MODE_HOLLOW;
             hollowButton.setVisibility(View.INVISIBLE);
             switchPanelFragment(mHollowFragment);
+        } else {
+            undoButton.setVisibility(View.GONE);
+
         }
     }
 
@@ -625,7 +590,8 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
 
 
     public void onRotateButtonClicked() {
-
+        switchPanelFragment(mRotateFragment);
+        mode = MODE_ROTATE;
     }
 
     public void onTrimButtonClicked() {

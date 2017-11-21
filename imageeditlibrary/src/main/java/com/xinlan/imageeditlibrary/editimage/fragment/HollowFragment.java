@@ -67,10 +67,10 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         backToMenu.setOnClickListener(this);// 返回主菜单
         mCropButton.setOnClickListener(this);
         mCropCircleButton.setOnClickListener(this);
+        onShow();
     }
 
 
@@ -105,7 +105,6 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
     public void backToMain() {
         activity.mainImage.setVisibility(View.VISIBLE);
         mHollowView.resetCache();
-        activity.mode = EditImageActivity.MODE_NONE;
         activity.backToMainMenu();
         activity.hollowButton.setVisibility(View.VISIBLE);
         activity.mainImage.setVisibility(View.VISIBLE);
@@ -116,7 +115,6 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
     }
 
     public void onShow() {
-        activity.mode = EditImageActivity.MODE_HOLLOW;
         mPaintModeView.setPaintStrokeColor(Color.WHITE);
         mHollowView.setFragment(this);
         mHollowView.resetBitmap(activity.mainBitmap.copy(activity.mainBitmap.getConfig(), false),
