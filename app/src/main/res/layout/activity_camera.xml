@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Black"
+    android:background="@drawable/gradient_full_background"
     tools:context="com.viseator.montagecam.activity.CameraActivity">
 
 
@@ -16,7 +16,7 @@
         android:adjustViewBounds="true"
         android:background="@color/Black"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/camera_toolbar">
+        app:layout_constraintTop_toTopOf="parent">
 
 
     </com.google.android.cameraview.CameraView>

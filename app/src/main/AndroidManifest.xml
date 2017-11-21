@@ -30,7 +30,9 @@
                 <!--<category android:name="android.intent.category.LAUNCHER"/>-->
             <!--</intent-filter>-->
         </activity>
-        <activity android:name="com.xinlan.imageeditlibrary.editimage.EditImageActivity">
+        <activity android:name="com.xinlan.imageeditlibrary.editimage.EditImageActivity"
+            android:screenOrientation="portrait"
+            >
         </activity>
         <activity android:name=".activity.MainActivity"
             >

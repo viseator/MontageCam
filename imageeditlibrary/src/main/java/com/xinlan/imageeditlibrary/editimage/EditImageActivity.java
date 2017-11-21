@@ -116,7 +116,7 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
     public Bitmap mainBitmap;// 底层显示Bitmap
 
     public ImageViewTouch mainImage;
-    private ImageView hollowButton;
+    public ImageView hollowButton;
     private ImageView backButton;  // v updated
     private ImageView saveButton;// 保存按钮 v updated
     private ImageView undoButton;
@@ -287,6 +287,16 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.remove(mCurrentPanelFragment);
         fragmentTransaction.add(R.id.edit_panel_container, baseEditFragment);
+        mCurrentPanelFragment = baseEditFragment;
+        fragmentTransaction.commit();
+    }
+
+    public void backToMainMenu() {
+        mode = MODE_NONE;
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.remove(mCurrentPanelFragment);
+        fragmentTransaction.add(R.id.edit_panel_container, mMainMenuFragment);
+        mCurrentPanelFragment = mMainMenuFragment;
         fragmentTransaction.commit();
     }
 /*    private final class BottomGalleryAdapter extends FragmentPagerAdapter {
@@ -342,14 +352,18 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
 
     @Override
     public void onClick(View v) {
+        if (v.getVisibility() != View.VISIBLE) {
+            return;
+        }
         if (v == undoButton) {
             if (mode == MODE_HOLLOW) {
                 mHollowFragment.undo();
             } else {
                 changeMainBitmap(mBitmapCache.undo(), true);
             }
-        } else if (v == hollowButton){
+        } else if (v == hollowButton) {
             mode = MODE_HOLLOW;
+            hollowButton.setVisibility(View.INVISIBLE);
             switchPanelFragment(mHollowFragment);
         }
     }
@@ -437,20 +451,15 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
     private final class SaveBtnClick implements OnClickListener {
         @Override
         public void onClick(View v) {
-//            if (mOpTimes == 0) {//并未修改图片
-//                showInfoSnackBar(getResources().getString(R.string.need_to_hollow));
-//            } else {
             if (mode != MODE_NONE) {
                 applyChange(false);
-                shouldSave = true;
             } else {
                 doSaveImage();
             }
         }
-    }// end inner class
+    }
 
     protected void doSaveImage() {
-//        if (mOpTimes <= 0) return;
 
         if (mSaveImageTask != null) {
             mSaveImageTask.cancel(true);

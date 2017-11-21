@@ -106,9 +106,10 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
         activity.mainImage.setVisibility(View.VISIBLE);
         mHollowView.resetCache();
         activity.mode = EditImageActivity.MODE_NONE;
-//        activity.bottomGallery.setCurrentItem(MainMenuFragment.INDEX);
+        activity.backToMainMenu();
+        activity.hollowButton.setVisibility(View.VISIBLE);
         activity.mainImage.setVisibility(View.VISIBLE);
-        activity.mFrameLayout.setBackgroundColor(getResources().getColor(R.color.main_backgroud));
+        activity.mFrameLayout.setBackgroundColor(Color.TRANSPARENT);
 
         mHollowView.setVisibility(View.GONE);
         mHollowView.reset();
@@ -168,8 +169,8 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
     public void savePaintImage(boolean isBack) {
         if (mHollowCropCircleView.getVisibility() == View.VISIBLE) {
             if (!isBack) {
-                mHollowView.hollowCircle(mHollowCropCircleView.getCx(),mHollowCropCircleView
-                        .getCy(),mHollowCropCircleView.getRadius());
+                mHollowView.hollowCircle(mHollowCropCircleView.getCx(), mHollowCropCircleView
+                        .getCy(), mHollowCropCircleView.getRadius());
             }
             mHollowCropCircleView.setVisibility(View.GONE);
         }
