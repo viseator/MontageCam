@@ -1,7 +1,6 @@
 package com.xinlan.imageeditlibrary.editimage;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -50,7 +49,7 @@ import com.xinlan.imageeditlibrary.editimage.view.CustomPaintView;
 import com.xinlan.imageeditlibrary.editimage.view.RotateImageView;
 import com.xinlan.imageeditlibrary.editimage.view.StickerView;
 import com.xinlan.imageeditlibrary.editimage.view.TextStickerView;
-import com.xinlan.imageeditlibrary.editimage.view.UploadDialog;
+import com.xinlan.imageeditlibrary.editimage.view.UploadFragment;
 import com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouch;
 import com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouchBase;
 
@@ -79,7 +78,7 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
     private static final String TAG = "@vir EditImageActivity";
     public static final String INTENT_START_CAMERA_ACTIVITY = "com.viseator.START_CAMERA_ACTIVITY";
     public static final String BITMAP_FILE = "bitmap";
-    private UploadDialog mDialog;
+    private UploadFragment mUploadFragment;
     public static final String FILE_PATH = "file_path";
     public static final String CLIP_LABEL = "token";
     public static final String EXTRA_OUTPUT = "extra_output";
@@ -220,7 +219,7 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
         imageWidth = metrics.widthPixels / 2;
         imageHeight = metrics.heightPixels / 2;
 
-        mConstraintLayout = findViewById(R.id.image_edit_relativelayout);
+        mConstraintLayout = findViewById(R.id.image_edit_main_layout);
         mFrameLayout = findViewById(R.id.work_space);
         saveButton = findViewById(R.id.edit_main_confirm);
         saveButton.setOnClickListener(new SaveBtnClick());
@@ -377,12 +376,16 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
     @Override
     public void onBackPressed() {
         if (mode == MODE_NONE) {
-            if (mDialog != null && mDialog.isVisible()) {
-                mDialog.dismiss();
+            if (mUploadFragment != null && mUploadFragment.isVisible()) {
+                FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                fragmentTransaction.remove(mUploadFragment);
+                fragmentTransaction.commit();
+            } else {
+                finish();
             }
-            finish();
+        } else {
+            fragmentBackToMain();
         }
-        fragmentBackToMain();
     }
 
     public void fragmentBackToMain() {
@@ -506,18 +509,18 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
     private StringRequestListener mUploadListener = new StringRequestListener() {
         @Override
         public void onResponse(String response) {
-            if (!mDialog.isAdded()) {
+            if (!mUploadFragment.isAdded()) {
                 return;
             }
-            mDialog.progressEnd();
-            String resultString = mDialog.genShareText(response);
-            mDialog.setResultText(resultString);
-            mDialog.setTitle(getResources().getString(R.string.your_token));
+            mUploadFragment.progressEnd();
+            String resultString = mUploadFragment.genShareText(response);
+            mUploadFragment.setResultText(resultString);
+            mUploadFragment.setMainInfo(R.string.share_success);
             ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context
                     .CLIPBOARD_SERVICE);
             ClipData data = ClipData.newPlainText(CLIP_LABEL, resultString);
             clipboardManager.setPrimaryClip(data);
-            mDialog.setListener(new OnClickListener() {
+            mUploadFragment.setListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent();
@@ -541,16 +544,14 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
     };
 
     private void uploadImage() {
+        mUploadFragment.setMainInfo(R.string.uploading);
         File file = new File(saveFilePath);
-        mDialog = new UploadDialog();
-        mDialog.show(getFragmentManager(), TAG);
         AndroidNetworking.upload(getResources().getString(R.string.server_upload)).setPriority
                 (Priority.HIGH).addMultipartFile("img", file).build().setUploadProgressListener
                 (new UploadProgressListener() {
             @Override
             public void onProgress(long bytesUploaded, long totalBytes) {
 //                Log.d(TAG, String.valueOf(bytesUploaded / (float) totalBytes));
-                mDialog.setProgress((int) (bytesUploaded / (float) totalBytes * 100));
             }
         }).getAsString(mUploadListener);
     }
@@ -560,14 +561,15 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
      * 完成后退出
      */
     private final class SaveImageTask extends AsyncTask<Bitmap, Void, Boolean> {
-        private Dialog dialog;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            dialog = EditImageActivity.getLoadingDialog(mContext, R.string.saving_image, false);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();
+            mUploadFragment = new UploadFragment();
+            FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+            fragmentTransaction.add(R.id.image_edit_main_layout, mUploadFragment);
+            fragmentTransaction.commit();
+            mUploadFragment.setMainInfo(R.string.saving_image);
         }
 
         @Override
@@ -581,8 +583,6 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
         @Override
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
-            dialog.dismiss();
-
             if (result) {
                 resetOpTimes();
                 onSaveTaskDone();
@@ -594,18 +594,25 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            dialog.dismiss();
+            removeUploadFragment();
         }
 
         @Override
         protected void onCancelled(Boolean result) {
             super.onCancelled(result);
-            dialog.dismiss();
+            removeUploadFragment();
         }
 
 
     }//end inner class
 
+    private void removeUploadFragment() {
+        if (mUploadFragment.isAdded()) {
+            FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+            fragmentTransaction.remove(mUploadFragment);
+            fragmentTransaction.commit();
+        }
+    }
 
     public void onRotateButtonClicked() {
         switchPanelFragment(mRotateFragment);
