@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MontageCam</string>
+    <string name="app_name">摩卡相机</string>
     <string name="picture_taken">Picture taken</string>
     <string name="aspect_ratio">Aspect ratio</string>
     <string name="switch_flash">Switch flash</string>
