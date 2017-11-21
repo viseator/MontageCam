@@ -1,66 +1,23 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/image_edit_relativelayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/image_edit_relativelayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_backgroud"
+    >
 
-    <FrameLayout
-        android:id="@+id/banner"
-        android:layout_width="fill_parent"
-        android:layout_height="55dp"
-        android:layout_alignParentTop="true"
-        android:background="#333333">
-
-        <ImageView
-            android:id="@+id/back_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="55dp"
-            android:layout_gravity="left|center_vertical"
-            android:layout_margin="10dp"
-            android:src="@drawable/back_arrow"/>
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="@string/app_name"
-            android:textColor="#ffffff"
-            android:textSize="20sp"/>
-
-        <TextView
-            android:id="@+id/save_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_gravity="right|center_vertical"
-            android:layout_marginEnd="10dp"
-            android:gravity="center"
-            android:text="@string/save"
-            android:textColor="#ffffff"
-            android:textSize="20sp"/>
-
-    </FrameLayout>
-
-
-    <com.xinlan.imageeditlibrary.editimage.view.CustomViewPager
-        android:id="@+id/bottom_gallery"
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/bottom_banner_height"
-        android:layout_alignParentBottom="true"
-        android:background="@color/main_backgroud"
-        android:overScrollMode="never"/>
 
     <FrameLayout
         android:id="@+id/work_space"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_above="@id/bottom_gallery"
-        android:layout_below="@id/banner"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@color/main_backgroud"
-
-        >
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouch
             android:id="@+id/main_image"
@@ -127,30 +84,70 @@
             android:visibility="gone"/>
     </FrameLayout>
 
-    <RelativeLayout
-        android:layout_width="100dp"
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="96dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:srcCompat="@drawable/gradient_bottom_bar"/>
+
+    <ImageView
+        android:id="@+id/edit_blank_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/bottom_gallery"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="10dp"
-        android:orientation="horizontal">
+        android:src="@drawable/icon_setblank_noshader"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline2"/>
 
-        <ImageButton
-            android:id="@+id/button_undo"
-            android:layout_width="45dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/undo"
-            android:visibility="gone"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="28dp"
+        android:background="@drawable/gradient_circle"
+        android:src="@drawable/icon_undo"
+        app:layout_constraintBottom_toBottomOf="@id/edit_blank_button"
+        app:layout_constraintRight_toLeftOf="@id/edit_blank_button"
+        app:layout_constraintTop_toTopOf="@+id/edit_blank_button"/>
 
-        <ImageButton
-            android:id="@+id/button_redo"
-            android:layout_width="45dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:background="@android:color/transparent"
-            android:src="@drawable/redo"
-            android:visibility="gone"/>
-    </RelativeLayout>
-</RelativeLayout>
+    <ImageView
+        android:id="@+id/back_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/icon_back"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.84"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:background="@drawable/gradient_circle"
+        android:src="@drawable/icon_ok_noshader"
+        app:layout_constraintBottom_toBottomOf="@id/edit_blank_button"
+        app:layout_constraintLeft_toRightOf="@id/edit_blank_button"
+        app:layout_constraintTop_toTopOf="@id/edit_blank_button"
+        />
+    
+    <android.support.constraint.ConstraintLayout
+        app:layout_constraintTop_toBottomOf="@id/edit_blank_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>
