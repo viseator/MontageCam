@@ -1,5 +1,6 @@
 package com.xinlan.imageeditlibrary.editimage.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.SpannableStringBuilder
@@ -11,6 +12,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.victor.loading.rotate.RotateLoading
 import com.xinlan.imageeditlibrary.R
+import com.xinlan.imageeditlibrary.editimage.EditImageActivity.BITMAP_FILE
+import com.xinlan.imageeditlibrary.editimage.EditImageActivity.INTENT_START_CAMERA_ACTIVITY
 
 
 /**
@@ -32,6 +35,7 @@ class UploadFragment : Fragment(), View.OnClickListener {
     var shareText: TextView? = null
     var listener: View.OnClickListener? = null
     var temp: Int? = null
+    var result: String? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -45,6 +49,7 @@ class UploadFragment : Fragment(), View.OnClickListener {
         shareButton = view.findViewById(R.id.token_share)
         shareText = view.findViewById(R.id.upload_text_share)
         selfButton?.setOnClickListener(this)
+        shareButton?.setOnClickListener(this)
         if (temp != null) {
             mainInfoText?.text = getText(temp!!)
             temp = null
@@ -55,7 +60,16 @@ class UploadFragment : Fragment(), View.OnClickListener {
 
 
     override fun onClick(v: View?) {
-        listener?.onClick(v)
+        if (v == selfButton) {
+            listener?.onClick(v)
+        } else if (v == shareButton) {
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.type = "text/plain"
+            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.friends))
+            intent.putExtra(Intent.EXTRA_TEXT, result)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(Intent.createChooser(intent, getString(R.string.share_to)))
+        }
     }
 
     fun setMainInfo(id: Int) {
@@ -83,6 +97,7 @@ class UploadFragment : Fragment(), View.OnClickListener {
     }
 
     fun setResultText(result: String) {
+        this.result = result
         resultText?.text = SpannableStringBuilder(result)
     }
 

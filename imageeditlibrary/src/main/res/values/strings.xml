@@ -14,7 +14,6 @@
     <string name="hollow">hollow</string>
 
 
-
     <string name="materialcolorpicker__app_name">Android Material Color Picker Dialog</string>
     <string name="materialcolorpicker__descLib">Material Color Picker Dialog</string>
     <string name="materialcolorpicker__errHex">Hex Code Format incorrect</string>
@@ -63,7 +62,10 @@
     <string name="return_">返回</string>
     <string name="self_fill">自己制作</string>
     <string name="share_info_pre">嘿～你的朋友在摩卡相机邀请你一同完成一张属于你们的照片哦～分享码如下</string>
-    <string name="share_info_suf">。复制这条消息，打开摩卡相机完成你和TA的照片故事吧！</string>
+    <string name="share_info_suf">。复制这条消息，打开[摩卡相机]完成你和TA的照片故事吧！</string>
     <string name="share_to_friend">分享给好友</string>
     <string name="made_myself">自己制作</string>
+    <string name="moca">摩卡相机</string>
+    <string name="share_to">分享到</string>
+    <string name="friends">小伙伴们</string>
 </resources>
