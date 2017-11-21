@@ -74,8 +74,8 @@ import java.io.File;
  *         包含 1.贴图 2.滤镜 3.剪裁 4.底图旋转 功能
  */
 public class EditImageActivity extends BaseActivity implements OnClickListener {
-    public static final int OUT_HEIGHT = 1920;
-    public static final int OUT_WIDTH = 1080;
+    public static final int OUT_HEIGHT = 2560;
+    public static final int OUT_WIDTH = 1440;
     private static final String TAG = "@vir EditImageActivity";
     public static final String INTENT_START_CAMERA_ACTIVITY = "com.viseator.START_CAMERA_ACTIVITY";
     public static final String BITMAP_FILE = "bitmap";
@@ -299,12 +299,14 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
 
     public void backToMainMenu() {
         mode = MODE_NONE;
+        hollowButton.setVisibility(View.VISIBLE);
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.remove(mCurrentPanelFragment);
         fragmentTransaction.add(R.id.edit_panel_container, mMainMenuFragment);
         mCurrentPanelFragment = mMainMenuFragment;
         fragmentTransaction.commit();
     }
+
     /**
      * 异步载入编辑图片
      *
@@ -380,10 +382,16 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
             }
             finish();
         }
-        applyChange(true);
+        fragmentBackToMain();
     }
 
-    public void applyChange(boolean isBack) {
+    public void fragmentBackToMain() {
+        if (mode != MODE_NONE) {
+            mCurrentPanelFragment.backToMain();
+        }
+    }
+
+    public void applyChange() {
         switch (mode) {
             case MODE_STICKERS:
                 mStickerFragment.applyStickers();// 保存贴图
@@ -407,7 +415,7 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
                 mBeautyFragment.applyBeauty();
                 break;
             case MODE_HOLLOW:
-                mHollowFragment.savePaintImage(isBack);
+                mHollowFragment.savePaintImage();
                 break;
             default:
                 break;
@@ -423,7 +431,7 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
         @Override
         public void onClick(View v) {
             if (mode != MODE_NONE) {
-                applyChange(false);
+                applyChange();
             } else {
                 doSaveImage();
             }
@@ -455,8 +463,8 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
 
         mainBitmap = newBit;
         mBitmapCache.push(mainBitmap);
-        mainImage.setImageBitmap(mainBitmap);
         mainImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
+        mainImage.setImageBitmap(mainBitmap);
 
         increaseOpTimes();
         if (shouldSave) {
@@ -499,7 +507,6 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
         @Override
         public void onResponse(String response) {
             if (!mDialog.isAdded()) {
-                Log.d(TAG, String.valueOf("Invisible Dialog"));
                 return;
             }
             mDialog.progressEnd();
@@ -525,6 +532,7 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
 
         @Override
         public void onError(ANError anError) {
+            // TODO: 11/21/17 handle network error here
             Log.e(TAG, anError.getErrorDetail());
             Log.e(TAG, anError.getErrorBody());
             new AlertDialog.Builder(EditImageActivity.this).setCustomTitle(null).setMessage(R
@@ -601,18 +609,25 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
 
     public void onRotateButtonClicked() {
         switchPanelFragment(mRotateFragment);
+        hollowButton.setVisibility(View.INVISIBLE);
         mode = MODE_ROTATE;
     }
 
     public void onTrimButtonClicked() {
-
+        switchPanelFragment(mCropFragment);
+        hollowButton.setVisibility(View.INVISIBLE);
+        mode = MODE_CROP;
     }
 
     public void onFilterButtonClicked() {
-
+        switchPanelFragment(mFilterListFragment);
+        hollowButton.setVisibility(View.INVISIBLE);
+        mode = MODE_FILTER;
     }
 
     public void onTextButtonClicked() {
-
+        switchPanelFragment(mAddTextFragment);
+        hollowButton.setVisibility(View.INVISIBLE);
+        mode = MODE_TEXT;
     }
 }// end class

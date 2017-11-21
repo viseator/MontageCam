@@ -7,6 +7,7 @@ import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -106,7 +107,7 @@ public class RotateFragment extends BaseEditFragment implements OnClickListener 
     private final class BackToMenuClick implements OnClickListener {
         @Override
         public void onClick(View v) {
-            applyRotateImage();
+            backToMain();
         }
     }// end class
 
@@ -159,6 +160,8 @@ public class RotateFragment extends BaseEditFragment implements OnClickListener 
         @Override
         protected Bitmap doInBackground(Bitmap... params) {
             RectF imageRect = mRotatePanel.getImageNewRect();
+            Log.d(TAG, imageRect.width() + "x" + String.valueOf(imageRect.height()));
+            Log.d(TAG, String.valueOf(mRotatePanel.getScale()));
             Bitmap originBit = params[0];
             Bitmap result = Bitmap.createBitmap((int) imageRect.width(), (int) imageRect.height()
                     , Bitmap.Config.ARGB_8888);
@@ -174,8 +177,8 @@ public class RotateFragment extends BaseEditFragment implements OnClickListener 
             RectF dst = new RectF(left, top, left + originBit.getWidth(), top + originBit
                     .getHeight());
             canvas.save();
-            canvas.scale(mRotatePanel.getScale(), mRotatePanel.getScale(), imageRect.width() / 2,
-                    imageRect.height() / 2);
+//            canvas.scale(mRotatePanel.getScale(), mRotatePanel.getScale(), imageRect.width() / 2,
+//                    imageRect.height() / 2);
             canvas.rotate(mRotatePanel.getRotateAngle(), imageRect.width() / 2, imageRect.height
                     () / 2);
 
@@ -192,8 +195,7 @@ public class RotateFragment extends BaseEditFragment implements OnClickListener 
             super.onPostExecute(result);
             //dialog.dismiss();
             if (result == null) return;
-
-            // 切换新底图
+            rotate = 0;
             activity.changeMainBitmap(result);
             backToMain();
         }

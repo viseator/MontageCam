@@ -109,6 +109,7 @@
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/icon_undo"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/edit_blank_button"
         app:layout_constraintRight_toLeftOf="@id/edit_blank_button"
         app:layout_constraintTop_toTopOf="@+id/edit_blank_button"/>
