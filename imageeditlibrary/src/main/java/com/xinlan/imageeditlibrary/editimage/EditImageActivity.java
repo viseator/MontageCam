@@ -620,6 +620,8 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
     }
 
     public void onTextButtonClicked() {
-
+        switchPanelFragment(mAddTextFragment);
+        hollowButton.setVisibility(View.INVISIBLE);
+        mode = MODE_TEXT;
     }
 }// end class

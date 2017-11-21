@@ -64,8 +64,8 @@ public class AddTextFragment extends BaseEditFragment implements TextWatcher {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         mainView = inflater.inflate(R.layout.fragment_edit_image_add_text, null);
         return mainView;
@@ -75,7 +75,7 @@ public class AddTextFragment extends BaseEditFragment implements TextWatcher {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mTextStickerView = (TextStickerView)getActivity().findViewById(R.id.text_sticker_panel);
+        mTextStickerView = (TextStickerView) getActivity().findViewById(R.id.text_sticker_panel);
 
         backToMenu = mainView.findViewById(R.id.back_to_main);
         mInputText = (EditText) mainView.findViewById(R.id.text_input);
@@ -87,6 +87,7 @@ public class AddTextFragment extends BaseEditFragment implements TextWatcher {
         mTextColorSelector.setOnClickListener(new SelectColorBtnClick());
         mInputText.addTextChangedListener(this);
         mTextStickerView.setEditText(mInputText);
+        onShow();
     }
 
     @Override
@@ -136,7 +137,8 @@ public class AddTextFragment extends BaseEditFragment implements TextWatcher {
     }
 
     public void hideInput() {
-        if (getActivity() != null && getActivity().getCurrentFocus() != null && isInputMethodShow()) {
+        if (getActivity() != null && getActivity().getCurrentFocus() != null && isInputMethodShow
+                ()) {
             imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
                     InputMethodManager.HIDE_NOT_ALWAYS);
         }
@@ -154,7 +156,7 @@ public class AddTextFragment extends BaseEditFragment implements TextWatcher {
     private final class BackToMenuClick implements OnClickListener {
         @Override
         public void onClick(View v) {
-            applyTextImage();
+            backToMain();
         }
     }// end class
 
@@ -163,8 +165,7 @@ public class AddTextFragment extends BaseEditFragment implements TextWatcher {
      */
     public void backToMain() {
         hideInput();
-        activity.mode = EditImageActivity.MODE_NONE;
-//        activity.bottomGallery.setCurrentItem(MainMenuFragment.INDEX);
+        activity.backToMainMenu();
         activity.mainImage.setVisibility(View.VISIBLE);
         mTextStickerView.setVisibility(View.GONE);
     }
@@ -211,9 +212,10 @@ public class AddTextFragment extends BaseEditFragment implements TextWatcher {
             canvas.save();
             canvas.translate(dx, dy);
             canvas.scale(scale_x, scale_y);
-            //System.out.println("scale = " + scale_x + "       " + scale_y + "     " + dx + "    " + dy);
-            mTextStickerView.drawText(canvas, mTextStickerView.layout_x,
-                    mTextStickerView.layout_y, mTextStickerView.mScale, mTextStickerView.mRotateAngle);
+            //System.out.println("scale = " + scale_x + "       " + scale_y + "     " + dx + "
+            // " + dy);
+            mTextStickerView.drawText(canvas, mTextStickerView.layout_x, mTextStickerView
+                    .layout_y, mTextStickerView.mScale, mTextStickerView.mRotateAngle);
             canvas.restore();
         }
 
