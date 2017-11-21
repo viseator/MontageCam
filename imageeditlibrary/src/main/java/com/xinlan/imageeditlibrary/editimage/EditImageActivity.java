@@ -614,7 +614,9 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
     }
 
     public void onFilterButtonClicked() {
-
+        switchPanelFragment(mFilterListFragment);
+        hollowButton.setVisibility(View.INVISIBLE);
+        mode = MODE_FILTER;
     }
 
     public void onTextButtonClicked() {

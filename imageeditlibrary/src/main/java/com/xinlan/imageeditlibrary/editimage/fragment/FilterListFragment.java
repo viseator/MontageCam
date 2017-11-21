@@ -51,8 +51,8 @@ public class FilterListFragment extends BaseEditFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         mainView = inflater.inflate(R.layout.fragment_edit_image_fliter, null);
         return mainView;
     }
@@ -62,15 +62,16 @@ public class FilterListFragment extends BaseEditFragment {
         super.onActivityCreated(savedInstanceState);
 
         backBtn = mainView.findViewById(R.id.back_to_main);
-        mFilterGroup = (LinearLayout) mainView.findViewById(R.id.fliter_group);
+        mFilterGroup =  mainView.findViewById(R.id.fliter_group);
 
         backBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                applyFilterImage();
+                backToMain();
             }
         });
         setUpFliters();
+        onShow();
     }
 
     @Override
@@ -89,8 +90,7 @@ public class FilterListFragment extends BaseEditFragment {
         currentBitmap = activity.mainBitmap;
         fliterBit = null;
         activity.mainImage.setImageBitmap(activity.mainBitmap);// 返回原图
-        activity.mode = EditImageActivity.MODE_NONE;
-//        activity.bottomGallery.setCurrentItem(0);
+        activity.backToMainMenu();
         activity.mainImage.setScaleEnabled(true);
     }
 
@@ -115,12 +115,10 @@ public class FilterListFragment extends BaseEditFragment {
      */
     private void setUpFliters() {
         fliters = getResources().getStringArray(R.array.fliters);
-        if (fliters == null)
-            return;
+        if (fliters == null) return;
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout
+                .LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.gravity = Gravity.CENTER_VERTICAL;
         params.leftMargin = 20;
         params.rightMargin = 20;
@@ -178,8 +176,8 @@ public class FilterListFragment extends BaseEditFragment {
                 srcBitmap.recycle();
             }
 
-            srcBitmap = Bitmap.createBitmap(activity.mainBitmap.copy(
-                    Bitmap.Config.ARGB_8888, true));
+            srcBitmap = Bitmap.createBitmap(activity.mainBitmap.copy(Bitmap.Config.ARGB_8888,
+                    true));
             return PhotoProcessing.filterPhoto(srcBitmap, type);
         }
 
@@ -200,8 +198,7 @@ public class FilterListFragment extends BaseEditFragment {
         protected void onPostExecute(Bitmap result) {
             super.onPostExecute(result);
             dialog.dismiss();
-            if (result == null)
-                return;
+            if (result == null) return;
             if (fliterBit != null && (!fliterBit.isRecycled())) {
                 fliterBit.recycle();
             }
@@ -213,8 +210,7 @@ public class FilterListFragment extends BaseEditFragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            dialog = BaseActivity.getLoadingDialog(getActivity(), R.string.handing,
-                    false);
+            dialog = BaseActivity.getLoadingDialog(getActivity(), R.string.handing, false);
             dialog.show();
         }
 
