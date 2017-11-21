@@ -164,7 +164,7 @@ public class AddTextFragment extends BaseEditFragment implements TextWatcher {
     public void backToMain() {
         hideInput();
         activity.mode = EditImageActivity.MODE_NONE;
-        activity.bottomGallery.setCurrentItem(MainMenuFragment.INDEX);
+//        activity.bottomGallery.setCurrentItem(MainMenuFragment.INDEX);
         activity.mainImage.setVisibility(View.VISIBLE);
         mTextStickerView.setVisibility(View.GONE);
     }

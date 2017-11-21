@@ -1,7 +1,9 @@
 package com.xinlan.imageeditlibrary.editimage.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.View;
 
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity;
 
@@ -12,9 +14,9 @@ import com.xinlan.imageeditlibrary.editimage.EditImageActivity;
 public abstract class BaseEditFragment extends Fragment {
     public EditImageActivity activity;
 
-    protected EditImageActivity ensureEditActivity(){
-        if(activity==null){
-            activity = (EditImageActivity)getActivity();
+    protected EditImageActivity ensureEditActivity() {
+        if (activity == null) {
+            activity = (EditImageActivity) getActivity();
         }
         return activity;
     }
@@ -25,5 +27,10 @@ public abstract class BaseEditFragment extends Fragment {
         ensureEditActivity();
     }
 
-     public abstract void onShow();
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    public abstract void onShow();
 }//end class

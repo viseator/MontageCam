@@ -130,7 +130,7 @@ public class PaintFragment extends BaseEditFragment implements View.OnClickListe
      */
     public void backToMain() {
         activity.mode = EditImageActivity.MODE_NONE;
-        activity.bottomGallery.setCurrentItem(MainMenuFragment.INDEX);
+//        activity.bottomGallery.setCurrentItem(MainMenuFragment.INDEX);
         activity.mainImage.setVisibility(View.VISIBLE);
 
         this.mPaintView.setVisibility(View.GONE);
@@ -211,9 +211,9 @@ public class PaintFragment extends BaseEditFragment implements View.OnClickListe
         });
 
         int[] locations = new int[2];
-        activity.bottomGallery.getLocationOnScreen(locations);
-        setStokenWidthWindow.showAtLocation(activity.bottomGallery, Gravity.NO_GRAVITY, 0,
-                locations[1] - popView.getMeasuredHeight());
+//        activity.bottomGallery.getLocationOnScreen(locations);
+//        setStokenWidthWindow.showAtLocation(activity.bottomGallery, Gravity.NO_GRAVITY, 0,
+//                locations[1] - popView.getMeasuredHeight());
     }
 
     private void initStokeWidthPopWindow() {

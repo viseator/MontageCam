@@ -179,7 +179,7 @@ public class CropFragment extends BaseEditFragment {
 		activity.mode = EditImageActivity.MODE_NONE;
 		mCropPanel.setVisibility(View.GONE);
 		activity.mainImage.setScaleEnabled(true);// 恢复缩放功能
-		activity.bottomGallery.setCurrentItem(0);
+//		activity.bottomGallery.setCurrentItem(0);
 		if (selctedTextView != null) {
 			selctedTextView.setTextColor(UNSELECTED_COLOR);
 		}

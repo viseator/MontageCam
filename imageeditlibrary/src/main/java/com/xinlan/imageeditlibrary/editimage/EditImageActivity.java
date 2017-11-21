@@ -5,17 +5,15 @@ import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -25,8 +23,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
@@ -38,6 +35,7 @@ import com.xinlan.imageeditlibrary.BaseActivity;
 import com.xinlan.imageeditlibrary.R;
 import com.xinlan.imageeditlibrary.editimage.cache.BitmapCache;
 import com.xinlan.imageeditlibrary.editimage.fragment.AddTextFragment;
+import com.xinlan.imageeditlibrary.editimage.fragment.BaseEditFragment;
 import com.xinlan.imageeditlibrary.editimage.fragment.BeautyFragment;
 import com.xinlan.imageeditlibrary.editimage.fragment.CropFragment;
 import com.xinlan.imageeditlibrary.editimage.fragment.FilterListFragment;
@@ -46,15 +44,14 @@ import com.xinlan.imageeditlibrary.editimage.fragment.MainMenuFragment;
 import com.xinlan.imageeditlibrary.editimage.fragment.PaintFragment;
 import com.xinlan.imageeditlibrary.editimage.fragment.RotateFragment;
 import com.xinlan.imageeditlibrary.editimage.fragment.StickerFragment;
+import com.xinlan.imageeditlibrary.editimage.utils.BitmapUtils;
 import com.xinlan.imageeditlibrary.editimage.view.CropImageView;
 import com.xinlan.imageeditlibrary.editimage.view.CustomPaintView;
-import com.xinlan.imageeditlibrary.editimage.view.CustomViewPager;
 import com.xinlan.imageeditlibrary.editimage.view.RotateImageView;
 import com.xinlan.imageeditlibrary.editimage.view.StickerView;
 import com.xinlan.imageeditlibrary.editimage.view.TextStickerView;
 import com.xinlan.imageeditlibrary.editimage.view.UploadDialog;
 import com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouch;
-import com.xinlan.imageeditlibrary.editimage.utils.BitmapUtils;
 import com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouchBase;
 
 import java.io.File;
@@ -76,7 +73,7 @@ import java.io.File;
  *         <p>
  *         包含 1.贴图 2.滤镜 3.剪裁 4.底图旋转 功能
  */
-public class EditImageActivity extends BaseActivity {
+public class EditImageActivity extends BaseActivity implements OnClickListener {
     public static final int OUT_HEIGHT = 1920;
     public static final int OUT_WIDTH = 1080;
     private static final String TAG = "@vir EditImageActivity";
@@ -114,18 +111,18 @@ public class EditImageActivity extends BaseActivity {
     public int mode = MODE_NONE;// 当前操作模式
 
     protected int mOpTimes = 0;
+    private boolean shouldSave = false;
     protected boolean isBeenSaved = false;
-
+    private FragmentManager mFragmentManager;
     private EditImageActivity mContext;
     public Bitmap mainBitmap;// 底层显示Bitmap
+
     public ImageViewTouch mainImage;
-    private View backBtn;
-    private boolean shouldSave = false;
-
-    private View saveBtn;// 保存按钮
-
-    private ImageButton undoButton;
-    private ImageButton redoButton;
+    public ImageView hollowButton;
+    private ImageView backButton;  // v updated
+    private ImageView saveButton;// 保存按钮 v updated
+    private ImageView undoButton;
+    private ConstraintLayout mConstraintLayout;
 
     public StickerView mStickerView;// 贴图层View
     public CropImageView mCropPanel;// 剪切操作控件
@@ -134,10 +131,7 @@ public class EditImageActivity extends BaseActivity {
     public CustomPaintView mPaintView;//涂鸦模式画板
     public FrameLayout mFrameLayout;
 
-    public CustomViewPager bottomGallery;// 底部gallery
-    private BottomGalleryAdapter mBottomGalleryAdapter;// 底部gallery
     private MainMenuFragment mMainMenuFragment;// Menu
-    private RelativeLayout mRelativeLayout;
     public HollowFragment mHollowFragment;
     public StickerFragment mStickerFragment;// 贴图Fragment
     public FilterListFragment mFilterListFragment;// 滤镜FilterListFragment
@@ -146,6 +140,8 @@ public class EditImageActivity extends BaseActivity {
     public AddTextFragment mAddTextFragment;//图片添加文字
     public PaintFragment mPaintFragment;//绘制模式Fragment
     public BeautyFragment mBeautyFragment;//美颜模式Fragment
+
+    private BaseEditFragment mCurrentPanelFragment;
 
     private SaveImageTask mSaveImageTask;
 
@@ -162,9 +158,6 @@ public class EditImageActivity extends BaseActivity {
 
         @Override
         public void canRedo(boolean b) {
-            if (mode == MODE_HOLLOW) {
-                redoButton.setVisibility(b ? View.VISIBLE : View.GONE);
-            }
         }
     };
 
@@ -177,7 +170,6 @@ public class EditImageActivity extends BaseActivity {
 
         @Override
         public void canRedo(boolean b) {
-            redoButton.setVisibility(b ? View.VISIBLE : View.GONE);
         }
     };
 
@@ -228,31 +220,29 @@ public class EditImageActivity extends BaseActivity {
         imageWidth = metrics.widthPixels / 2;
         imageHeight = metrics.heightPixels / 2;
 
-        mRelativeLayout = findViewById(R.id.image_edit_relativelayout);
-        mFrameLayout = (FrameLayout) findViewById(R.id.work_space);
-        saveBtn = findViewById(R.id.save_btn);
-        saveBtn.setOnClickListener(new SaveBtnClick());
+        mConstraintLayout = findViewById(R.id.image_edit_relativelayout);
+        mFrameLayout = findViewById(R.id.work_space);
+        saveButton = findViewById(R.id.edit_main_confirm);
+        saveButton.setOnClickListener(new SaveBtnClick());
 
-        mainImage = (ImageViewTouch) findViewById(R.id.main_image);
-        backBtn = findViewById(R.id.back_btn);// 退出按钮
-        backBtn.setOnClickListener(new OnClickListener() {
+        mainImage = findViewById(R.id.main_image);
+        backButton = findViewById(R.id.edit_image_main_back);// 退出按钮
+        backButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
+        hollowButton = findViewById(R.id.edit_blank_button);
+        hollowButton.setOnClickListener(this);
 
-        mStickerView = (StickerView) findViewById(R.id.sticker_panel);
-        mCropPanel = (CropImageView) findViewById(R.id.crop_panel);
-        mRotatePanel = (RotateImageView) findViewById(R.id.rotate_panel);
-        mTextStickerView = (TextStickerView) findViewById(R.id.text_sticker_panel);
-        mPaintView = (CustomPaintView) findViewById(R.id.custom_paint_view);
+        mStickerView = findViewById(R.id.sticker_panel);
+        mCropPanel = findViewById(R.id.crop_panel);
+        mRotatePanel = findViewById(R.id.rotate_panel);
+        mTextStickerView = findViewById(R.id.text_sticker_panel);
+        mPaintView = findViewById(R.id.custom_paint_view);
 
-        // 底部gallery
-        bottomGallery = (CustomViewPager) findViewById(R.id.bottom_gallery);
-        //bottomGallery.setOffscreenPageLimit(7);
         mMainMenuFragment = MainMenuFragment.newInstance();
-        mBottomGalleryAdapter = new BottomGalleryAdapter(this.getSupportFragmentManager());
         mHollowFragment = HollowFragment.newInstance();
         mStickerFragment = StickerFragment.newInstance();
         mFilterListFragment = FilterListFragment.newInstance();
@@ -262,32 +252,10 @@ public class EditImageActivity extends BaseActivity {
         mPaintFragment = PaintFragment.newInstance();
         mBeautyFragment = BeautyFragment.newInstance();
 
-        bottomGallery.setAdapter(mBottomGalleryAdapter);
         mHollowFragment.setCacheListener(mHollowViewCacheListener);
 
-        undoButton = findViewById(R.id.button_undo);
-        redoButton = findViewById(R.id.button_redo);
-        undoButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mode == MODE_HOLLOW) {
-                    mHollowFragment.undo();
-                } else {
-                    changeMainBitmap(mBitmapCache.undo(), true);
-                }
-            }
-        });
-
-        redoButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mode == MODE_HOLLOW) {
-                    mHollowFragment.redo();
-                } else {
-                    changeMainBitmap(mBitmapCache.redo(), true);
-                }
-            }
-        });
+        undoButton = findViewById(R.id.edit_main_undo);
+        undoButton.setOnClickListener(this);
 
 
         mainImage.setFlingListener(new ImageViewTouch.OnImageFlingListener() {
@@ -299,6 +267,7 @@ public class EditImageActivity extends BaseActivity {
                 }
             }
         });
+        initMainMenuFragment();
     }
 
     /**
@@ -310,48 +279,32 @@ public class EditImageActivity extends BaseActivity {
         }
     }
 
-    /**
-     * @author panyi
-     */
-    private final class BottomGalleryAdapter extends FragmentPagerAdapter {
-        public BottomGalleryAdapter(FragmentManager fm) {
-            super(fm);
-        }
+    // TODO: 11/21/17 handle new fragment logic
 
-        @Override
-        public Fragment getItem(int index) {
-            undoButton.setVisibility(View.GONE);
-            redoButton.setVisibility(View.GONE);
-            // System.out.println("createFragment-->"+index);
-            switch (index) {
-                case MainMenuFragment.INDEX:// 主菜单
-                    return mMainMenuFragment;
-                case StickerFragment.INDEX:// 贴图
-                    return mStickerFragment;
-                case FilterListFragment.INDEX:// 滤镜
-                    return mFilterListFragment;
-                case CropFragment.INDEX://剪裁
-                    return mCropFragment;
-                case RotateFragment.INDEX://旋转
-                    return mRotateFragment;
-                case AddTextFragment.INDEX://添加文字
-                    return mAddTextFragment;
-                case PaintFragment.INDEX:
-                    return mPaintFragment;//绘制
-                case BeautyFragment.INDEX://美颜
-                    return mBeautyFragment;
-                case HollowFragment.INDEX:
-                    return mHollowFragment;
-            }//end switch
-            return MainMenuFragment.newInstance();
-        }
+    private void initMainMenuFragment() {
+        mFragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.edit_panel_container, mMainMenuFragment);
+        mCurrentPanelFragment = mMainMenuFragment;
+        fragmentTransaction.commit();
+    }
 
-        @Override
-        public int getCount() {
-            return 9;
-        }
-    }// end inner class
+    public void switchPanelFragment(BaseEditFragment baseEditFragment) {
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.remove(mCurrentPanelFragment);
+        fragmentTransaction.add(R.id.edit_panel_container, baseEditFragment);
+        mCurrentPanelFragment = baseEditFragment;
+        fragmentTransaction.commit();
+    }
 
+    public void backToMainMenu() {
+        mode = MODE_NONE;
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.remove(mCurrentPanelFragment);
+        fragmentTransaction.add(R.id.edit_panel_container, mMainMenuFragment);
+        mCurrentPanelFragment = mMainMenuFragment;
+        fragmentTransaction.commit();
+    }
     /**
      * 异步载入编辑图片
      *
@@ -363,6 +316,27 @@ public class EditImageActivity extends BaseActivity {
         }
         mLoadImageTask = new LoadImageTask();
         mLoadImageTask.execute(filepath);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getVisibility() != View.VISIBLE) {
+            return;
+        }
+        if (v == undoButton) {
+            if (mode == MODE_HOLLOW) {
+                mHollowFragment.undo();
+            } else {
+                changeMainBitmap(mBitmapCache.undo(), true);
+            }
+        } else if (v == hollowButton) {
+            mode = MODE_HOLLOW;
+            hollowButton.setVisibility(View.INVISIBLE);
+            switchPanelFragment(mHollowFragment);
+        } else {
+            undoButton.setVisibility(View.GONE);
+
+        }
     }
 
     private final class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
@@ -448,20 +422,15 @@ public class EditImageActivity extends BaseActivity {
     private final class SaveBtnClick implements OnClickListener {
         @Override
         public void onClick(View v) {
-//            if (mOpTimes == 0) {//并未修改图片
-//                showInfoSnackBar(getResources().getString(R.string.need_to_hollow));
-//            } else {
             if (mode != MODE_NONE) {
                 applyChange(false);
-                shouldSave = true;
             } else {
                 doSaveImage();
             }
         }
-    }// end inner class
+    }
 
     protected void doSaveImage() {
-//        if (mOpTimes <= 0) return;
 
         if (mSaveImageTask != null) {
             mSaveImageTask.cancel(true);
@@ -629,23 +598,21 @@ public class EditImageActivity extends BaseActivity {
 
     }//end inner class
 
-    private void showInfoDialog(String info) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(info);
-        builder.setCustomTitle(null);
-        builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
 
-            }
-        });
-        builder.create().show();
+    public void onRotateButtonClicked() {
+        switchPanelFragment(mRotateFragment);
+        mode = MODE_ROTATE;
     }
 
-    private void showInfoSnackBar(String info) {
-        Snackbar snackbar = Snackbar.make(mRelativeLayout, info, Snackbar.LENGTH_SHORT);
-        snackbar.show();
+    public void onTrimButtonClicked() {
+
     }
 
+    public void onFilterButtonClicked() {
 
+    }
+
+    public void onTextButtonClicked() {
+
+    }
 }// end class

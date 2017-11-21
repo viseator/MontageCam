@@ -127,7 +127,7 @@ public class BeautyFragment extends BaseEditFragment implements SeekBar.OnSeekBa
         mWhiteValueBar.setProgress(0);
 
         activity.mode = EditImageActivity.MODE_NONE;
-        activity.bottomGallery.setCurrentItem(MainMenuFragment.INDEX);
+//        activity.bottomGallery.setCurrentItem(MainMenuFragment.INDEX);
         activity.mainImage.setImageBitmap(activity.mainBitmap);// 返回原图
 
         activity.mainImage.setVisibility(View.VISIBLE);

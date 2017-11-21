@@ -90,7 +90,7 @@ public class FilterListFragment extends BaseEditFragment {
         fliterBit = null;
         activity.mainImage.setImageBitmap(activity.mainBitmap);// 返回原图
         activity.mode = EditImageActivity.MODE_NONE;
-        activity.bottomGallery.setCurrentItem(0);
+//        activity.bottomGallery.setCurrentItem(0);
         activity.mainImage.setScaleEnabled(true);
     }
 

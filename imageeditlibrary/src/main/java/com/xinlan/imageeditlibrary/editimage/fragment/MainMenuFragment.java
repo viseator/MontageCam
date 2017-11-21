@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.xinlan.imageeditlibrary.R;
 import com.xinlan.imageeditlibrary.editimage.ModuleConfig;
@@ -17,17 +18,13 @@ import com.xinlan.imageeditlibrary.editimage.ModuleConfig;
 public class MainMenuFragment extends BaseEditFragment implements View.OnClickListener {
     public static final int INDEX = ModuleConfig.INDEX_MAIN;
 
-    public static final String TAG = MainMenuFragment.class.getName();
+    private static final String TAG = "@vir MainMenuFragment";
     private View mainView;
 
-    private View hollowBtn;
-    private View stickerBtn;// 贴图按钮
-    private View filterBtn;// 滤镜按钮
-    private View cropBtn;// 剪裁按钮
-    private View rotateBtn;// 旋转按钮
-    private View mTextBtn;//文字型贴图添加
-    private View mPaintBtn;//编辑按钮
-    private View mBeautyBtn;//美颜按钮
+    private ImageView rotateButton;
+    private ImageView trimButton;
+    private ImageView filterButton;
+    private ImageView textButton;
 
     public static MainMenuFragment newInstance() {
         MainMenuFragment fragment = new MainMenuFragment();
@@ -49,24 +46,15 @@ public class MainMenuFragment extends BaseEditFragment implements View.OnClickLi
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        rotateButton = mainView.findViewById(R.id.edit_panel_rotate);
+        trimButton = mainView.findViewById(R.id.edit_panel_trim);
+        filterButton = mainView.findViewById(R.id.edit_panel_filter);
+        textButton = mainView.findViewById(R.id.edit_panel_text);
 
-        hollowBtn = mainView.findViewById(R.id.btn_hollow);
-        stickerBtn = mainView.findViewById(R.id.btn_stickers);
-        filterBtn = mainView.findViewById(R.id.btn_fliter);
-        cropBtn = mainView.findViewById(R.id.btn_crop);
-        rotateBtn = mainView.findViewById(R.id.btn_rotate);
-        mTextBtn = mainView.findViewById(R.id.btn_text);
-        mPaintBtn = mainView.findViewById(R.id.btn_paint);
-        mBeautyBtn = mainView.findViewById(R.id.btn_beauty);
-
-        hollowBtn.setOnClickListener(this);
-        stickerBtn.setOnClickListener(this);
-        filterBtn.setOnClickListener(this);
-        cropBtn.setOnClickListener(this);
-        rotateBtn.setOnClickListener(this);
-        mTextBtn.setOnClickListener(this);
-        mPaintBtn.setOnClickListener(this);
-        mBeautyBtn.setOnClickListener(this);
+        rotateButton.setOnClickListener(this);
+        trimButton.setOnClickListener(this);
+        filterButton.setOnClickListener(this);
+        textButton.setOnClickListener(this);
     }
 
     @Override
@@ -76,91 +64,15 @@ public class MainMenuFragment extends BaseEditFragment implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        if (v == hollowBtn) {
-            onHollowClick();
-        } else if (v == stickerBtn) {
-            onStickClick();
-        } else if (v == filterBtn) {
-            onFilterClick();
-        } else if (v == cropBtn) {
-            onCropClick();
-        } else if (v == rotateBtn) {
-            onRotateClick();
-        } else if (v == mTextBtn) {
-            onAddTextClick();
-        } else if (v == mPaintBtn) {
-            onPaintClick();
-        } else if (v == mBeautyBtn) {
-            onBeautyClick();
+        if (v == rotateButton) {
+            activity.onRotateButtonClicked();
+        } else if (v == trimButton) {
+            activity.onTrimButtonClicked();
+        } else if (v == filterButton) {
+            activity.onFilterButtonClicked();
+        } else if (v == textButton) {
+            activity.onTextButtonClicked();
         }
-    }
-
-    private void onHollowClick() {
-        activity.bottomGallery.setCurrentItem(HollowFragment.INDEX);
-        activity.mHollowFragment.onShow();
-    }
-
-    /**
-     * 贴图模式
-     *
-     * @author panyi
-     */
-    private void onStickClick() {
-        activity.bottomGallery.setCurrentItem(StickerFragment.INDEX);
-        activity.mStickerFragment.onShow();
-    }
-
-    /**
-     * 滤镜模式
-     *
-     * @author panyi
-     */
-    private void onFilterClick() {
-        activity.bottomGallery.setCurrentItem(FilterListFragment.INDEX);
-        activity.mFilterListFragment.onShow();
-    }
-
-    /**
-     * 裁剪模式
-     *
-     * @author panyi
-     */
-    private void onCropClick() {
-        activity.bottomGallery.setCurrentItem(CropFragment.INDEX);
-        activity.mCropFragment.onShow();
-    }
-
-    /**
-     * 图片旋转模式
-     *
-     * @author panyi
-     */
-    private void onRotateClick() {
-        activity.bottomGallery.setCurrentItem(RotateFragment.INDEX);
-        activity.mRotateFragment.onShow();
-    }
-
-    /**
-     * 插入文字模式
-     *
-     * @author panyi
-     */
-    private void onAddTextClick() {
-        activity.bottomGallery.setCurrentItem(AddTextFragment.INDEX);
-        activity.mAddTextFragment.onShow();
-    }
-
-    /**
-     * 自由绘制模式
-     */
-    private void onPaintClick() {
-        activity.bottomGallery.setCurrentItem(PaintFragment.INDEX);
-        activity.mPaintFragment.onShow();
-    }
-
-    private void onBeautyClick() {
-        activity.bottomGallery.setCurrentItem(BeautyFragment.INDEX);
-        activity.mBeautyFragment.onShow();
     }
 
 }// end class

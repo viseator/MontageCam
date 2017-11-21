@@ -67,10 +67,10 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         backToMenu.setOnClickListener(this);// 返回主菜单
         mCropButton.setOnClickListener(this);
         mCropCircleButton.setOnClickListener(this);
+        onShow();
     }
 
 
@@ -105,17 +105,16 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
     public void backToMain() {
         activity.mainImage.setVisibility(View.VISIBLE);
         mHollowView.resetCache();
-        activity.mode = EditImageActivity.MODE_NONE;
-        activity.bottomGallery.setCurrentItem(MainMenuFragment.INDEX);
+        activity.backToMainMenu();
+        activity.hollowButton.setVisibility(View.VISIBLE);
         activity.mainImage.setVisibility(View.VISIBLE);
-        activity.mFrameLayout.setBackgroundColor(getResources().getColor(R.color.main_backgroud));
+        activity.mFrameLayout.setBackgroundColor(Color.TRANSPARENT);
 
         mHollowView.setVisibility(View.GONE);
         mHollowView.reset();
     }
 
     public void onShow() {
-        activity.mode = EditImageActivity.MODE_HOLLOW;
         mPaintModeView.setPaintStrokeColor(Color.WHITE);
         mHollowView.setFragment(this);
         mHollowView.resetBitmap(activity.mainBitmap.copy(activity.mainBitmap.getConfig(), false),
@@ -168,8 +167,8 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
     public void savePaintImage(boolean isBack) {
         if (mHollowCropCircleView.getVisibility() == View.VISIBLE) {
             if (!isBack) {
-                mHollowView.hollowCircle(mHollowCropCircleView.getCx(),mHollowCropCircleView
-                        .getCy(),mHollowCropCircleView.getRadius());
+                mHollowView.hollowCircle(mHollowCropCircleView.getCx(), mHollowCropCircleView
+                        .getCy(), mHollowCropCircleView.getRadius());
             }
             mHollowCropCircleView.setVisibility(View.GONE);
         }
