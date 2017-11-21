@@ -88,6 +88,6 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/main_take_photo_button"
         app:layout_constraintEnd_toEndOf="@+id/main_take_photo_button"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toEndOf="@+id/edit_panel_trim"
         app:layout_constraintTop_toTopOf="@+id/guideline"/>
 </android.support.constraint.ConstraintLayout>
