@@ -429,10 +429,8 @@ public abstract class ImageViewTouchBase extends ImageView implements IDisposabl
 
         if (drawable != null) {
 
-            if (LOG_ENABLED) {
-                Log.d(LOG_TAG, "size: " + drawable.getIntrinsicWidth() + "x" + drawable
-                        .getIntrinsicHeight());
-            }
+            Log.d(LOG_TAG, "size: " + drawable.getIntrinsicWidth() + "x" + drawable
+                    .getIntrinsicHeight());
             super.setImageDrawable(drawable);
         } else {
             mBaseMatrix.reset();
@@ -494,7 +492,6 @@ public abstract class ImageViewTouchBase extends ImageView implements IDisposabl
         if (null != mOnLayoutChangeListener) {
             mOnLayoutChangeListener.onLayoutChanged(true, left, top, right, bottom);
         }
-        Log.d(TAG, String.valueOf(mThisWidth) + "x" + String.valueOf(mThisHeight));
     }
 
     protected void fireOnDrawableChangeListener(Drawable drawable) {

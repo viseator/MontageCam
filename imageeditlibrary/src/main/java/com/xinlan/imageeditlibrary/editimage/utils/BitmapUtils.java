@@ -78,6 +78,7 @@ public class BitmapUtils {
             result = Bitmap.createScaledBitmap(bitmap, (int) (width * mainScale), (int) (height *
                     mainScale), false);
         }
+        bitmap.recycle();
         return result;
     }
 

@@ -74,8 +74,8 @@ import java.io.File;
  *         包含 1.贴图 2.滤镜 3.剪裁 4.底图旋转 功能
  */
 public class EditImageActivity extends BaseActivity implements OnClickListener {
-    public static final int OUT_HEIGHT = 1920;
-    public static final int OUT_WIDTH = 1080;
+    public static final int OUT_HEIGHT = 2560;
+    public static final int OUT_WIDTH = 1440;
     private static final String TAG = "@vir EditImageActivity";
     public static final String INTENT_START_CAMERA_ACTIVITY = "com.viseator.START_CAMERA_ACTIVITY";
     public static final String BITMAP_FILE = "bitmap";
@@ -299,6 +299,7 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
         mCurrentPanelFragment = mMainMenuFragment;
         fragmentTransaction.commit();
     }
+
     /**
      * 异步载入编辑图片
      *
@@ -343,8 +344,8 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
             }
             Bitmap bitmap = BitmapFactory.decodeFile(params[0], option);
             Bitmap scaledBitmap = BitmapUtils.scaleBitmap(bitmap, OUT_HEIGHT, OUT_WIDTH);
-            bitmap.recycle();
             return scaledBitmap;
+//            return bitmap;
         }
 
         @Override
@@ -449,8 +450,8 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
 
         mainBitmap = newBit;
         mBitmapCache.push(mainBitmap);
-        mainImage.setImageBitmap(mainBitmap);
         mainImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
+        mainImage.setImageBitmap(mainBitmap);
 
         increaseOpTimes();
         if (shouldSave) {
@@ -492,6 +493,9 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
     private StringRequestListener mUploadListener = new StringRequestListener() {
         @Override
         public void onResponse(String response) {
+            if (!mDialog.isAdded()) {
+                return;
+            }
             mDialog.progressEnd();
             String resultString = mDialog.genShareText(response);
             mDialog.setResultText(resultString);
@@ -515,6 +519,7 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
 
         @Override
         public void onError(ANError anError) {
+            // TODO: 11/21/17 handle network error here
             Log.e(TAG, anError.getErrorDetail());
             Log.e(TAG, anError.getErrorBody());
             new AlertDialog.Builder(EditImageActivity.this).setCustomTitle(null).setMessage(R
