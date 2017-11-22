@@ -6,18 +6,20 @@
     <ImageView
         android:id="@+id/back_to_main"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_gravity="center_vertical"
-        android:layout_margin="10dp"
-        android:src="@drawable/image_edit_back"/>
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="0dp"
+        android:layout_marginStart="24dp"
+        android:src="@drawable/icon_fold"/>
 
     <EditText
         android:id="@+id/text_input"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
-        android:gravity="center"
         android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:gravity="center"
         android:hint="@string/input_hint"
         android:textColor="@color/white"
         android:textColorHint="@color/white"/>

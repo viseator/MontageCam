@@ -279,7 +279,6 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
         }
     }
 
-    // TODO: 11/21/17 handle new fragment logic
 
     private void initMainMenuFragment() {
         mFragmentManager = getSupportFragmentManager();
@@ -290,6 +289,9 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
     }
 
     public void switchPanelFragment(BaseEditFragment baseEditFragment) {
+        if (baseEditFragment != mMainMenuFragment && baseEditFragment != mHollowFragment) {
+            undoButton.setVisibility(View.GONE);
+        }
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.remove(mCurrentPanelFragment);
         fragmentTransaction.add(R.id.edit_panel_container, baseEditFragment);
@@ -299,6 +301,9 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
 
     public void backToMainMenu() {
         mode = MODE_NONE;
+        if (mBitmapCache.canUndo()) {
+            undoButton.setVisibility(View.VISIBLE);
+        }
         hollowButton.setVisibility(View.VISIBLE);
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.remove(mCurrentPanelFragment);
