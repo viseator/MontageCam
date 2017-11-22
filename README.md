@@ -2,7 +2,8 @@
 
 [![CircleCI](https://circleci.com/gh/viseator/MontageCam.svg?style=svg)](https://circleci.com/gh/viseator/MontageCam)
 
-<img src="http://www.viseator.com/images/google-play-badge.png" height="72">
+<a href="https://play.google.com/store/apps/details?id=com.viseator.montagecam"><img 
+src="http://www.viseator.com/images/google-play-badge.png" height="72"></a>
 
 A camera app with ability to make interesting picture cooperated with others.
 
