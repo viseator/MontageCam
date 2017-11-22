@@ -167,9 +167,14 @@ public class HollowFragment extends BaseEditFragment implements View.OnClickList
 
     public void savePaintImage() {
         if (mHollowCropCircleView.getVisibility() == View.VISIBLE) {
+            mHollowView.hollowCircle(mHollowCropCircleView.getCx(), mHollowCropCircleView.getCy()
+                    , mHollowCropCircleView.getRadius());
+            mCropCircleButton.setImageResource(R.drawable.icon_blankcir);
             mHollowCropCircleView.setVisibility(View.GONE);
         }
         if (mHollowCropRectView.getVisibility() == View.VISIBLE) {
+            mHollowView.hollowRect(mHollowCropRectView.getCropRect());
+            mCropButton.setImageResource(R.drawable.icon_blankrec);
             mHollowCropRectView.setVisibility(View.GONE);
         }
         if (mSavePaintImageTask != null && !mSavePaintImageTask.isCancelled()) {
