@@ -70,7 +70,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
 
     private val FLASH_TITLES = intArrayOf(R.string.flash_auto, R.string.flash_off,
             R.string.flash_on)
-    private val FRAGMENT_DIALOG = "dialog"
+    private val FRAGMENT_DIALOG = "tokenInputFragment"
     private var mCurrentFlash: Int = 0
     private var inHollowMode = false
     private var mToken: String? = null

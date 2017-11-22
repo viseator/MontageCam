@@ -36,7 +36,7 @@ import java.util.Set;
 
 
 /**
- * A simple dialog that allows user to pick an aspect ratio.
+ * A simple tokenInputFragment that allows user to pick an aspect ratio.
  */
 public class AspectRatioFragment extends DialogFragment {
 

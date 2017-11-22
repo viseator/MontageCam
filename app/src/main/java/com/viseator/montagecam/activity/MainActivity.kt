@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.IntentFilter
 import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
-import android.widget.Button
+import android.view.View
 import android.widget.ImageView
 import butterknife.BindView
 import com.androidnetworking.AndroidNetworking
@@ -14,8 +14,8 @@ import com.jacksonandroidnetworking.JacksonParserFactory
 import com.viseator.montagecam.R
 import com.viseator.montagecam.base.BaseActivity
 import com.viseator.montagecam.receiver.CameraActivityReceiver
-import com.viseator.montagecam.view.OnInputDialogResultListener
-import com.viseator.montagecam.view.TokenInputDialog
+import com.viseator.montagecam.fragment.OnInputDialogResultListener
+import com.viseator.montagecam.fragment.TokenInputFragment
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
@@ -24,7 +24,7 @@ import org.jetbrains.anko.toast
 class MainActivity : BaseActivity() {
 
     val TAG = "@vir MainActivity"
-    val dialog = TokenInputDialog()
+    val tokenInputFragment = TokenInputFragment()
     lateinit var clipManager: ClipboardManager
 
     companion object {
@@ -39,7 +39,6 @@ class MainActivity : BaseActivity() {
         setFullScreen()
         setContentView(R.layout.activity_main)
         super.onCreate(savedInstanceState)
-        //        startActivity<CameraActivity>(TOKEN to "9dfb96a5")
     }
 
     override fun init() {
@@ -48,24 +47,37 @@ class MainActivity : BaseActivity() {
         AndroidNetworking.setParserFactory(JacksonParserFactory())
         LocalBroadcastManager.getInstance(this).registerReceiver(CameraActivityReceiver(),
                 IntentFilter(EditImageActivity.INTENT_START_CAMERA_ACTIVITY))
+        tokenInputFragment.listener = View.OnClickListener { hideInputFragment() }
     }
 
     override fun initView() {
-        dialog.resultListener = inputListener
+        tokenInputFragment.resultListener = inputListener
         takePhotoButton.setOnClickListener({
             startActivity<CameraActivity>()
         })
         receiverPhotoButton.setOnClickListener({
-            dialog.show(fragmentManager, null)
+            showInputFragment()
         })
     }
 
     val inputListener = object : OnInputDialogResultListener {
         override fun onResult(result: String) {
-            dialog.dismiss()
+            hideInputFragment()
             startActivity<CameraActivity>(TOKEN to getToken(result))
         }
 
+    }
+
+    fun showInputFragment() {
+        val fragmentTrans = supportFragmentManager.beginTransaction()
+        fragmentTrans.add(R.id.main_constraintlayout, tokenInputFragment)
+        fragmentTrans.commit()
+    }
+
+    fun hideInputFragment() {
+        val fragmentTrans = supportFragmentManager.beginTransaction()
+        fragmentTrans.remove(tokenInputFragment)
+        fragmentTrans.commit()
     }
 
     fun getToken(s: String): String {
@@ -95,17 +107,24 @@ class MainActivity : BaseActivity() {
         val token = getToken(clipData.getItemAt(0).text.toString())
         if (token != "error") {
             toast(resources.getString(R.string.recognizedToken))
-            dialog.token = "|$token|"
-            dialog.show(fragmentManager, null)
+            tokenInputFragment.token = "|$token|"
+            showInputFragment()
         }
     }
 
     override fun onPause() {
         super.onPause()
-        if (dialog.isAdded) {
-            dialog.dismiss()
+        if (tokenInputFragment.isAdded) {
+            hideInputFragment()
         }
     }
 
+    override fun onBackPressed() {
+        if (tokenInputFragment.isAdded == true) {
+            hideInputFragment()
+        } else {
+            finish()
+        }
+    }
 }
 
