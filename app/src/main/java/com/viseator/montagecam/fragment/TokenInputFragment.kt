@@ -35,10 +35,6 @@ class TokenInputFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_input, container, false)
         ButterKnife.bind(this, view)
-        if (token != null) {
-            editText.text = SpannableStringBuilder(token)
-            editText.selectAll()
-        }
         editText.setOnClickListener({
             editText.selectAll()
         })
@@ -54,5 +50,9 @@ class TokenInputFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         editText.requestFocus()
+        if (token != null) {
+            editText.text = SpannableStringBuilder(token)
+            editText.selectAll()
+        }
     }
 }

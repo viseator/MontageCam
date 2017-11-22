@@ -14,7 +14,7 @@
     <!--<string name="server_download">http://118.89.193.105:9091/</string>-->
     <string name="server_download">http://35.194.250.61:9091/</string>
     <string name="downloading">正在加载图片</string>
-    <string name="download_error">加载错误，请重试</string>
+    <string name="download_error">网络错误 轻触重试</string>
     <string name="file_has_save_to">图片已经保存到</string>
     <string name="choose_image">请选择图片</string>
     <string name="loading">正在加载</string>

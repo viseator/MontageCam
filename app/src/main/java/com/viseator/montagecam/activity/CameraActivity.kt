@@ -2,17 +2,13 @@ package com.viseator.montagecam.activity
 
 import android.Manifest
 import android.app.Activity
-import android.app.ProgressDialog
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.net.Uri
 import android.os.*
 import android.support.constraint.ConstraintLayout
-import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
@@ -22,7 +18,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import butterknife.BindView
 import com.androidnetworking.AndroidNetworking
@@ -35,14 +30,13 @@ import com.viseator.montagecam.R
 import com.viseator.montagecam.base.BaseActivity
 import com.viseator.montagecam.fragment.AspectRatioFragment
 import com.viseator.montagecam.fragment.CompressResultFragment
+import com.viseator.montagecam.fragment.DownloadFragment
 import com.viseator.montagecam.util.BitmapUtil
 import com.viseator.montagecam.util.ExifUtil
 import com.viseator.montagecam.view.HollowImageView
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity
 import com.xinlan.imageeditlibrary.editimage.utils.BitmapUtils
 import com.xinlan.imageeditlibrary.editimage.utils.FileUtil
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.toast
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -78,6 +72,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     private var inHollowMode = false
     private var mToken: String? = null
     private val realMetrics = DisplayMetrics()
+    private var downloadFragment: DownloadFragment? = null
     var compressResultFragment: CompressResultFragment? = null
 
     private var mBackgroundHandler: Handler? = null
@@ -199,7 +194,6 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     }
 
 
-
     override fun initView() {
         setSupportActionBar(mToolBar)
         val actionBar = supportActionBar
@@ -226,28 +220,38 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
 
     fun initHollowView() {
         mCameraView.setMocaOnScrollListener(mMocaScrollListener)
+        downloadFragment = DownloadFragment()
+        downloadFragment?.listener = View.OnClickListener {
+            if (downloadFragment?.failed!!) {
+                downloadFragment?.restart()
+                startDownload()
+            }
+        }
+        showDownloadFragment()
+        startDownload()
+    }
+
+    fun startDownload() {
         val file = File(externalCacheDir, "download.png")
-        val dialog = ProgressDialog(this)
-        dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
-        dialog.setTitle(R.string.downloading)
-        dialog.max = 100
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.setOnCancelListener { finish() }
-        dialog.show()
+        AndroidNetworking.cancelAll()
         AndroidNetworking.download(resources.getString(R.string.server_download) + mToken + ".png",
                 file.parent, "download.png").build().setDownloadProgressListener(
                 { bytesDownloaded, totalBytes ->
-                    dialog.progress = (bytesDownloaded / totalBytes.toFloat() * 100).toInt()
+                    downloadFragment?.setDownloadProgress(
+                            ((bytesDownloaded / totalBytes.toFloat() * 100).toInt()))
                 }).startDownload(object : DownloadListener {
             override fun onError(anError: ANError?) {
                 Log.d(TAG, anError?.message)
-                dialog.dismiss()
-                alert(resources.getString(R.string.download_error)) {}
+                downloadFragment?.fail()
+
             }
 
             override fun onDownloadComplete() {
                 Log.d(TAG, "download done")
-                dialog.dismiss()
+                if (downloadFragment?.isAdded == false) {
+                    return
+                }
+                hideDownloadFragment()
                 val options = BitmapFactory.Options()
                 options.inScaled = false
                 mHollowImageView.bitmap = BitmapFactory.decodeFile(file.absolutePath)
@@ -382,6 +386,9 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
             fragmentTrans.remove(compressResultFragment)
             fragmentTrans.commit()
             compressResultFragment = null
+        } else if (downloadFragment?.isAdded == true) {
+            hideDownloadFragment()
+            finish()
         } else {
             finish()
         }
@@ -413,5 +420,18 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
             dialog.dismiss()
             startImageEdit(file.absolutePath, 0f)
         }
+    }
+
+    fun showDownloadFragment() {
+        val fragmentTrans = supportFragmentManager.beginTransaction()
+        fragmentTrans.add(R.id.camera_main_constraintlayout, downloadFragment)
+        fragmentTrans.commit()
+    }
+
+    fun hideDownloadFragment() {
+        val fragmentTrans = supportFragmentManager.beginTransaction()
+        fragmentTrans.remove(downloadFragment)
+        fragmentTrans.commit()
+
     }
 }
