@@ -9,6 +9,17 @@
     android:background="@drawable/bg_index">
 
     <ImageView
+        android:id="@+id/main_info_button"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="24dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/icon_about"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
         android:id="@+id/main_take_photo_button"
         android:layout_width="232dp"
         android:layout_height="64dp"

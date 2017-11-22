@@ -13,6 +13,7 @@ import com.androidnetworking.AndroidNetworking
 import com.jacksonandroidnetworking.JacksonParserFactory
 import com.viseator.montagecam.R
 import com.viseator.montagecam.base.BaseActivity
+import com.viseator.montagecam.fragment.InfoFragment
 import com.viseator.montagecam.fragment.OnInputDialogResultListener
 import com.viseator.montagecam.fragment.TokenInputFragment
 import com.viseator.montagecam.receiver.CameraActivityReceiver
@@ -24,7 +25,9 @@ class MainActivity : BaseActivity() {
 
     val TAG = "@vir MainActivity"
     val tokenInputFragment = TokenInputFragment()
+    val infoFragment = InfoFragment()
     lateinit var clipManager: ClipboardManager
+
 
     companion object {
         val TOKEN = "token"
@@ -33,6 +36,7 @@ class MainActivity : BaseActivity() {
 
     @BindView(R.id.main_take_photo_button) lateinit var takePhotoButton: ImageView
     @BindView(R.id.main_receive_photo_button) lateinit var receiverPhotoButton: ImageView
+    @BindView(R.id.main_info_button) lateinit var infoButton: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setFullScreen()
@@ -47,16 +51,21 @@ class MainActivity : BaseActivity() {
         LocalBroadcastManager.getInstance(this).registerReceiver(CameraActivityReceiver(),
                 IntentFilter(EditImageActivity.INTENT_START_CAMERA_ACTIVITY))
         tokenInputFragment.listener = View.OnClickListener { hideInputFragment() }
+        infoFragment.listener = View.OnClickListener { hideInfoFragment() }
     }
 
     override fun initView() {
         tokenInputFragment.resultListener = inputListener
+        infoButton.setOnClickListener({
+            showInfoFragment()
+        })
         takePhotoButton.setOnClickListener({
             startActivity<CameraActivity>()
         })
         receiverPhotoButton.setOnClickListener({
             showInputFragment()
         })
+
     }
 
     val inputListener = object : OnInputDialogResultListener {
@@ -81,6 +90,18 @@ class MainActivity : BaseActivity() {
     fun hideInputFragment() {
         val fragmentTrans = supportFragmentManager.beginTransaction()
         fragmentTrans.remove(tokenInputFragment)
+        fragmentTrans.commit()
+    }
+
+    fun showInfoFragment() {
+        val fragmentTrans = supportFragmentManager.beginTransaction()
+        fragmentTrans.add(R.id.main_constraintlayout, infoFragment)
+        fragmentTrans.commit()
+    }
+
+    fun hideInfoFragment() {
+        val fragmentTrans = supportFragmentManager.beginTransaction()
+        fragmentTrans.remove(infoFragment)
         fragmentTrans.commit()
     }
 
@@ -126,6 +147,8 @@ class MainActivity : BaseActivity() {
     override fun onBackPressed() {
         if (tokenInputFragment.isAdded == true) {
             hideInputFragment()
+        } else if (infoFragment.isAdded == true) {
+            hideInfoFragment()
         } else {
             finish()
         }

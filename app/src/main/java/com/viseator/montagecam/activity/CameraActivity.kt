@@ -71,6 +71,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     private val FRAGMENT_DIALOG = "tokenInputFragment"
     private var mCurrentFlash: Int = 0
     private var inHollowMode = false
+    private var ratioInited = false
     private var mToken: String? = null
     private val realMetrics = DisplayMetrics()
     private var downloadFragment: DownloadFragment? = null
@@ -142,12 +143,9 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA),
                     REQUEST_CAMERA_PERMISSION)
         }
-        val ratios = mCameraView.supportedAspectRatios
-        for (ratio in ratios) {
-            if (ratio.toString() == "16:9") {
-                mCameraView.setAspectRatio(ratio)
-                break
-            }
+        if (!ratioInited) {
+            initRatio()
+            ratioInited = true
         }
         if (mShotButton.visibility != View.VISIBLE) {
             mShotButton.visibility = View.VISIBLE
@@ -159,6 +157,17 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
             fragmentTrans.commit()
             compressResultFragment = null
         }
+    }
+
+    fun initRatio() {
+        val ratios = mCameraView.supportedAspectRatios
+        for (ratio in ratios) {
+            if (ratio.toString() == "16:9") {
+                mCameraView.setAspectRatio(ratio)
+                break
+            }
+        }
+
     }
 
     override fun onStop() {
