@@ -12,10 +12,12 @@
 
         <ImageView
             android:id="@+id/back_to_main"
-            android:layout_width="40dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/image_edit_back"/>
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="0dp"
+            android:layout_marginStart="24dp"
+            android:src="@drawable/icon_fold"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/stickers_type_list"

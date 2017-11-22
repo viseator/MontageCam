@@ -63,7 +63,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     private val FLASH_OPTIONS = intArrayOf(CameraView.FLASH_AUTO, CameraView.FLASH_OFF,
             CameraView.FLASH_ON)
 
-    private val FLASH_ICONS = intArrayOf(R.drawable.ic_flash_auto, R.drawable.ic_flash_off,
+    private val FLASH_ICONS = intArrayOf(R.drawable.icon_flash_auto, R.drawable.icon_flash_off,
             R.drawable.icon_flash)
 
     private val FLASH_TITLES = intArrayOf(R.string.flash_auto, R.string.flash_off,
