@@ -8,9 +8,11 @@ import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.Uri
 import android.os.*
 import android.support.constraint.ConstraintLayout
+import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
@@ -20,6 +22,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import butterknife.BindView
 import com.androidnetworking.AndroidNetworking
@@ -177,7 +180,6 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
                 inHollowMode = true
                 mToken = intent.getStringExtra(MainActivity.TOKEN)
                 if (mToken == "error") {
-                    toast(resources.getString(R.string.error_token))
                     finish()
                 } else {
                     initHollowView()
@@ -195,6 +197,8 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
             mHollowImageView.visibility = View.VISIBLE
         }
     }
+
+
 
     override fun initView() {
         setSupportActionBar(mToolBar)
