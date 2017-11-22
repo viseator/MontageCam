@@ -8,14 +8,10 @@ A camera app with ability to make interesting picture cooperated with others.
 
 ## ScreenShots
 
-<img src="http://www.viseator.com/images/moca1.jpg" height="400">
-<img src="http://www.viseator.com/images/moca2.jpg" height="400">
-<img src="http://www.viseator.com/images/moca3.jpg" height="400">
-<img src="http://www.viseator.com/images/moca4.jpg" height="400">
-<img src="http://www.viseator.com/images/moca5.jpg" height="400">
-<img src="http://www.viseator.com/images/moca6.jpg" height="400">
-<img src="http://www.viseator.com/images/moca7.jpg" height="400">
-<img src="http://www.viseator.com/images/moca8.jpg" height="400">
+<img src="http://www.viseator.com/images/moca1.jpg" height="400"><img src="http://www.viseator.com/images/moca2.jpg" height="400">
+<img src="http://www.viseator.com/images/moca3.jpg" height="400"><img src="http://www.viseator.com/images/moca4.jpg" height="400">
+<img src="http://www.viseator.com/images/moca5.jpg" height="400"><img src="http://www.viseator.com/images/moca6.jpg" height="400">
+<img src="http://www.viseator.com/images/moca7.jpg" height="400"><img src="http://www.viseator.com/images/moca8.jpg" height="400">
 ## Dependencies
 
 * [cameraview](https://github.com/google/cameraview)
