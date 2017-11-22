@@ -4,11 +4,13 @@ import android.Manifest
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.*
+import android.support.constraint.ConstraintLayout
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
@@ -17,9 +19,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import android.widget.Toast
 import butterknife.BindView
 import com.androidnetworking.AndroidNetworking
@@ -31,10 +31,10 @@ import com.google.android.cameraview.MocaOnScrollListener
 import com.viseator.montagecam.R
 import com.viseator.montagecam.base.BaseActivity
 import com.viseator.montagecam.fragment.AspectRatioFragment
+import com.viseator.montagecam.fragment.CompressResultFragment
 import com.viseator.montagecam.util.BitmapUtil
 import com.viseator.montagecam.util.ExifUtil
 import com.viseator.montagecam.view.HollowImageView
-import com.viseator.montagecam.view.ImagePreviewDialog
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity
 import com.xinlan.imageeditlibrary.editimage.utils.BitmapUtils
 import com.xinlan.imageeditlibrary.editimage.utils.FileUtil
@@ -59,6 +59,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     @BindView(R.id.camera_shot_button) lateinit var mShotButton: ImageView
     @BindView(R.id.hollow_image) lateinit var mHollowImageView: HollowImageView
     @BindView(R.id.camera_album_button) lateinit var mAlbumButton: ImageView
+    @BindView(R.id.camera_main_constraintlayout) lateinit var mConstraintLayout: ConstraintLayout
 
     private val ALPHA_SPEED = 500
     private val FLASH_OPTIONS = intArrayOf(CameraView.FLASH_AUTO, CameraView.FLASH_OFF,
@@ -74,6 +75,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     private var inHollowMode = false
     private var mToken: String? = null
     private val realMetrics = DisplayMetrics()
+    var compressResultFragment: CompressResultFragment? = null
 
     private var mBackgroundHandler: Handler? = null
     private val mMocaScrollListener = MocaOnScrollListener { e1, e2, distanceX, distanceY ->
@@ -93,7 +95,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         }
 
         override fun onPictureTaken(cameraView: CameraView, data: ByteArray) {
-            Log.d(TAG, "Rotation:${ExifUtil.getOrientation(data)}")
+            mShotButton.visibility = View.GONE
             val rotation = ExifUtil.getOrientation(data).toFloat()
             getBackgroundHandler().post {
                 val file = File(externalCacheDir, "shoot_temp.jpg")
@@ -147,6 +149,16 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
                 mCameraView.setAspectRatio(ratio)
                 break
             }
+        }
+        if (mShotButton.visibility != View.VISIBLE) {
+            mShotButton.visibility = View.VISIBLE
+        }
+        if (compressResultFragment?.isAdded == true) {
+            mShotButton.visibility = View.VISIBLE
+            val fragmentTrans = supportFragmentManager.beginTransaction()
+            fragmentTrans.remove(compressResultFragment)
+            fragmentTrans.commit()
+            compressResultFragment = null
         }
     }
 
@@ -224,8 +236,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
                     dialog.progress = (bytesDownloaded / totalBytes.toFloat() * 100).toInt()
                 }).startDownload(object : DownloadListener {
             override fun onError(anError: ANError?) {
-                Log.e(TAG, anError?.errorBody)
-                Log.e(TAG, anError?.errorDetail)
+                Log.d(TAG, anError?.message)
                 dialog.dismiss()
                 alert(resources.getString(R.string.download_error)) {}
             }
@@ -244,6 +255,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
 
     fun startComposeImage(file: File, rotation: Float) {
         //        val metrics = resources.displayMetrics
+
         val options = BitmapFactory.Options()
         Log.d(TAG, "realdisplay: ${realMetrics.widthPixels} x ${realMetrics.heightPixels}")
         options.inScaled = false
@@ -257,15 +269,14 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         task.execute(resultBitmap)
     }
 
+
     inner class UploadImageTask : AsyncTask<Bitmap, Unit, Unit>() {
         var fileOutput: File? = null
-        val dialog = this@CameraActivity.getLoadingDialog(this@CameraActivity,
-                R.string.saving_image, false)
-        val imagePreviewDialog = ImagePreviewDialog()
         lateinit var bitmap: Bitmap
 
         override fun onPreExecute() {
             super.onPreExecute()
+            compressResultFragment = CompressResultFragment()
             val df = SimpleDateFormat("yyyyMMddHHmmss")
             val time = df.format(Date())
 
@@ -273,7 +284,9 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
             fileOutput = File(
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
                     "MontageCam$time.png")
-            dialog.show()
+            val fragmentTrans = supportFragmentManager.beginTransaction()
+            fragmentTrans.add(R.id.camera_main_constraintlayout, compressResultFragment)
+            fragmentTrans.commit()
         }
 
         override fun doInBackground(vararg params: Bitmap?) {
@@ -283,19 +296,18 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
 
         override fun onPostExecute(result: Unit?) {
             super.onPostExecute(result)
+            Log.d(TAG, "Save Done")
+            if (compressResultFragment?.isAdded == false) {
+                return
+            }
             FileUtil.ablumUpdate(this@CameraActivity, fileOutput?.absolutePath)
-            dialog.dismiss()
-            imagePreviewDialog.setData(bitmap,
+            compressResultFragment!!.showImage(bitmap,
                     this@CameraActivity.resources.getString(R.string.file_has_save_to),
                     fileOutput?.absolutePath!!)
-            imagePreviewDialog.show(this@CameraActivity.fragmentManager, TAG)
         }
     }
 
     fun startImageEdit(path: String, rotation: Float) {
-        //        if (!file.exists()) {
-        //            Toast.makeText(this, resources.getString(R.string.NoImg), Toast.LENGTH_SHORT).show()
-        //        }
         val fileOutput = File(externalCacheDir, "picture_output.png")
         EditImageActivity.start(this, path, fileOutput.absolutePath,
                 mCameraView.facing == CameraView.FACING_FRONT, rotation, CALL_EDIT_ACTIVITY)
@@ -360,8 +372,15 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
+        if (compressResultFragment?.isAdded == true) {
+            mShotButton.visibility = View.VISIBLE
+            val fragmentTrans = supportFragmentManager.beginTransaction()
+            fragmentTrans.remove(compressResultFragment)
+            fragmentTrans.commit()
+            compressResultFragment = null
+        } else {
+            finish()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -391,5 +410,4 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
             startImageEdit(file.absolutePath, 0f)
         }
     }
-
 }

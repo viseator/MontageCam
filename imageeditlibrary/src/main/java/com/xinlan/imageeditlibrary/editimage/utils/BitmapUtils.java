@@ -76,7 +76,7 @@ public class BitmapUtils {
             result = bitmap.copy(bitmap.getConfig(), false);
         } else {
             result = Bitmap.createScaledBitmap(bitmap, (int) (width * mainScale), (int) (height *
-                    mainScale), false);
+                    mainScale), true);
         }
         bitmap.recycle();
         return result;
@@ -496,7 +496,8 @@ public class BitmapUtils {
         }
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
-        Bitmap result = Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), matrix, false);
+        Bitmap result = Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), matrix,
+                true);
         src.recycle();
         return result;
     }

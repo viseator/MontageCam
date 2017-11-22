@@ -14,7 +14,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -49,7 +48,7 @@ import com.xinlan.imageeditlibrary.editimage.view.CustomPaintView;
 import com.xinlan.imageeditlibrary.editimage.view.RotateImageView;
 import com.xinlan.imageeditlibrary.editimage.view.StickerView;
 import com.xinlan.imageeditlibrary.editimage.view.TextStickerView;
-import com.xinlan.imageeditlibrary.editimage.view.UploadFragment;
+import com.xinlan.imageeditlibrary.editimage.fragment.UploadFragment;
 import com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouch;
 import com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouchBase;
 
@@ -505,7 +504,6 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
     }
 
     protected void onSaveTaskDone() {
-        mUploadFragment.getProgressBar().stop();
         uploadImage();
     }
 
@@ -540,6 +538,7 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
         @Override
         public void onError(ANError anError) {
             // TODO: 11/21/17 handle network error here
+            Log.e(TAG, anError.getMessage());
             mUploadFragment.getProgressBar().stop();
             mUploadFragment.setMainInfo(R.string.upload_error);
         }

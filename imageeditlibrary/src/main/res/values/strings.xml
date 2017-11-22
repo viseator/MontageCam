@@ -19,7 +19,7 @@
     <string name="materialcolorpicker__errHex">Hex Code Format incorrect</string>
     <string name="materialcolorpicker__inputColor">Color:</string>
     <string name="materialcolorpicker__btnSelectColor">Select</string>
-    <string name="saving_image">save...</string>
+    <string name="saving_image">图片保存中</string>
     <string name="input_hint">input text ...</string>
 
     <string name="no_choose">please choose a image for edit</string>
@@ -53,7 +53,7 @@
     <string name="mPaint">mPaint</string>
     <string name="need_to_hollow">需要对照片进行挖空</string>
     <!--<string name="server_upload">http://118.89.193.105:9090</string>-->
-    <string name="server_upload">http://mocau.viseator.com:9090</string>
+    <string name="server_upload">http://35.194.250.61:9090</string>
     <string name="uploading">正在获取分享码</string>
     <string name="share_success">复制成功</string>
     <string name="copy">复制</string>

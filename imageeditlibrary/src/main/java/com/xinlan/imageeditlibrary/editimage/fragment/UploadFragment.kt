@@ -1,4 +1,4 @@
-package com.xinlan.imageeditlibrary.editimage.view
+package com.xinlan.imageeditlibrary.editimage.fragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,13 +7,10 @@ import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.victor.loading.rotate.RotateLoading
 import com.xinlan.imageeditlibrary.R
-import com.xinlan.imageeditlibrary.editimage.EditImageActivity.BITMAP_FILE
-import com.xinlan.imageeditlibrary.editimage.EditImageActivity.INTENT_START_CAMERA_ACTIVITY
 
 
 /**
@@ -41,7 +38,7 @@ class UploadFragment : Fragment(), View.OnClickListener {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = activity.layoutInflater.inflate(R.layout.upload_dialog, container, false)
+        val view = activity.layoutInflater.inflate(R.layout.fragment_upload, container, false)
         progressBar = view.findViewById(R.id.upload_progressbar)
         mainInfoText = view.findViewById(R.id.upload_main_text)
         resultText = view.findViewById(R.id.upload_detail_text)
