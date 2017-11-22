@@ -2,21 +2,20 @@
 
 [![CircleCI](https://circleci.com/gh/viseator/MontageCam.svg?style=svg)](https://circleci.com/gh/viseator/MontageCam)
 
-![GooglePlay](http://www.viseator.com/images/google-play-badge.png)
+<img src="http://www.viseator.com/images/google-play-badge.png" height="72">
 
 A camera app with ability to make interesting picture cooperated with others.
 
 ## ScreenShots
 
-![](http://www.viseator.com/images/moca1.jpg)
-![](http://www.viseator.com/images/moca2.jpg)
-![](http://www.viseator.com/images/moca3.jpg)
-![](http://www.viseator.com/images/moca4.jpg)
-![](http://www.viseator.com/images/moca5.jpg)
-![](http://www.viseator.com/images/moca6.jpg)
-![](http://www.viseator.com/images/moca7.jpg)
-![](http://www.viseator.com/images/moca8.jpg)
-
+<img src="http://www.viseator.com/images/moca1.jpg" height="400">
+<img src="http://www.viseator.com/images/moca2.jpg" height="400">
+<img src="http://www.viseator.com/images/moca3.jpg" height="400">
+<img src="http://www.viseator.com/images/moca4.jpg" height="400">
+<img src="http://www.viseator.com/images/moca5.jpg" height="400">
+<img src="http://www.viseator.com/images/moca6.jpg" height="400">
+<img src="http://www.viseator.com/images/moca7.jpg" height="400">
+<img src="http://www.viseator.com/images/moca8.jpg" height="400">
 ## Dependencies
 
 * [cameraview](https://github.com/google/cameraview)
