@@ -57,6 +57,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     @BindView(R.id.hollow_image) lateinit var mHollowImageView: HollowImageView
     @BindView(R.id.camera_album_button) lateinit var mAlbumButton: ImageView
     @BindView(R.id.camera_main_constraintlayout) lateinit var mConstraintLayout: ConstraintLayout
+    @BindView(R.id.camera_main_back) lateinit var mBackButton: ImageView
 
     private val ALPHA_SPEED = 500
     private val FLASH_OPTIONS = intArrayOf(CameraView.FLASH_AUTO, CameraView.FLASH_OFF,
@@ -201,6 +202,9 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         mCameraView.addCallback(mCallback)
         mCameraView.setManualFocus(true)
         mCameraView.setPinchZoom(true)
+        mBackButton.setOnClickListener({
+            onBackPressed()
+        })
         mShotButton.setOnClickListener({
             mCameraView.takePicture()
         })
