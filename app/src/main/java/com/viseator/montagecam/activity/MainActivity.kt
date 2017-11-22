@@ -4,8 +4,12 @@ import android.content.ClipDescription
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.IntentFilter
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.content.LocalBroadcastManager
+import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import butterknife.BindView
@@ -17,8 +21,10 @@ import com.viseator.montagecam.receiver.CameraActivityReceiver
 import com.viseator.montagecam.fragment.OnInputDialogResultListener
 import com.viseator.montagecam.fragment.TokenInputFragment
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity
+import org.jetbrains.anko.design.snackbar
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.toast
+import android.widget.TextView
+import com.viseator.montagecam.R.color.textColor
 
 
 class MainActivity : BaseActivity() {
@@ -106,7 +112,7 @@ class MainActivity : BaseActivity() {
         }
         val token = getToken(clipData.getItemAt(0).text.toString())
         if (token != "error") {
-            toast(resources.getString(R.string.recognizedToken))
+            showSnackBar()
             tokenInputFragment.token = "|$token|"
             showInputFragment()
         }
@@ -125,6 +131,21 @@ class MainActivity : BaseActivity() {
         } else {
             finish()
         }
+    }
+
+    fun showSnackBar() {
+        val snackbar: Snackbar = Snackbar.make(findViewById(R.id.main_constraintlayout),
+                resources.getString(R.string.recognizedToken), Snackbar.LENGTH_SHORT)
+        val snackBarView = snackbar.view
+        snackBarView.setBackgroundColor(Color.WHITE)
+        val textView: TextView = snackBarView.findViewById(
+                android.support.design.R.id.snackbar_text)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            textView.setTextColor(getColor(R.color.moca_gra_blue))
+        } else {
+            textView.setTextColor(resources.getColor(R.color.moca_gra_blue))
+        }
+        snackbar.show()
     }
 }
 

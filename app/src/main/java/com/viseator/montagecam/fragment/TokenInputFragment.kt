@@ -1,8 +1,5 @@
 package com.viseator.montagecam.fragment
 
-import android.app.AlertDialog
-import android.app.Dialog
-import android.app.DialogFragment
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
@@ -10,7 +7,6 @@ import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import butterknife.BindView
@@ -35,9 +31,9 @@ class TokenInputFragment : Fragment() {
     @BindView(R.id.confirm_token) lateinit var button: ImageView
     @BindView(R.id.input_main) lateinit var background: ConstraintLayout
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
-        val view = inflater!!.inflate(R.layout.fragment_input, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.fragment_input, container, false)
         ButterKnife.bind(this, view)
         if (token != null) {
             editText.text = SpannableStringBuilder(token)
@@ -53,5 +49,10 @@ class TokenInputFragment : Fragment() {
             listener?.onClick(v)
         })
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        editText.requestFocus()
     }
 }

@@ -7,7 +7,7 @@ buildscript {
     ext.minSdkVersion = 19
     ext.buildToolsVersion = '26.0.2'
     ext.supportLibraryVersion = '26.1.0'
-    ext.anko_version='0.10.1'
+    ext.anko_version='0.10.2'
     repositories {
         google()
         jcenter()

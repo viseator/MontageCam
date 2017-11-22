@@ -22,4 +22,5 @@
     <string name="recognizedToken">检测到分享码</string>
     <string name="publish_image">发布拼图</string>
     <string name="join_image">参与拼图</string>
+    <string name="touch_back">轻触返回</string>
 </resources>
