@@ -230,7 +230,7 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
         backButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                finish();
             }
         });
         hollowButton = findViewById(R.id.edit_blank_button);
@@ -332,7 +332,7 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
             } else {
                 changeMainBitmap(mBitmapCache.undo(), true);
             }
-        } else if (v == hollowButton) {
+        } else if (v == hollowButton && mode == MODE_NONE) {
             mode = MODE_HOLLOW;
             hollowButton.setImageResource(R.drawable.icon_setblank_press_noshader);
             switchPanelFragment(mHollowFragment);
@@ -505,6 +505,7 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
     }
 
     protected void onSaveTaskDone() {
+        mUploadFragment.getProgressBar().stop();
         uploadImage();
     }
 
@@ -522,6 +523,7 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
                     .CLIPBOARD_SERVICE);
             ClipData data = ClipData.newPlainText(CLIP_LABEL, resultString);
             clipboardManager.setPrimaryClip(data);
+            mUploadFragment.setBackgroundClickListener(null);
             mUploadFragment.setListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -538,24 +540,38 @@ public class EditImageActivity extends BaseActivity implements OnClickListener {
         @Override
         public void onError(ANError anError) {
             // TODO: 11/21/17 handle network error here
-            Log.e(TAG, anError.getErrorDetail());
-            Log.e(TAG, anError.getErrorBody());
-            new AlertDialog.Builder(EditImageActivity.this).setCustomTitle(null).setMessage(R
-                    .string.upload_error).setPositiveButton(R.string.return_, null).create().show();
+            mUploadFragment.getProgressBar().stop();
+            mUploadFragment.setMainInfo(R.string.upload_error);
         }
     };
 
     private void uploadImage() {
+        mUploadFragment.setBackgroundClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mUploadFragment.getProgressBar().isStart()) {
+                    return;
+                }
+                mUploadFragment.getProgressBar().start();
+                AndroidNetworking.cancelAll();
+                startUpload();
+            }
+        });
+        startUpload();
+    }
+
+    private void startUpload() {
         mUploadFragment.setMainInfo(R.string.uploading);
+        mUploadFragment.getProgressBar().start();
         File file = new File(saveFilePath);
         AndroidNetworking.upload(getResources().getString(R.string.server_upload)).setPriority
                 (Priority.HIGH).addMultipartFile("img", file).build().setUploadProgressListener
                 (new UploadProgressListener() {
             @Override
             public void onProgress(long bytesUploaded, long totalBytes) {
-//                Log.d(TAG, String.valueOf(bytesUploaded / (float) totalBytes));
             }
         }).getAsString(mUploadListener);
+
     }
 
     /**

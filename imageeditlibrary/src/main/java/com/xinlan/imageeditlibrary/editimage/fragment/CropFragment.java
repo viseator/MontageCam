@@ -133,7 +133,7 @@ public class CropFragment extends BaseEditFragment {
     private final class BackToMenuClick implements OnClickListener {
         @Override
         public void onClick(View v) {
-            applyCropImage();
+            backToMain();
         }
     }// end class
 

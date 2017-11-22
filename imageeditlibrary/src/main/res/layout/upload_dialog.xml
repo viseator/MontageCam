@@ -9,9 +9,12 @@
     >
 
     <ImageView
+        android:id="@+id/upload_image_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:alpha="0.8"
+        android:clickable="true"
+        android:focusable="true"
         android:src="@drawable/gradient_full_background_main"/>
 
     <ImageView

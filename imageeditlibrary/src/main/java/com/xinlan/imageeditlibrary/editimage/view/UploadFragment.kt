@@ -34,8 +34,10 @@ class UploadFragment : Fragment(), View.OnClickListener {
     var shareButton: ImageView? = null
     var shareText: TextView? = null
     var listener: View.OnClickListener? = null
+    var backgroundClickListener: View.OnClickListener? = null
     var temp: Int? = null
     var result: String? = null
+    var background: ImageView? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -48,6 +50,8 @@ class UploadFragment : Fragment(), View.OnClickListener {
         uploadOk = view.findViewById(R.id.upload_ok)
         shareButton = view.findViewById(R.id.token_share)
         shareText = view.findViewById(R.id.upload_text_share)
+        background = view.findViewById(R.id.upload_image_background)
+        background?.setOnClickListener(this)
         selfButton?.setOnClickListener(this)
         shareButton?.setOnClickListener(this)
         if (temp != null) {
@@ -60,16 +64,19 @@ class UploadFragment : Fragment(), View.OnClickListener {
 
 
     override fun onClick(v: View?) {
-        if (v == selfButton) {
-            listener?.onClick(v)
-        } else if (v == shareButton) {
+        if (v == shareButton) {
             val intent = Intent(Intent.ACTION_SEND)
             intent.type = "text/plain"
             intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.friends))
             intent.putExtra(Intent.EXTRA_TEXT, result)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(Intent.createChooser(intent, getString(R.string.share_to)))
+        } else if(v == selfButton){
+            listener?.onClick(v)
+        } else if (v == background) {
+            backgroundClickListener?.onClick(v)
         }
+
     }
 
     fun setMainInfo(id: Int) {
