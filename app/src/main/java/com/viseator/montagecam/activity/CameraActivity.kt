@@ -44,13 +44,24 @@ import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Camera Activity
+ * @author viseator
+ */
 class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     val REQUEST_CAMERA_PERMISSION = 0x1
     val REQUEST_STORAGE_PERMISSION = 0x2
     val CALL_EDIT_ACTIVITY = 0x3
-    val CALL_CHOOSE_IMAGE_REQUEST = 0x4;
+    val CALL_CHOOSE_IMAGE_REQUEST = 0x4
     val TAG = "@vir CameraActivity"
-
+    private val ALPHA_SPEED = 500
+    private val FLASH_OPTIONS = intArrayOf(CameraView.FLASH_AUTO, CameraView.FLASH_OFF,
+            CameraView.FLASH_ON)
+    private val FLASH_ICONS = intArrayOf(R.drawable.icon_flash_auto, R.drawable.icon_flash_off,
+            R.drawable.icon_flash)
+    private val FLASH_TITLES = intArrayOf(R.string.flash_auto, R.string.flash_off,
+            R.string.flash_on)
+    private val FRAGMENT_DIALOG = "tokenInputFragment"
     @BindView(R.id.main_camera_view) lateinit var mCameraView: CameraView
     @BindView(R.id.camera_toolbar) lateinit var mToolBar: Toolbar
     @BindView(R.id.camera_shot_button) lateinit var mShotButton: ImageView
@@ -59,24 +70,13 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     @BindView(R.id.camera_main_constraintlayout) lateinit var mConstraintLayout: ConstraintLayout
     @BindView(R.id.camera_main_back) lateinit var mBackButton: ImageView
 
-    private val ALPHA_SPEED = 500
-    private val FLASH_OPTIONS = intArrayOf(CameraView.FLASH_AUTO, CameraView.FLASH_OFF,
-            CameraView.FLASH_ON)
-
-    private val FLASH_ICONS = intArrayOf(R.drawable.icon_flash_auto, R.drawable.icon_flash_off,
-            R.drawable.icon_flash)
-
-    private val FLASH_TITLES = intArrayOf(R.string.flash_auto, R.string.flash_off,
-            R.string.flash_on)
-    private val FRAGMENT_DIALOG = "tokenInputFragment"
+    private val realMetrics = DisplayMetrics()
     private var mCurrentFlash: Int = 0
     private var inHollowMode = false
     private var mToken: String? = null
-    private val realMetrics = DisplayMetrics()
+    private var mBackgroundHandler: Handler? = null
     private var downloadFragment: DownloadFragment? = null
     var compressResultFragment: CompressResultFragment? = null
-
-    private var mBackgroundHandler: Handler? = null
     private val mMocaScrollListener = MocaOnScrollListener { e1, e2, distanceX, distanceY ->
         val ratioY = distanceY / realMetrics.heightPixels
         if (e2.x !in realMetrics.widthPixels * 0.7..realMetrics.widthPixels.toDouble()) {
@@ -86,7 +86,6 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         true
     }
     private val mCallback = object : CameraView.Callback() {
-
         override fun onCameraOpened(cameraView: CameraView) {
         }
 
@@ -110,7 +109,6 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
                         try {
                             os.close()
                         } catch (e: IOException) {
-                            // Ignore
                         }
 
                     }
@@ -123,7 +121,6 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
                 }
             }
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -195,7 +192,6 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         }
     }
 
-
     override fun initView() {
         setSupportActionBar(mToolBar)
         val actionBar = supportActionBar
@@ -209,7 +205,6 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         mShotButton.setOnClickListener({
             mCameraView.takePicture()
         })
-
         if (!inHollowMode) {
             mAlbumButton.visibility = View.VISIBLE
             mAlbumButton.setOnClickListener({
@@ -267,8 +262,6 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     }
 
     fun startComposeImage(file: File, rotation: Float) {
-        //        val metrics = resources.displayMetrics
-
         val options = BitmapFactory.Options()
         Log.d(TAG, "realdisplay: ${realMetrics.widthPixels} x ${realMetrics.heightPixels}")
         options.inScaled = false
@@ -282,7 +275,10 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         task.execute(resultBitmap)
     }
 
-
+    /**
+     * Background task to upload image
+     * @author viseator
+     */
     inner class UploadImageTask : AsyncTask<Bitmap, Unit, Unit>() {
         var fileOutput: File? = null
         lateinit var bitmap: Bitmap
@@ -292,8 +288,6 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
             compressResultFragment = CompressResultFragment()
             val df = SimpleDateFormat("yyyyMMddHHmmss")
             val time = df.format(Date())
-
-
             fileOutput = File(
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
                     "MontageCam$time.png")
@@ -407,6 +401,9 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         }
     }
 
+    /**
+     * Background task to load image
+     */
     inner class LoadImageTask : AsyncTask<Uri, Unit, Unit>() {
         val file = File(externalCacheDir, "shoot_temp.jpg")
         val dialog = getLoadingDialog(this@CameraActivity, R.string.loading, false)
@@ -437,6 +434,5 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         val fragmentTrans = supportFragmentManager.beginTransaction()
         fragmentTrans.remove(downloadFragment)
         fragmentTrans.commit()
-
     }
 }

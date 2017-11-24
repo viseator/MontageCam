@@ -18,10 +18,17 @@ import com.viseator.montagecam.R
  * Wu Di
  * viseator@gmail.com
  */
+
+/**
+ * input dialog result
+ */
 interface OnInputDialogResultListener {
     fun onResult(result: String)
 }
 
+/**
+ * Token input Fragment
+ */
 class TokenInputFragment : Fragment() {
     var resultListener: OnInputDialogResultListener? = null
     var token: String? = null

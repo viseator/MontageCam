@@ -11,8 +11,14 @@ import android.provider.MediaStore
  * Wu Di
  * viseator@gmail.com
  */
+/**
+ * File untils
+ */
 class FileUtil {
     companion object {
+        /**
+         * @deprecated
+         */
         fun getRealPathFromURI(context: Context, contentURI: Uri): String {
             val result: String
 

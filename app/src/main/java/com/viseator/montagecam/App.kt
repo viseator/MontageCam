@@ -11,6 +11,9 @@ import android.os.StrictMode
  * viseator@gmail.com
  */
 
+/**
+ * Application base class
+ */
 class App :Application(){
     override fun onCreate() {
         super.onCreate()

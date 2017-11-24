@@ -20,6 +20,9 @@ import com.viseator.montagecam.R
  * viseator@gmail.com
  */
 
+/**
+ * Base activity
+ */
 abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,12 +34,21 @@ abstract class BaseActivity : AppCompatActivity() {
 
     abstract fun init()
     abstract fun initView()
+    /**
+     * set activity enter fullscreen state
+     */
     protected fun setFullScreen() {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         this.window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN)
     }
 
+    /**
+     * get simple loading dialog
+     * @param context
+     * @param titleId the resource id for title
+     * @param canCancel can dialog be canceled
+     */
     fun getLoadingDialog(context: Context, titleId: Int,
                          canCancel: Boolean): Dialog = getLoadingDialog(context,
             context.getString(titleId), canCancel)
@@ -49,6 +61,12 @@ abstract class BaseActivity : AppCompatActivity() {
         return dialog
     }
 
+    /**
+     * show snack bar
+     * @param viewId the id for the view show snack bar on
+     * @param stringId the resource id for the string show in snack bar
+     * @author viseator
+     */
     fun showSnackBar(viewId: Int, stringId: Int) {
         val snackBar: Snackbar = Snackbar.make(findViewById(viewId), resources.getString(stringId),
                 Snackbar.LENGTH_SHORT)

@@ -16,13 +16,23 @@ import com.xinlan.imageeditlibrary.editimage.utils.Matrix3
  * viseator@gmail.com
  */
 
+/**
+ * Bitmap utils
+ */
 class BitmapUtil {
     companion object {
         val TAG = "@vir BitmapUtil"
         val paintColor = Color.BLACK
         val paintAlpha = 180
 
-
+        /**
+         * fix bitmap to screen specified by h and w
+         *
+         * @param bitmap the input bitmap
+         * @param h height of screen
+         * @param w width of screen
+         * @return the bitmap info
+         */
         fun bitmapFixToScreen(bitmap: Bitmap, h: Int, w: Int): BitmapInfo {
             val height = bitmap.height
             val width = bitmap.width
@@ -39,6 +49,13 @@ class BitmapUtil {
             }
         }
 
+        /**
+         * handle the scale out
+         *
+         * @param bitmap source bitmap
+         * @param scale calculated scale for height and width
+         * @return the bitmap info
+         */
         fun handleScaleOut(bitmap: Bitmap, scale: Float, h: Int, w: Int): BitmapInfo {
             val screenBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
             screenBitmap.density = bitmap.density
@@ -59,6 +76,13 @@ class BitmapUtil {
             return BitmapInfo(screenBitmap, scale, dX, dY)
         }
 
+        /**
+         * handle the scale in
+         *
+         * @param bitmap source bitmap
+         * @param scale calculated scale for height and width
+         * @return the bitmap info
+         */
         fun handleScaleIn(bitmap: Bitmap, scale: Float, h: Int, w: Int, fitX: Boolean): BitmapInfo {
             val screenBitmap = if (fitX) {
                 Bitmap.createBitmap(bitmap.width,
@@ -97,6 +121,20 @@ class BitmapUtil {
             }
         }
 
+        /**
+         * compose two bitmap to one output
+         *
+         * @param bgImg background bitmap
+         * @param fgImg foreground bitmap
+         * @param w width of screen
+         * @param h height of screen
+         * @param fgScale the foreground bitmap scale to fit screen
+         * @param dX the delta width to crop the result image
+         * @param dY the delta height to crop the result image
+         * @param isFrontCamera is the bitmap created by front camera, should x mirror the bitmap
+         * if true
+         * @return result bitmap
+         */
         fun composeBitmap(bgImg: Bitmap, fgImg: Bitmap, w: Int, h: Int, fgScale: Float, dX: Float,
                           dY: Float, isFrontCamera: Boolean): Bitmap {
             val bgInfo = bitmapFixToScreen(bgImg, h, w)
@@ -127,6 +165,11 @@ class BitmapUtil {
             return result
         }
 
+        /**
+         * resize the src bitmap by the delta
+         * @param src source bitmap
+         * @param dX delta x
+         */
         fun resizeBitmap(src: Bitmap, dX: Float, dY: Float): Bitmap {
             if (dX == 0f && dY == 0f) {
                 return src
@@ -139,6 +182,11 @@ class BitmapUtil {
             return result
         }
 
+        /**
+         * mirror the bitmap by the x axis, to handle the mirroring preview of front camera
+         * @param src the source bitmap
+         * @return the result bitmap
+         */
         fun xMirrorBitmap(src: Bitmap): Bitmap {
             val m = Matrix()
             m.preScale(-1f, 1f)
@@ -148,6 +196,10 @@ class BitmapUtil {
             return dst
         }
 
+
+        /**
+         * @deprecated
+         */
         fun restoreBitmap(src: Bitmap, matrix: Matrix, w: Int, h: Int): Bitmap {
             val result = Bitmap.createBitmap(w, h, src.config)
             result.density = src.density
@@ -171,6 +223,5 @@ class BitmapUtil {
             canvas.restore()
             return result
         }
-
     }
 }

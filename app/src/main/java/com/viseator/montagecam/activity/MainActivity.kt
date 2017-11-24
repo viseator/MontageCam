@@ -21,13 +21,15 @@ import com.xinlan.imageeditlibrary.editimage.EditImageActivity
 import org.jetbrains.anko.startActivity
 
 
+/**
+ * Main entry activity
+ * @author viseator
+ */
 class MainActivity : BaseActivity() {
-
     val TAG = "@vir MainActivity"
     val tokenInputFragment = TokenInputFragment()
     val infoFragment = InfoFragment()
     lateinit var clipManager: ClipboardManager
-
 
     companion object {
         val TOKEN = "token"
@@ -78,7 +80,6 @@ class MainActivity : BaseActivity() {
                 startActivity<CameraActivity>(TOKEN to getToken(result))
             }
         }
-
     }
 
     fun showInputFragment() {
@@ -105,6 +106,11 @@ class MainActivity : BaseActivity() {
         fragmentTrans.commit()
     }
 
+    /**
+     * extract token from raw string
+     * @param s raw string
+     * @return token if exist, "error" if not
+     */
     fun getToken(s: String): String {
         var sub: String = ""
         try {
@@ -145,9 +151,9 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        if (tokenInputFragment.isAdded == true) {
+        if (tokenInputFragment.isAdded) {
             hideInputFragment()
-        } else if (infoFragment.isAdded == true) {
+        } else if (infoFragment.isAdded) {
             hideInfoFragment()
         } else {
             finish()

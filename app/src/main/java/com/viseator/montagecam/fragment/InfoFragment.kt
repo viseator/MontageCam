@@ -18,6 +18,10 @@ import com.viseator.montagecam.R
  * Wu Di
  * viseator@gmail.com
  */
+
+/**
+ * The info about us
+ */
 class InfoFragment : Fragment() {
 
     @BindView(R.id.info_main) lateinit var background: ConstraintLayout

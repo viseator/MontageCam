@@ -24,6 +24,9 @@ import java.io.File
  * viseator@gmail.com
  */
 
+/**
+ * Info fragment show the result of compress
+ */
 class CompressResultFragment : Fragment(), View.OnClickListener {
 
     @BindView(R.id.result_image) lateinit var resultImage: ImageView

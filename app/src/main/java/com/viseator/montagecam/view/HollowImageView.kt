@@ -13,8 +13,15 @@ import com.viseator.montagecam.util.BitmapUtil
  * Wu Di
  * viseator@gmail.com
  */
+
+/**
+ * java bean class stores information about bitmap
+ */
 data class BitmapInfo(val bitmap: Bitmap, val scale: Float, val dX: Float, val dY: Float)
 
+/**
+ * image view to show the scaled image
+ */
 class HollowImageView : View {
     val TAG = "@vir TestHollow"
 

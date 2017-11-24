@@ -12,6 +12,9 @@ import com.viseator.montagecam.activity.MainActivity
  * viseator@gmail.com
  */
 
+/**
+ * Local receiver to proxy the intent from edit activity
+ */
 class CameraActivityReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         val newIntent = Intent(context, CameraActivity::class.java)
