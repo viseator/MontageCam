@@ -7,19 +7,19 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.*
-import android.support.constraint.ConstraintLayout
+import android.os.AsyncTask
+import android.os.Bundle
+import android.os.Environment
+import android.os.Handler
+import android.os.HandlerThread
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import android.support.v7.widget.Toolbar
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
 import android.widget.Toast
-import butterknife.BindView
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.DownloadListener
@@ -33,16 +33,21 @@ import com.viseator.montagecam.fragment.CompressResultFragment
 import com.viseator.montagecam.fragment.DownloadFragment
 import com.viseator.montagecam.util.BitmapUtil
 import com.viseator.montagecam.util.ExifUtil
-import com.viseator.montagecam.view.HollowImageView
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity
 import com.xinlan.imageeditlibrary.editimage.utils.BitmapUtils
 import com.xinlan.imageeditlibrary.editimage.utils.FileUtil
+import kotlinx.android.synthetic.main.activity_camera.camera_album_button
+import kotlinx.android.synthetic.main.activity_camera.camera_main_back
+import kotlinx.android.synthetic.main.activity_camera.camera_shot_button
+import kotlinx.android.synthetic.main.activity_camera.camera_toolbar
+import kotlinx.android.synthetic.main.activity_camera.hollow_image
+import kotlinx.android.synthetic.main.activity_camera.main_camera_view
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 
 /**
  * Camera Activity
@@ -62,13 +67,6 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     private val FLASH_TITLES = intArrayOf(R.string.flash_auto, R.string.flash_off,
             R.string.flash_on)
     private val FRAGMENT_DIALOG = "tokenInputFragment"
-    @BindView(R.id.main_camera_view) lateinit var mCameraView: CameraView
-    @BindView(R.id.camera_toolbar) lateinit var mToolBar: Toolbar
-    @BindView(R.id.camera_shot_button) lateinit var mShotButton: ImageView
-    @BindView(R.id.hollow_image) lateinit var mHollowImageView: HollowImageView
-    @BindView(R.id.camera_album_button) lateinit var mAlbumButton: ImageView
-    @BindView(R.id.camera_main_constraintlayout) lateinit var mConstraintLayout: ConstraintLayout
-    @BindView(R.id.camera_main_back) lateinit var mBackButton: ImageView
 
     private val realMetrics = DisplayMetrics()
     private var mCurrentFlash: Int = 0
@@ -82,7 +80,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         if (e2.x !in realMetrics.widthPixels * 0.7..realMetrics.widthPixels.toDouble()) {
             return@MocaOnScrollListener false
         }
-        mHollowImageView.paintAlpha = (mHollowImageView.paintAlpha + ratioY * ALPHA_SPEED).toInt()
+        hollow_image.paintAlpha = (hollow_image.paintAlpha + ratioY * ALPHA_SPEED).toInt()
         true
     }
     private val mCallback = object : CameraView.Callback() {
@@ -93,7 +91,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         }
 
         override fun onPictureTaken(cameraView: CameraView, data: ByteArray) {
-            mShotButton.visibility = View.GONE
+            camera_shot_button.visibility = View.GONE
             val rotation = ExifUtil.getOrientation(data).toFloat()
             getBackgroundHandler().post {
                 val file = File(externalCacheDir, "shoot_temp.jpg")
@@ -133,24 +131,24 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     override fun onResume() {
         super.onResume()
         if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            mCameraView.start()
+                    Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            main_camera_view.start()
         } else {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA),
                     REQUEST_CAMERA_PERMISSION)
         }
-        val ratios = mCameraView.supportedAspectRatios
+        val ratios = main_camera_view.supportedAspectRatios
         for (ratio in ratios) {
             if (ratio.toString() == "16:9") {
-                mCameraView.setAspectRatio(ratio)
+                main_camera_view.setAspectRatio(ratio)
                 break
             }
         }
-        if (mShotButton.visibility != View.VISIBLE) {
-            mShotButton.visibility = View.VISIBLE
+        if (camera_shot_button.visibility != View.VISIBLE) {
+            camera_shot_button.visibility = View.VISIBLE
         }
         if (compressResultFragment?.isAdded == true) {
-            mShotButton.visibility = View.VISIBLE
+            camera_shot_button.visibility = View.VISIBLE
             val fragmentTrans = supportFragmentManager.beginTransaction()
             fragmentTrans.remove(compressResultFragment)
             fragmentTrans.commit()
@@ -158,9 +156,8 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         }
     }
 
-
     override fun onStop() {
-        mCameraView.stop()
+        main_camera_view.stop()
         super.onStop()
     }
 
@@ -183,31 +180,31 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         val filePath = intent.getStringExtra(MainActivity.BITMAP_FILE)
         if (filePath != null) {
             inHollowMode = true
-            mCameraView.setMocaOnScrollListener(mMocaScrollListener)
+            main_camera_view.setMocaOnScrollListener(mMocaScrollListener)
             val options = BitmapFactory.Options()
             options.inScaled = false
             val bitmap = BitmapFactory.decodeFile(filePath, options)
-            mHollowImageView.bitmap = bitmap
-            mHollowImageView.visibility = View.VISIBLE
+            hollow_image.bitmap = bitmap
+            hollow_image.visibility = View.VISIBLE
         }
     }
 
     override fun initView() {
-        setSupportActionBar(mToolBar)
+        setSupportActionBar(camera_toolbar)
         val actionBar = supportActionBar
         actionBar?.setDisplayShowTitleEnabled(false)
-        mCameraView.addCallback(mCallback)
-        mCameraView.setManualFocus(true)
-        mCameraView.setPinchZoom(true)
-        mBackButton.setOnClickListener({
+        main_camera_view.addCallback(mCallback)
+        main_camera_view.setManualFocus(true)
+        main_camera_view.setPinchZoom(true)
+        camera_main_back.setOnClickListener({
             onBackPressed()
         })
-        mShotButton.setOnClickListener({
-            mCameraView.takePicture()
+        camera_shot_button.setOnClickListener({
+            main_camera_view.takePicture()
         })
         if (!inHollowMode) {
-            mAlbumButton.visibility = View.VISIBLE
-            mAlbumButton.setOnClickListener({
+            camera_album_button.visibility = View.VISIBLE
+            camera_album_button.setOnClickListener({
                 val intent = Intent()
                 intent.type = "image/*"
                 intent.action = Intent.ACTION_GET_CONTENT
@@ -219,7 +216,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     }
 
     fun initHollowView() {
-        mCameraView.setMocaOnScrollListener(mMocaScrollListener)
+        main_camera_view.setMocaOnScrollListener(mMocaScrollListener)
         downloadFragment = DownloadFragment()
         downloadFragment?.listener = View.OnClickListener {
             if (downloadFragment?.failed!!) {
@@ -254,8 +251,8 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
                 hideDownloadFragment()
                 val options = BitmapFactory.Options()
                 options.inScaled = false
-                mHollowImageView.bitmap = BitmapFactory.decodeFile(file.absolutePath)
-                mHollowImageView.visibility = View.VISIBLE
+                hollow_image.bitmap = BitmapFactory.decodeFile(file.absolutePath)
+                hollow_image.visibility = View.VISIBLE
             }
 
         })
@@ -267,10 +264,10 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
         options.inScaled = false
         val bgImg = BitmapFactory.decodeFile(file.absolutePath, options)
         val rotatedImg = BitmapUtils.rotateBitmap(bgImg, rotation)
-        val resultBitmap = BitmapUtil.composeBitmap(rotatedImg!!, mHollowImageView.bitmap!!,
-                realMetrics.widthPixels, realMetrics.heightPixels, mHollowImageView.scale!!,
-                mHollowImageView.dX!!, mHollowImageView.dY!!,
-                mCameraView.facing == CameraView.FACING_FRONT)
+        val resultBitmap = BitmapUtil.composeBitmap(rotatedImg!!, hollow_image.bitmap!!,
+                realMetrics.widthPixels, realMetrics.heightPixels, hollow_image.scale!!,
+                hollow_image.dX!!, hollow_image.dY!!,
+                main_camera_view.facing == CameraView.FACING_FRONT)
         val task = UploadImageTask()
         task.execute(resultBitmap)
     }
@@ -317,9 +314,8 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
     fun startImageEdit(path: String, rotation: Float) {
         val fileOutput = File(externalCacheDir, "picture_output.png")
         EditImageActivity.start(this, path, fileOutput.absolutePath,
-                mCameraView.facing == CameraView.FACING_FRONT, rotation, CALL_EDIT_ACTIVITY)
+                main_camera_view.facing == CameraView.FACING_FRONT, rotation, CALL_EDIT_ACTIVITY)
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main, menu)
@@ -331,8 +327,8 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
             R.id.aspect_ratio -> {
                 val fragmentManager = supportFragmentManager
                 if (fragmentManager.findFragmentByTag(FRAGMENT_DIALOG) == null) {
-                    val ratios = mCameraView.supportedAspectRatios
-                    val currentRatio = mCameraView.aspectRatio
+                    val ratios = main_camera_view.supportedAspectRatios
+                    val currentRatio = main_camera_view.aspectRatio
                     AspectRatioFragment.newInstance(ratios, currentRatio).show(fragmentManager,
                             FRAGMENT_DIALOG)
                 }
@@ -342,13 +338,14 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
                 mCurrentFlash = (mCurrentFlash + 1) % FLASH_OPTIONS.size
                 item.setTitle(FLASH_TITLES[mCurrentFlash])
                 item.setIcon(FLASH_ICONS[mCurrentFlash])
-                mCameraView.flash = FLASH_OPTIONS[mCurrentFlash]
+                main_camera_view.flash = FLASH_OPTIONS[mCurrentFlash]
                 return true
             }
             R.id.switch_camera -> {
-                val facing = mCameraView.facing
-                mCameraView.facing = if (facing == CameraView.FACING_FRONT) CameraView.FACING_BACK
-                else CameraView.FACING_FRONT
+                val facing = main_camera_view.facing
+                main_camera_view.facing =
+                        if (facing == CameraView.FACING_FRONT) CameraView.FACING_BACK
+                        else CameraView.FACING_FRONT
                 return true
             }
         }
@@ -357,7 +354,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
 
     override fun onAspectRatioSelected(ratio: AspectRatio) {
         Toast.makeText(this, ratio.toString(), Toast.LENGTH_SHORT).show()
-        mCameraView.setAspectRatio(ratio)
+        main_camera_view.setAspectRatio(ratio)
     }
 
     private fun getBackgroundHandler(): Handler {
@@ -371,7 +368,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
 
     private fun checkPermission() {
         if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE,
                             Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_STORAGE_PERMISSION)
@@ -380,7 +377,7 @@ class CameraActivity : BaseActivity(), AspectRatioFragment.Listener {
 
     override fun onBackPressed() {
         if (compressResultFragment?.isAdded == true) {
-            mShotButton.visibility = View.VISIBLE
+            camera_shot_button.visibility = View.VISIBLE
             val fragmentTrans = supportFragmentManager.beginTransaction()
             fragmentTrans.remove(compressResultFragment)
             fragmentTrans.commit()

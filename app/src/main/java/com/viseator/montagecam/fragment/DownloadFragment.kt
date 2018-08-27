@@ -1,17 +1,15 @@
 package com.viseator.montagecam.fragment
 
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import butterknife.BindView
 import butterknife.ButterKnife
-import butterknife.OnClick
-import com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView
 import com.viseator.montagecam.R
+import kotlinx.android.synthetic.main.fragment_download.download_main
+import kotlinx.android.synthetic.main.fragment_download.download_progress
+import kotlinx.android.synthetic.main.fragment_download.download_text
 
 /**
  * Created by viseator on 11/15/17.
@@ -21,9 +19,6 @@ import com.viseator.montagecam.R
 
 class DownloadFragment : Fragment() {
 
-    @BindView(R.id.download_progress) lateinit var progress: AnimatedCircleLoadingView
-    @BindView(R.id.download_text) lateinit var text: TextView
-    @BindView(R.id.download_main) lateinit var background: ConstraintLayout
     var failed = false
 
     var listener: View.OnClickListener? = null
@@ -31,30 +26,30 @@ class DownloadFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_download, container, false)
         ButterKnife.bind(this, view)
-        background.setOnClickListener({ v ->
-            listener?.onClick(v)
-        })
         return view
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        progress.startDeterminate()
+        download_main.setOnClickListener({ v ->
+            listener?.onClick(v)
+        })
+        download_progress.startDeterminate()
     }
 
     fun setDownloadProgress(data: Int) {
-        progress.setPercent(data)
+        download_progress.setPercent(data)
     }
 
     fun fail() {
         failed = true
-        text.text = getText(R.string.download_error)
-        progress.stopFailure()
+        download_text.text = getText(R.string.download_error)
+        download_progress.stopFailure()
     }
 
     fun restart() {
-        text.text = getText(R.string.downloading)
+        download_text.text = getText(R.string.downloading)
         failed = false
-        progress.resetLoading()
+        download_progress.resetLoading()
     }
 }

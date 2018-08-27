@@ -1,17 +1,16 @@
 package com.viseator.montagecam.fragment
 
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageView
-import butterknife.BindView
 import butterknife.ButterKnife
 import com.viseator.montagecam.R
+import kotlinx.android.synthetic.main.fragment_input.confirm_token
+import kotlinx.android.synthetic.main.fragment_input.input_main
+import kotlinx.android.synthetic.main.fragment_input.token_input
 
 /**
  * Created by viseator on 11/15/17.
@@ -34,32 +33,32 @@ class TokenInputFragment : Fragment() {
     var token: String? = null
     var listener: View.OnClickListener? = null
 
-    @BindView(R.id.token_input) lateinit var editText: EditText
-    @BindView(R.id.confirm_token) lateinit var button: ImageView
-    @BindView(R.id.input_main) lateinit var background: ConstraintLayout
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_input, container, false)
         ButterKnife.bind(this, view)
-        editText.setOnClickListener({
-            editText.selectAll()
+        return view
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        token_input.setOnClickListener({
+            token_input.selectAll()
         })
-        button.setOnClickListener({
-            resultListener?.onResult(editText.text.toString())
+        confirm_token.setOnClickListener({
+            resultListener?.onResult(token_input.text.toString())
         })
-        background.setOnClickListener({ v ->
+        input_main.setOnClickListener({ v ->
             listener?.onClick(v)
         })
-        return view
     }
 
     override fun onResume() {
         super.onResume()
-        editText.requestFocus()
+        token_input.requestFocus()
         if (token != null) {
-            editText.text = SpannableStringBuilder(token)
-            editText.selectAll()
+            token_input.text = SpannableStringBuilder(token)
+            token_input.selectAll()
         }
     }
 }
