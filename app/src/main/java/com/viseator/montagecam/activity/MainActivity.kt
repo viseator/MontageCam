@@ -9,6 +9,7 @@ import android.support.v4.content.LocalBroadcastManager
 import android.view.View
 import android.widget.ImageView
 import butterknife.BindView
+import butterknife.ButterKnife
 import com.androidnetworking.AndroidNetworking
 import com.jacksonandroidnetworking.JacksonParserFactory
 import com.viseator.montagecam.R
@@ -18,6 +19,9 @@ import com.viseator.montagecam.fragment.OnInputDialogResultListener
 import com.viseator.montagecam.fragment.TokenInputFragment
 import com.viseator.montagecam.receiver.CameraActivityReceiver
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity
+import kotlinx.android.synthetic.main.activity_main.main_info_button
+import kotlinx.android.synthetic.main.activity_main.main_receive_photo_button
+import kotlinx.android.synthetic.main.activity_main.main_take_photo_button
 import org.jetbrains.anko.startActivity
 
 
@@ -35,10 +39,6 @@ class MainActivity : BaseActivity() {
         val TOKEN = "token"
         val BITMAP_FILE = "bitmap"
     }
-
-    @BindView(R.id.main_take_photo_button) lateinit var takePhotoButton: ImageView
-    @BindView(R.id.main_receive_photo_button) lateinit var receiverPhotoButton: ImageView
-    @BindView(R.id.main_info_button) lateinit var infoButton: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setFullScreen()
@@ -58,13 +58,13 @@ class MainActivity : BaseActivity() {
 
     override fun initView() {
         tokenInputFragment.resultListener = inputListener
-        infoButton.setOnClickListener({
+        main_info_button.setOnClickListener({
             showInfoFragment()
         })
-        takePhotoButton.setOnClickListener({
+        main_take_photo_button.setOnClickListener({
             startActivity<CameraActivity>()
         })
-        receiverPhotoButton.setOnClickListener({
+        main_receive_photo_button.setOnClickListener({
             showInputFragment()
         })
 

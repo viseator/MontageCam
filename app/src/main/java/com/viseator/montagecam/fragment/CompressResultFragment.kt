@@ -1,22 +1,22 @@
 package com.viseator.montagecam.fragment
 
+import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import butterknife.BindView
 import butterknife.ButterKnife
-import com.victor.loading.rotate.RotateLoading
 import com.viseator.montagecam.R
+import kotlinx.android.synthetic.main.fragment_compress_resut.result_detail_text
+import kotlinx.android.synthetic.main.fragment_compress_resut.result_image
+import kotlinx.android.synthetic.main.fragment_compress_resut.result_main_text
+import kotlinx.android.synthetic.main.fragment_compress_resut.result_progressBar
+import kotlinx.android.synthetic.main.fragment_compress_resut.result_share
 import org.jetbrains.anko.imageBitmap
-import android.content.Intent
-import android.net.Uri
 import java.io.File
-
 
 /**
  * Created by viseator on 11/22/17.
@@ -29,20 +29,19 @@ import java.io.File
  */
 class CompressResultFragment : Fragment(), View.OnClickListener {
 
-    @BindView(R.id.result_image) lateinit var resultImage: ImageView
-    @BindView(R.id.result_progressBar) lateinit var progressBar: RotateLoading
-    @BindView(R.id.result_main_text) lateinit var mainInfo: TextView
-    @BindView(R.id.result_detail_text) lateinit var detailText: TextView
-    @BindView(R.id.result_share) lateinit var shareButton: ImageView
     var path: String? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+            savedInstanceState: Bundle?): View? {
         val view = inflater?.inflate(R.layout.fragment_compress_resut, container, false)
         ButterKnife.bind(this, view!!)
-        shareButton.setOnClickListener(this)
-        progressBar.start()
         return view
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        result_share.setOnClickListener(this)
+        result_progressBar.start()
     }
 
     override fun onClick(v: View?) {
@@ -56,12 +55,12 @@ class CompressResultFragment : Fragment(), View.OnClickListener {
     }
 
     fun showImage(bitmap: Bitmap, info: String, path: String) {
-        progressBar.stop()
+        result_progressBar.stop()
         this.path = path
-        mainInfo.visibility = View.GONE
-        resultImage.imageBitmap = bitmap
-        resultImage.visibility = View.VISIBLE
-        shareButton.visibility = View.VISIBLE
-        detailText.text = "$info$path"
+        result_main_text.visibility = View.GONE
+        result_image.imageBitmap = bitmap
+        result_image.visibility = View.VISIBLE
+        result_share.visibility = View.VISIBLE
+        result_detail_text.text = "$info$path"
     }
 }

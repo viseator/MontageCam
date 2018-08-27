@@ -11,8 +11,7 @@
     <string name="main_take_photo">拍照</string>
     <string name="receive_photo">收到图片</string>
     <string name="input_token">请输入含分享码信息</string>
-    <!--<string name="server_download">http://118.89.193.105:9091/</string>-->
-    <string name="server_download">http://35.194.250.61:9091/</string>
+    <string name="server_download">http://mocad.viseator.com/</string>
     <string name="downloading">正在加载图片</string>
     <string name="download_error">网络错误 轻触重试</string>
     <string name="file_has_save_to">图片已经保存到</string>
@@ -23,7 +22,7 @@
     <string name="publish_image">发布拼图</string>
     <string name="join_image">参与拼图</string>
     <string name="touch_back">轻触返回</string>
-    <string name="version">v1.0.0-beta</string>
+    <string name="version">v1.1.0-beta</string>
     <string name="hust">华中科技大学</string>
     <string name="uniquestudio">联创团队</string>
     <string name="unique_site">https://www.hustunique.com/</string>
